@@ -5,8 +5,7 @@
         <div class="row">
             <div class="col-sm-6 col-md-6">
                 <div class="bg-opacity-25 bg-success w-100 h-100">
-                    {{json_encode($holidays)}}
-                    @php($holidays['title'] = "test")
+                    {{$holidays[0]->start}}
                 </div>
             </div>
             <div class="col-sm-6 col-md-6">
@@ -21,9 +20,16 @@
         let calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
             themeSystem: 'bootstrap5',
-            events: {{$holidays}}
+            events: [
+                {
+                    'title': 'test',
+                    'start': '2022-08-03',
+                    'end': '2022-08-10'
+                }
+            ]
         });
         calendar.render();
+        console.log(calendar.getEvents())
     });
 </script>
 @endsection

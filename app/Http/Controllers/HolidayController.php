@@ -10,12 +10,12 @@ class HolidayController extends Controller
 {
     public function index(){
         return view('holidays.index',[
-            'holidays' => Holiday::latest()->get()
+            'holidays' => Holiday::all()
         ]);
     }
     // public function show(Customer $customer){}
     public function create(){
-        return view('customers.create');
+        return view('holidays.create');
     }
     public function store(Request $request){
         $formFields = $request->validate([

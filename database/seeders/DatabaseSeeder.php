@@ -5,10 +5,12 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Customer;
 use App\Models\Employee;
+use App\Models\Holiday;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
 
 class DatabaseSeeder extends Seeder
@@ -297,12 +299,15 @@ class DatabaseSeeder extends Seeder
         DB::table('statuses')->insert($statuses);
 
         User::factory(10)->create();
+        Holiday::factory(30)->create();
+
 
         Order::factory(50)->create();
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        User::factory()->create([
+             'name' => 'Dennis Pirotta',
+             'email' => 'dennispirotta@gmail.com',
+             'password' => Hash::make('pellio2014'),
+         ]);
     }
 }

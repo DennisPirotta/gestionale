@@ -79,6 +79,22 @@ Route::middleware(['auth'])->group(function (){
     *  GESTIONE ROUTES FERIE
     */
 
+    // Mostra pannello con ferie rimanenti e calendario
     Route::get('/ferie',[HolidayController::class, 'index']);
+
+    // Mostra pagina crea evento
+    Route::get('/ferie/create',[HolidayController::class, 'create']);
+
+    // Mostra pagina clienti
+    Route::post('/ferie', [HolidayController::class, 'store']);
+
+    // Mostra pagina modifica
+    Route::get('/ferie/{holiday}/edit',[HolidayController::class,'edit']);
+
+    // Modifica cliente
+    Route::put('/ferie/{customer}', [HolidayController::class, 'update']);
+
+    // Elimina cliente
+    Route::delete('/ferie/{customer}',[HolidayController::class, 'destroy']);
 });
 

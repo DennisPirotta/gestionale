@@ -60,6 +60,24 @@
                                 <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
                             </div>
                         </div>
+                        <div class="row mb-3">
+                            <label for="password-confirm" class="col-md-4 col-form-label text-md-end">{{ __('Company') }}</label>
+
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="company" id="3d" value="1">
+                                    <label class="form-check-label" for="3d">
+                                        3D Automation
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="company" id="sph" checked value="2">
+                                    <label class="form-check-label" for="sph">
+                                        S+H Technologies
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="row mb-0">
                             <div class="col-md-6 offset-md-4">
@@ -68,6 +86,9 @@
                                 </button>
                             </div>
                         </div>
+
+
+
                     </form>
                 </div>
             </div>

@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Customer;
 use App\Models\Holiday;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Date;
+use DateTime;
+use DateInterval;
 
 class HolidayController extends Controller
 {
@@ -53,24 +56,31 @@ class HolidayController extends Controller
 
     public function update(Request $request, Holiday $holiday){
 
-        /*
-        $data = json_decode($request);
+        $newDates['start'] = DateTime::createFromFormat("Y-m-d", $request->start)->add(DateInterval::createFromDateString('1 day'));
+        $newDates['end'] = DateTime::createFromFormat("Y-m-d", $request->end)->add(DateInterval::createFromDateString('1 day'));
 
+        $oldDates['start'] = DateTime::createFromFormat("Y-m-d", $request->start)->add(DateInterval::createFromDateString('1 day'));
+        $oldDates['end'] = DateTime::createFromFormat("Y-m-d", $request->end)->add(DateInterval::createFromDateString('1 day'));
 
-        $formFields['user'] = auth()->user()->id;
+        $newDates['user'] = auth()->user()->id;
 
         $dayCounter = auth()->user()->holidays;
+
+        $diff = $newDates['end']->diff($newDates['start']);
+        $old_diff = $oldDates['end']->diff($oldDates['start']);
 
         foreach (Holiday::where('user',auth()->user()->id)->get() as $day)
             $dayCounter -= abs((strtotime($day->end) - strtotime($day->start)) / 86400);
 
         $remaning = $dayCounter;
 
-        $dayCounter -= abs((strtotime($formFields['end']) - strtotime($formFields['start'])) / 86400);
+        $dayCounter += $old_diff->format("%a");
+        $dayCounter -= $diff->format("%a");
 
-        if ($dayCounter >= 0) Holiday::create($formFields);
+
+        if ($dayCounter >= 0) $holiday->update($newDates);
         else return redirect("/ferie")->with('error', 'Disponibilità di ferie insufficente, disponi di '.$remaning.' giorni ');
-        */
+
         return redirect('/ferie')->with('message','Ferie aggiornata con successo');
     }
     public function destroy(Customer $customer){

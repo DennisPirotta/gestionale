@@ -83,21 +83,29 @@
 
                     eventDrop: function (eventInfo){
                         console.log(eventInfo.event.start)
-                        let csrf = document.querySelector("input[name='_token']").value
-                        console.log(csrf)
+                        const token = document.querySelector('meta[name="csrf-token"]').content;
+                        console.log(token)
                         fetch(`/ferie/${eventInfo.event.id}`, {
-                            method: 'PUT',
+                            method: 'POST',
                             headers: {
                                 "Content-Type": "application/json",
-                                "X-CSRF-Token": csrf,
+                                "Accept": "application/json, text/plain, */*",
+                                "X-Requested-With": "XMLHttpRequest",
+                                "X-CSRF-TOKEN": token,
                             },
-                            body:{
-                                "id": eventInfo.event.id,
-                                "start": eventInfo.event.start,
-                                "end": eventInfo.event.end,
-                            },
-                        }).then(function(res){ console.log(res) })
-                            .catch(function(res){ console.log(res) })
+                            credentials: "same-origin",
+                            body: JSON.stringify(
+                                {
+                                    "_token": token,
+                                    "_method": "PUT",
+                                    "id": eventInfo.event.id,
+                                    "start": eventInfo.event.start.toISOString().split('T')[0],
+                                    "end": eventInfo.event.end.toISOString().split('T')[0],
+                                    "old_start": eventInfo.oldEvent.start.toISOString().split('T')[0],
+                                    "old_end": eventInfo.oldEvent.end.toISOString().split('T')[0],
+                                }
+                            ),
+                        })
                     },
 
             })

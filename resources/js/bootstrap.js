@@ -5,8 +5,8 @@ window._ = loadash
 import * as Popper from '@popperjs/core'
 window.Popper = Popper
 
-import 'bootstrap'
-
+import * as bootstrap from 'bootstrap'
+window.bootstrap = bootstrap
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests

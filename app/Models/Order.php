@@ -49,8 +49,6 @@ class Order extends Model
             foreach (DB::table('employees')->where('name','like','%'.$filters['search'].'%')->get() as $employee)
                 $employees[] = $employee->id;
 
-            //dd(gettype($employees).gettype($statuses).gettype($countries).gettype($companies));
-
             $query  ->whereIn('customer',$customers)
                     ->orWhereIn('manager',$employees)
                     ->orWhereIn('company',$companies)

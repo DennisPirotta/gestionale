@@ -9,6 +9,8 @@ use App\Models\Order;
 use App\Models\Status;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+
 class OrderController extends Controller
 {
     // Visualizza tutte le commesse
@@ -18,6 +20,8 @@ class OrderController extends Controller
         if (request('customer'))    $commesse = Order::latest()->filter(request(['customer']))->get();
         elseif (request('search'))  $commesse = Order::latest()->filter(request(['search']))->get();
         elseif (request('company')) $commesse = Order::latest()->filter(request(['company']))->get();
+
+        Session::put('require_navbar_tools',true);
 
         return view('orders.index',[
             'commesse' => $commesse,

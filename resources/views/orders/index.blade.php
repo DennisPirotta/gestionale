@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@php($require_navbar_tools = true)
 
 @section('content')
 <div class="container shadow-sm my-3 text-center justify-content-center p-3">

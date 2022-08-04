@@ -17,9 +17,7 @@ return new class extends Migration
             $table->id();
             $table->date('start');
             $table->date('end');
-            $table->boolean('approved');
-            $table->string('comment')->nullable();
-            $table->string('type');
+            $table->boolean('approved')->default(false);
             $table->timestamps();
 
             $table  ->foreignId('user')

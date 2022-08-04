@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@php($require_navbar_tools = true)
 @section('content')
 <div class="container my-5 p-5 text-center shadow-sm">
     <div class="row gy-3">

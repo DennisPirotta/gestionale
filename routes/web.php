@@ -52,7 +52,6 @@ Route::middleware(['auth'])->group(function (){
     // Sezione utenti
     Route::get('/', [HomeController::class, 'index']);
 
-
     /*
     *  GESTIONE ROUTES CLIENTI
     */
@@ -92,9 +91,13 @@ Route::middleware(['auth'])->group(function (){
     Route::get('/ferie/{holiday}/edit',[HolidayController::class,'edit']);
 
     // Modifica cliente
-    Route::put('/ferie/{customer}', [HolidayController::class, 'update']);
+    Route::put('/ferie/{holiday}', [HolidayController::class, 'update']);
 
     // Elimina cliente
-    Route::delete('/ferie/{customer}',[HolidayController::class, 'destroy']);
+    Route::delete('/ferie/{holiday}',[HolidayController::class, 'destroy']);
+
+
+    Route::get("test",function (){ return redirect("/"); });
+
 });
 

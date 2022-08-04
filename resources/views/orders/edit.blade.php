@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@php($require_navbar_tools = true)
 @section('content')
     <div class="container my-5 p-4 shadow-sm">
         <form method="POST" action="/commesse/{{$commessa->id}}" class="row" enctype="multipart/form-data">

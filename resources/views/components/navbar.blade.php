@@ -52,8 +52,7 @@
                         </div>
                     </li>
                 @endguest
-                @php($uri = request()->route()->uri)
-                @if($uri != "/" && $uri != "login" && $uri != "register")
+                @if(isset($require_navbar_tools))
                     <div class="navbar-nav ms-auto">
                         <a onclick="history.go(-1);"><i class="bi bi-arrow-counterclockwise fs-3 me-2 text-primary"></i></a>
                         <a href="/{{explode("/",request()->route()->uri)[0]}}/create"><i class="bi bi-plus-square fs-3 me-2 text-success"></i></a>

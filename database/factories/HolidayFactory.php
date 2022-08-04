@@ -23,8 +23,6 @@ class HolidayFactory extends Factory
             'start' => $start,
             'end' => $end,
             'approved' => fake()->boolean,
-            'comment' => fake()->text(10),
-            'type' => fake()->text(10),
             'user' => User::all()->random()->id
         ];
     }

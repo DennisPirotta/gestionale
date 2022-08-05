@@ -1,25 +1,26 @@
 @extends('layouts.app')
 @php($require_navbar_tools = true)
 @section('content')
-
-    @php($used = 0)
-    @foreach($holidays as $event)
-        @if($event->user == auth()->user()->id)
-            @php($used += abs((strtotime($event->end) - strtotime($event->start)) / 86400))
-        @endif
-    @endforeach
-    @php($percentage = (auth()->user()->holidays - $used)*100/auth()->user()->holidays)
+        @php($used = 0)
+        @foreach($holidays as $event)
+            @if($event->user == auth()->user()->id)
+                @php($used += App\Models\Holiday::getWorkingDays($event->start,$event->end))
+            @endif
+        @endforeach
+        @php($percentage = (auth()->user()->holidays - $used)*100/auth()->user()->holidays)
     <div class="container mt-3 mb-1 shadow-sm p-5">
         <div class="row text-center">
-                <div class="col-sm-6 col-md-6 mb-3">
+                <div class="col-sm-12 col-lg-5 mb-3">
                     <div class="card"> <!--  bg-black bg-opacity-25 -->
                         <div class="card-body">
                             <i class="bi bi-person fs-3"></i>
                             <span class="card-title fs-3">{{auth()->user()->name}}</span>
                             <hr class="w-50 mx-auto mt-0">
-                            <p class="card-text">Giorni di ferie rimasti: <b>{{auth()->user()->holidays - $used}}</b></p>
+
+                            <p class="card-text">Giorni di ferie rimasti: <b id="hourLeft">{{auth()->user()->holidays - $used}}</b></p>
+
                             <div class="progress my-3">
-                                <div class="progress-bar" role="progressbar" aria-label="Example with label"
+                                <div id="progressBar" class="progress-bar" role="progressbar" aria-label="Example with label"
                                      style="width: {{$percentage}}%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
                                     {{$percentage}}% rimasto
                                 </div>
@@ -40,17 +41,29 @@
                                         Elimina
                                     </button>
                                 </form>
+                                <a tabindex="0"
+                                        data-bs-toggle="popover"
+                                        data-bs-title="Popover title"
+                                        data-bs-trigger="focus"
+                                        data-bs-content="And here's some amazing content. It's <b>very</b> engaging. Right?">
+                                    Click to toggle popover
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
-            <div class="col-sm-6 col-md-6">
+            <div class="col-sm-12 col-lg-7">
                 <div id='calendar'></div>
             </div>
         </div>
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+            const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl,{
+                sanitize: false,
+                html: true,
+            }))
             let calendarEl = document.getElementById('calendar')
             let colors = ["rgba(215,239,79,0.84)","#497e29"];
             let borders = ["rgb(250,192,0)","rgb(32,70,15)"];
@@ -74,18 +87,18 @@
                                 'borderColor': borders[{{$event->approved}}],
                                 'textColor': text[{{$event->approved}}],
                             },
-
                         ],
+                        eventRender: function f() {
 
+                    }
                     },
                     @endforeach
                     ],
-
-                    eventDrop: function (eventInfo){
+                    eventDrop: async function (eventInfo){
                         console.log(eventInfo.event.start)
                         const token = document.querySelector('meta[name="csrf-token"]').content;
                         console.log(token)
-                        fetch(`/ferie/${eventInfo.event.id}`, {
+                        let res = await fetch(`/ferie/${eventInfo.event.id}`, {
                             method: 'POST',
                             headers: {
                                 "Content-Type": "application/json",
@@ -106,6 +119,20 @@
                                 }
                             ),
                         })
+                        let body = await res.json()
+                        console.log(body)
+                        let toastEl
+                        if (res.status === 200)
+                            toastEl = document.getElementById("success_toast")
+                        else if (res.status === 500)
+                            toastEl = document.getElementById("error_toast")
+
+                        toastEl.querySelector("div.toast-body").innerHTML = body.message
+                        document.getElementById('progressBar').style.width = body.perc + "%"
+                        document.getElementById('hourLeft').innerText = body.left
+                        let toast = new bootstrap.Toast(toastEl)
+                        toast.show()
+
                     },
 
             })

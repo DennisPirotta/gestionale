@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
 use DateTime;
 use DateInterval;
+use App\Http\Controllers\Session;
 
 class HolidayController extends Controller
 {
@@ -44,7 +45,7 @@ class HolidayController extends Controller
         $dayCounter -= abs((strtotime($formFields['end']) - strtotime($formFields['start'])) / 86400);
 
         if ($dayCounter >= 0) Holiday::create($formFields);
-        else return redirect("/ferie")->with('error', 'Disponibilità di ferie insufficente, disponi di '.$remaning.' giorni ');
+        else return redirect("/ferie")->with('error', 'Disponibilità di ferie insufficente, disponi di <b>'.$remaning.'</b> giorni ');
 
         return redirect('/ferie')->with('message','Ferie richiesta con successo');
     }
@@ -56,32 +57,33 @@ class HolidayController extends Controller
 
     public function update(Request $request, Holiday $holiday){
 
-        $newDates['start'] = DateTime::createFromFormat("Y-m-d", $request->start)->add(DateInterval::createFromDateString('1 day'));
-        $newDates['end'] = DateTime::createFromFormat("Y-m-d", $request->end)->add(DateInterval::createFromDateString('1 day'));
+        $userHolidays = auth()->user()->holidays;
 
-        $oldDates['start'] = DateTime::createFromFormat("Y-m-d", $request->start)->add(DateInterval::createFromDateString('1 day'));
-        $oldDates['end'] = DateTime::createFromFormat("Y-m-d", $request->end)->add(DateInterval::createFromDateString('1 day'));
+        $request->start = DateTime::createFromFormat('Y-m-d',$request->start)->modify('+1 day')->format('Y-m-d');
+        $request->end = DateTime::createFromFormat('Y-m-d',$request->end)->modify('+1 day')->format('Y-m-d');
 
-        $newDates['user'] = auth()->user()->id;
+        $data['start'] = $request->start;
+        $data['end'] = $request->end;
 
-        $dayCounter = auth()->user()->holidays;
-
-        $diff = $newDates['end']->diff($newDates['start']);
-        $old_diff = $oldDates['end']->diff($oldDates['start']);
-
+        $used = 0;
         foreach (Holiday::where('user',auth()->user()->id)->get() as $day)
-            $dayCounter -= abs((strtotime($day->end) - strtotime($day->start)) / 86400);
+            $used += Holiday::getWorkingDays($day->start,$day->end);
 
-        $remaning = $dayCounter;
+        $used -= Holiday::getWorkingDays($request->old_start,$request->old_end);
+        $used += Holiday::getWorkingDays($request->start,$request->end);
 
-        $dayCounter += $old_diff->format("%a");
-        $dayCounter -= $diff->format("%a");
+        if ($used <= $userHolidays) $holiday->update($data);
+        else return response('Disponibilità di ferie insufficente, disponi di <b>'.$remaning.'</b> giorni ',500);
 
+        return response(
+            json_encode([
+                'message' => 'ferie aggiornate con successo, Inizio: <b>' . $request->start . '</b> Fine: <b>' . $request->end . '</b> Giorni utilizzati: <b>'.Holiday::getWorkingDays($request->start,$request->end).'</b>',
+                'perc'    =>  ($userHolidays-$used)*100/$userHolidays,
+                'left'    =>  $userHolidays-$used
+            ]),
+            200
+        );
 
-        if ($dayCounter >= 0) $holiday->update($newDates);
-        else return redirect("/ferie")->with('error', 'Disponibilità di ferie insufficente, disponi di '.$remaning.' giorni ');
-
-        return redirect('/ferie')->with('message','Ferie aggiornata con successo');
     }
     public function destroy(Customer $customer){
         $customer->delete();

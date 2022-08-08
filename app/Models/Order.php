@@ -45,12 +45,12 @@ class Order extends Model
             foreach (DB::table('statuses')->where('description','like','%'.$filters['search'].'%')->get() as $status)
                 $statuses[] = $status->id;
 
-            $employees = [];
-            foreach (DB::table('employees')->where('name','like','%'.$filters['search'].'%')->get() as $employee)
-                $employees[] = $employee->id;
+            $users = [];
+            foreach (DB::table('users')->where('name','like','%'.$filters['search'].'%')->get() as $user)
+                $users[] = $user->id;
 
             $query  ->whereIn('customer',$customers)
-                    ->orWhereIn('manager',$employees)
+                    ->orWhereIn('manager',$users)
                     ->orWhereIn('company',$companies)
                     ->orWhereIn('country',$countries)
                     ->orWhereIn('status',$statuses)

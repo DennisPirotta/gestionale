@@ -98,7 +98,7 @@
                 <div class="card-body">
                     <i class="bi bi-person-check fs-3"></i>
                     <p class="card-title">Responsabile</p>
-                    <b>{{DB::table('employees')->where('id',$commessa['manager'])->value('name')}}</b>
+                    <b>{{DB::table('users')->where('id',$commessa['manager'])->value('name')}}</b>
                 </div>
             </div>
         </div>

@@ -2,9 +2,8 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Customer;
-use App\Models\Employee;
+use App\Models\Event;
 use App\Models\Holiday;
 use App\Models\Order;
 use App\Models\User;
@@ -23,7 +22,6 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
 
-        Employee::factory(10)->create();
         Customer::factory(10)->create();
 
         Schema::disableForeignKeyConstraints();

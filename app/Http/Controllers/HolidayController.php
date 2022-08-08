@@ -4,18 +4,54 @@ namespace App\Http\Controllers;
 
 use App\Models\Customer;
 use App\Models\Holiday;
+use DebugBar\DebugBar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
 use DateTime;
 use DateInterval;
 use App\Http\Controllers\Session;
+use App\Models\User;
 
 class HolidayController extends Controller
 {
 
-    public function index(){
+    public function index(Request $request){
+
+        $events = [];
+        $users  = User::select('id','name')->get();
+
+        foreach (Holiday::all() as $holiday){
+            $editable = false;
+            $user = $users->where('id',$holiday->user)->value('id');
+            $title = $users->where('id',$holiday->user)->value('name');
+
+            if ($holiday->user==auth()->user()->id)
+                $editable = true;
+
+            $color = 'rgba(215,239,79,0.84)'; // yellow ( default )
+            $text = 'black'; // yellow ( default )
+            $border = 'rgb(250,192,0)'; // yellow ( default )
+            if ($holiday->approved){
+                $color = '#497e29'; // green
+                $text = 'white';
+                $border = 'rgb(32,70,15)';
+            }
+
+                $events[] = [
+                'title' => $title,
+                'start' => $holiday->start,
+                'end' => $holiday->end,
+                'id' => $holiday->id,
+                'user' => $user,
+                'editable' => $editable,
+                'color' => $color,
+                'textColor' => $text,
+                'borderColor' => $border
+            ];
+        }
+
         return view('holidays.index',[
-            'holidays' => Holiday::all()
+            'holidays' => $events
         ]);
     }
     // public function show(Holiday $holiday){}

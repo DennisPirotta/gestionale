@@ -33,7 +33,7 @@ return new class extends Migration
                 ->cascadeOnUpdate();
 
             $table->foreignId('manager')
-                ->constrained('employees')
+                ->constrained('users')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
 

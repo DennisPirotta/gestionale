@@ -1,9 +1,12 @@
 <?php
 
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\FullCalenderController;
 use App\Http\Controllers\HolidayController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
+use App\Models\Event;
+use App\Models\Holiday;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -96,14 +99,6 @@ Route::middleware(['auth'])->group(function (){
 
     // Elimina cliente
     Route::delete('/ferie/{holiday}',[HolidayController::class, 'destroy']);
-
-
-
-    // !!!!!!! Dangerous Zone !!!!!!!
-    Route::post('/session',function (Request $request){
-        session($request['key'],$request['text']);
-    });
-
 
 });
 

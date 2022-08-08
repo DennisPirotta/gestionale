@@ -35,8 +35,8 @@ class OrderFactory extends Factory
             'hourFAT' => fake()->randomNumber(2),
             'hourSAF' => fake()->randomNumber(2),
             'progress' => fake()->text,
-            'opening' => fake()->date,
-            'closing' => fake()->date,
+            'opening' => fake()->dateTime,
+            'closing' => fake()->dateTime,
             'customer' => Customer::all()->random()->id,
             'manager' => User::all()->random()->id
         ];

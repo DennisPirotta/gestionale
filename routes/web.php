@@ -1,9 +1,9 @@
 <?php
 
 use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\FullCalenderController;
 use App\Http\Controllers\HolidayController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\HourController;
 use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -85,7 +85,7 @@ Route::middleware(['auth'])->group(function () {
     // Mostra pagina crea evento
     Route::get('/ferie/create', [HolidayController::class, 'create']);
 
-    // Mostra pagina clienti
+    // Crea ferie
     Route::post('/ferie', [HolidayController::class, 'store']);
 
     // Mostra pagina modifica
@@ -96,6 +96,26 @@ Route::middleware(['auth'])->group(function () {
 
     // Elimina cliente
     Route::delete('/ferie/{holiday}', [HolidayController::class, 'destroy']);
+    /*
+    *  GESTIONE ROUTES ORE
+    */
+
+    // Mostra pannello ore
+    Route::get('/ore', [HourController::class, 'index']);
+
+    // Mostra pagina inserisci ore
+    Route::get('/ore/create', [HourController::class, 'create']);
+
+    // Inserisci ore
+    Route::post('/ore', [HourController::class, 'store']);
+
+    // Mostra pagina modifica
+    Route::get('/ore/{hour}/edit', [HourController::class, 'edit']);
+
+    // Modifica ore
+    Route::put('/ore/{hour}', [HourController::class, 'update']);
+
+    // Elimina ore
+    Route::delete('/ore/{hour}', [HourController::class, 'destroy']);
 
 });
-

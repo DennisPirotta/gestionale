@@ -22,8 +22,8 @@ return new class extends Migration {
             $table->integer('hourFAT')->default(0);
             $table->integer('hourSAF')->default(0);
             $table->string('progress');
-            $table->date('opening');
-            $table->date('closing');
+            $table->dateTime('opening');
+            $table->dateTime('closing');
             $table->timestamps();
 
             $table->foreignId('customer')

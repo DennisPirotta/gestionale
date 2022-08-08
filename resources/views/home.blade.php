@@ -4,7 +4,7 @@
     <div class="container my-5 p-3 justify-content-center text-center">
         <div class="row">
             <div class="col">
-                <a href="commesse">
+                <a href="{{url('/commesse')}}">
                     <div class="card">
                         <div class="card-body">
                             <i class="bi bi-building fs-1"></i>
@@ -14,7 +14,7 @@
                 </a>
             </div>
             <div class="col">
-                <a href="clienti">
+                <a href="{{url('/clienti')}}">
                     <div class="card">
                         <div class="card-body">
                             <i class="bi bi-people fs-1"></i>
@@ -24,11 +24,21 @@
                 </a>
             </div>
             <div class="col">
-                <a href="ferie">
+                <a href="{{url('/ferie')}}">
                     <div class="card">
                         <div class="card-body">
                             <i class="bi bi-calendar4-week fs-1"></i>
                             <h5 class="card-title">Ferie</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col">
+                <a href="{{url('/ore')}}">
+                    <div class="card">
+                        <div class="card-body">
+                            <i class="bi bi-person-plus fs-1"></i>
+                            <h5 class="card-title">Gestione ore</h5>
                         </div>
                     </div>
                 </a>

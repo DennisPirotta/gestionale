@@ -6,6 +6,7 @@ use App\Models\Customer;
 use App\Models\Holiday;
 use App\Models\Order;
 use App\Models\User;
+use Doctrine\DBAL\Exception;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -17,17 +18,36 @@ class DatabaseSeeder extends Seeder
      * Seed the application's database.
      *
      * @return void
+     * @throws Exception
      */
-    public function run()
+    public function run(): void
     {
-
-        Customer::factory(10)->create();
-
         Schema::disableForeignKeyConstraints();
-        DB::table('countries')->truncate();
-        DB::table('companies')->truncate();
-        DB::table('statuses')->truncate();
+        $tableNames = Schema::getConnection()->getDoctrineSchemaManager()->listTableNames();
+        foreach ($tableNames as $name) { DB::table($name)->truncate(); }
         Schema::enableForeignKeyConstraints();
+
+        $jobTypes = [
+          ['description' => 'Sviluppo Software', 'color' => 'light'],
+          ['description' => 'Messa in servizio', 'color' => 'info'],
+          ['description' => 'Safety', 'color' => 'success'],
+          ['description' => 'Collaudo', 'color' => 'secondary'],
+          ['description' => 'Modifiche', 'color' => 'danger'],
+          ['description' => 'Riunioni', 'color' => 'dark'],
+          ['description' => 'Assistenza', 'color' => 'primary'],
+        ];
+        $hoursType = [
+            ['description' => 'Commessa'],
+            ['description' => 'Foglio intervento'],
+            ['description' => 'Assistenza'],
+            ['description' => 'AVIS'],
+            ['description' => 'Corso'],
+            ['description' => 'Ferie'],
+            ['description' => 'Malattia'],
+            ['description' => 'Ufficio'],
+            ['description' => 'Visita medica'],
+            ['description' => 'Altro'],
+        ];
         $countries = [
             ['name' => 'Afghanistan', 'code' => 'AF'],
             ['name' => 'Åland Islands', 'code' => 'AX'],
@@ -294,12 +314,14 @@ class DatabaseSeeder extends Seeder
         DB::table('countries')->insert($countries);
         DB::table('companies')->insert($companies);
         DB::table('statuses')->insert($statuses);
+        DB::table('hour_types')->insert($hoursType);
+        DB::table('job_types')->insert($jobTypes);
 
+        Customer::factory(10)->create();
         User::factory(10)->create();
         Holiday::factory(30)->create();
-
-
         Order::factory(50)->create();
+
 
         User::factory()->create([
             'name' => 'Dennis Pirotta',

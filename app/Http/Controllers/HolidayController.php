@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Session;
 use App\Models\Customer;
 use App\Models\Holiday;
 use App\Models\User;
@@ -12,7 +11,7 @@ use Illuminate\Http\Request;
 class HolidayController extends Controller
 {
 
-    public function index(Request $request)
+    public function index()
     {
 
         $events = [];
@@ -23,8 +22,10 @@ class HolidayController extends Controller
             $user = $users->where('id', $holiday->user)->value('id');
             $title = $users->where('id', $holiday->user)->value('name');
 
-            if ($holiday->user == auth()->user()->id)
+            if ($holiday->user === auth()->user()->id) {
                 $editable = true;
+            }
+
 
             $color = 'rgba(215,239,79,0.84)'; // yellow ( default )
             $text = 'black'; // yellow ( default )
@@ -55,13 +56,6 @@ class HolidayController extends Controller
 
     // public function show(Holiday $holiday){}
 
-    public function create()
-    {
-        return view('holidays.create', [
-            'holidays' => Holiday::all()
-        ]);
-    }
-
     public function store(Request $request)
     {
 
@@ -74,17 +68,29 @@ class HolidayController extends Controller
 
         $dayCounter = auth()->user()->holidays;
 
-        foreach (Holiday::where('user', auth()->user()->id)->get() as $day)
+        foreach (Holiday::where('user', auth()->user()->id)->get() as $day) {
             $dayCounter -= abs((strtotime($day->end) - strtotime($day->start)) / 86400);
+
+        }
 
         $remaning = $dayCounter;
 
         $dayCounter -= abs((strtotime($formFields['end']) - strtotime($formFields['start'])) / 86400);
 
-        if ($dayCounter >= 0) Holiday::create($formFields);
-        else return redirect("/ferie")->with('error', 'Disponibilità di ferie insufficente, disponi di <b>' . $remaning . '</b> giorni ');
+        if ($dayCounter >= 0) {
+            Holiday::create($formFields);
+        } else {
+            return redirect("/ferie")->with('error', 'Disponibilità di ferie insufficente, disponi di <b>' . $remaning . '</b> giorni ');
+        }
 
         return redirect('/ferie')->with('message', 'Ferie richiesta con successo');
+    }
+
+    public function create()
+    {
+        return view('holidays.create', [
+            'holidays' => Holiday::all()
+        ]);
     }
 
     public function edit(Customer $customer)
@@ -97,7 +103,8 @@ class HolidayController extends Controller
     public function update(Request $request, Holiday $holiday)
     {
 
-
+        $data = [];
+        $used = 0;
         $userHolidays = auth()->user()->holidays;
 
         $request->start = DateTime::createFromFormat('Y-m-d', $request->start)->modify('+1 day')->format('Y-m-d');
@@ -106,15 +113,21 @@ class HolidayController extends Controller
         $data['start'] = $request->start;
         $data['end'] = $request->end;
 
-        $used = 0;
-        foreach (Holiday::where('user', auth()->user()->id)->get() as $day)
-            $used += Holiday::getWorkingDays($day->start, $day->end);
+
+        foreach (Holiday::where('user', auth()->user()->id)->get() as $holiday) {
+            $used += Holiday::getWorkingDays($holiday->start, $holiday->end);
+
+        }
 
         $used -= Holiday::getWorkingDays($request->old_start, $request->old_end);
         $used += Holiday::getWorkingDays($request->start, $request->end);
 
-        if ($used <= $userHolidays) $holiday->update($data);
-        else return response('Disponibilità di ferie insufficente, disponi di <b>' . $remaning . '</b> giorni ', 500);
+        if ($used <= $userHolidays) {
+            $holiday->update($data);
+        } else {
+            return response('Disponibilità di ferie insufficente, disponi di <b>' . $remaning . '</b> giorni ', 500);
+
+        }
 
         return response(
             json_encode([

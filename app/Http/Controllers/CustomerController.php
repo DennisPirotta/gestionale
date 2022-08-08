@@ -16,10 +16,6 @@ class CustomerController extends Controller
     }
 
     // public function show(Customer $customer){}
-    public function create()
-    {
-        return view('customers.create');
-    }
 
     public function store(Request $request)
     {
@@ -28,6 +24,11 @@ class CustomerController extends Controller
         ]);
         Customer::create($formFields);
         return redirect('/clienti')->with('message', 'Cliente inserito con successo');
+    }
+
+    public function create()
+    {
+        return view('customers.create');
     }
 
     public function edit(Customer $customer)

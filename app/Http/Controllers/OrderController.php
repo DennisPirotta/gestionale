@@ -7,18 +7,27 @@ use App\Models\Country;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Status;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Session;
 
 class OrderController extends Controller
 {
     // Visualizza tutte le commesse
-    public function index()
+    public function index(): Factory|View|Application
     {
         $commesse = Order::latest()->get();
-        if (request('customer')) $commesse = Order::latest()->filter(request(['customer']))->get();
-        elseif (request('search')) $commesse = Order::latest()->filter(request(['search']))->get();
-        elseif (request('company')) $commesse = Order::latest()->filter(request(['company']))->get();
+        if (request('customer')) {
+            $commesse = Order::latest()->filter(request(['customer']))->get();
+        } elseif (request('search')) {
+            $commesse = Order::latest()->filter(request(['search']))->get();
+        } elseif (request('company')) {
+            $commesse = Order::latest()->filter(request(['company']))->get();
+        }
 
         Session::put('require_navbar_tools', true);
 
@@ -29,7 +38,7 @@ class OrderController extends Controller
     }
 
     // Filtra per commessa
-    public function show(Order $order)
+    public function show(Order $order): Factory|View|Application
     {
         return view('orders.show', [
             'commessa' => $order
@@ -37,18 +46,8 @@ class OrderController extends Controller
     }
 
     // Mostra pagina per creare una nuova commessa
-    public function create()
-    {
-        return view('orders.create', [
-            'customers' => Customer::all(),
-            'countries' => Country::all(),
-            'companies' => Company::all(),
-            'statuses' => Status::all()
-        ]);
-    }
 
-    // Salva la nuova commessa
-    public function store(Request $request)
+    public function store(Request $request): Redirector|Application|RedirectResponse
     {
         $formFields = $request->validate([
             'company' => 'required',
@@ -72,8 +71,21 @@ class OrderController extends Controller
         return redirect('/commesse')->with('message', 'Commessa inserita con successo');
     }
 
+    // Salva la nuova commessa
+
+    public function create(): Factory|View|Application
+    {
+        return view('orders.create', [
+            'customers' => Customer::all(),
+            'countries' => Country::all(),
+            'companies' => Company::all(),
+            'statuses' => Status::all()
+        ]);
+    }
+
     // Mostra pagina per modificare una commessa
-    public function edit(Order $order)
+
+    public function edit(Order $order): Factory|View|Application
     {
         return view('orders.edit', [
             'commessa' => $order,
@@ -85,7 +97,7 @@ class OrderController extends Controller
     }
 
     // Modifica la commessa
-    public function update(Request $request, Order $order)
+    public function update(Request $request, Order $order): Redirector|Application|RedirectResponse
     {
         $formFields = $request->validate([
             'company' => 'required',
@@ -110,7 +122,7 @@ class OrderController extends Controller
     }
 
     // Elimina la commessa
-    public function destroy(Order $order)
+    public function destroy(Order $order): RedirectResponse
     {
         $order->delete();
         return back()->with('message', 'Commessa eliminata con successo');

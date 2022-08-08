@@ -27,7 +27,7 @@
                 <div class="input-group mb-3">
                     <label class="input-group-text" for="hour_type"><i class="bi bi-building me-2"></i>Tipologia</label>
                     <select class="form-select" id="hour_type" name="hour_type">
-                        <option value=null selected>Seleziona la tipologia</option>
+                        <option value='' selected>Seleziona la tipologia</option>
                         @foreach($hour_types as $hour_type)
                             <option value="{{$hour_type->id}}">{{$hour_type->description}}</option>
                         @endforeach
@@ -89,8 +89,9 @@
         $(function (){
             $('#contentDetails').hide()
             $('#hour_type').on('change', function() {
-                console.log("change")
-                $('#contentDetails').removeClass("visually-hidden")
+                if ($('#hour_type').find(':selected').val() !== '')
+                    $('#contentDetails').removeClass("visually-hidden")
+                else $('#contentDetails').addClass("visually-hidden")
             });
         })
     </script>

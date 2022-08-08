@@ -26,7 +26,7 @@
 </div>
 @if(session()->has('message'))
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             let t_el = document.getElementById("success_toast")
             let t = new bootstrap.Toast(t_el)
             t.show()
@@ -35,7 +35,7 @@
 @endif
 @if(session()->has('error'))
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             let t_el = document.getElementById("error_toast")
             let t = new bootstrap.Toast(t_el)
             t.show()

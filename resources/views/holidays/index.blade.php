@@ -71,7 +71,7 @@
                 initialView: 'dayGridMonth',
                 themeSystem: 'bootstrap5',
                 events: events,
-                eventDidMount: function (info){
+                eventDidMount: function (info) {
                     $(info.el).popover(
                         {
                             title: 'Dettagli',
@@ -117,7 +117,7 @@
                         toastEl = document.getElementById("error_toast")
 
                     toastEl.querySelector("div.toast-body").innerHTML = body.message
-                    $('#progressBar').css('width',`${body.perc}%`).text(`${body.perc}% rimasto`)
+                    $('#progressBar').css('width', `${body.perc}%`).text(`${body.perc}% rimasto`)
                     $('#hourLeft').text(body.left)
                     let toast = new bootstrap.Toast(toastEl)
                     toast.show()

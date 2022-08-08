@@ -5,7 +5,8 @@
         <a class="navbar-brand ms-2" href="{{ url('/') }}">
             {{ config('app.name')}}
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
             <span class="navbar-toggler-icon"></span>
         </button>
 
@@ -13,7 +14,8 @@
             <!-- Center Of Navbar -->
             @if(str_contains(str_replace('/',' ',request()->route()->uri),'commesse'))
                 <form class="d-flex ms-auto" role="search" method="get" action="/commesse">
-                    <input class="form-control me-2" type="search" placeholder="Cerca" aria-label="Search" name="search" required>
+                    <input class="form-control me-2" type="search" placeholder="Cerca" aria-label="Search" name="search"
+                           required>
                     <button class="btn btn-outline-success" type="submit"><i class="bi bi-search"></i></button>
                 </form>
             @endif
@@ -35,7 +37,8 @@
                     @endif
                 @else
                     <li class="nav-item dropdown">
-                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="" role="button"
+                           data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             {{ Auth::user()->name }}
                         </a>
 
@@ -55,7 +58,8 @@
                 @if(isset($require_navbar_tools))
                     <div class="navbar-nav ms-auto">
                         <a onclick="history.go(-1);"><i class="bi bi-arrow-counterclockwise fs-3 me-2 text-primary"></i></a>
-                        <a href="/{{explode("/",request()->route()->uri)[0]}}/create"><i class="bi bi-plus-square fs-3 me-2 text-success"></i></a>
+                        <a href="/{{explode("/",request()->route()->uri)[0]}}/create"><i
+                                class="bi bi-plus-square fs-3 me-2 text-success"></i></a>
                     </div>
                 @endif
             </ul>

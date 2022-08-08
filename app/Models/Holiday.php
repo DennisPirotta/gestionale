@@ -12,13 +12,14 @@ class Holiday extends Model
 {
     use HasFactory;
 
-    public static function getWorkingDays($from, $to) {
-        $holidayDays = [6,7]; # date format = N (1 = Monday, ...)
+    public static function getWorkingDays($from, $to)
+    {
+        $holidayDays = [6, 7]; # date format = N (1 = Monday, ...)
         //$holidayDays = ['']; # variable and fixed holidays
         if (gettype($from) === "string")
-            $from = DateTime::createFromFormat('Y-m-d',$from);
+            $from = DateTime::createFromFormat('Y-m-d', $from);
         if (gettype($to) === "string")
-            $to = DateTime::createFromFormat('Y-m-d',$to);
+            $to = DateTime::createFromFormat('Y-m-d', $to);
         //$to->modify('+1 day');
         $interval = DateInterval::createFromDateString('1 day');
         $periods = new DatePeriod($from, $interval, $to);

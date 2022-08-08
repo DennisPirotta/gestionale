@@ -1,11 +1,13 @@
 import loadash from 'lodash'
+import * as Popper from '@popperjs/core'
+import * as bootstrap from 'bootstrap'
+import axios from 'axios'
+
 window._ = loadash
 
 
-import * as Popper from '@popperjs/core'
 window.Popper = Popper
 
-import * as bootstrap from 'bootstrap'
 window.bootstrap = bootstrap
 
 /**
@@ -14,7 +16,6 @@ window.bootstrap = bootstrap
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-import axios from 'axios'
 window.axios = axios
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';

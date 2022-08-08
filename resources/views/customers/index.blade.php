@@ -22,7 +22,8 @@
                                     <form method="POST" action="/clienti/{{$customer['id']}}">
                                         @csrf
                                         @method('DELETE')
-                                        <button class="btn btn-outline-danger" onclick="return confirm('Sicuro di voler Eliminare?')">
+                                        <button class="btn btn-outline-danger"
+                                                onclick="return confirm('Sicuro di voler Eliminare?')">
                                             <i class="bi bi-trash me-1"></i>
                                             Elimina
                                         </button>

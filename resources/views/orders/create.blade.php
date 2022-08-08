@@ -9,7 +9,7 @@
                     <label class="input-group-text" for="inputGroupSelect01"><i class="bi bi-building me-2"></i>Compagnia</label>
                     <select class="form-select" id="inputGroupSelect01" name="company">
                         @foreach($companies as $company)
-                                <option value="{{$company->id}}">{{$company->name}}</option>
+                            <option value="{{$company->id}}">{{$company->name}}</option>
                         @endforeach
                     </select>
                 </div>
@@ -32,7 +32,8 @@
             </div>
             <div class=" col-md-4 col-sm-6">
                 <div class="input-group mb-3 col-md-4 col-sm-6">
-                    <label class="input-group-text" for="inputGroupSelect01"><i class="bi bi-globe2 me-2"></i>Paese</label>
+                    <label class="input-group-text" for="inputGroupSelect01"><i
+                            class="bi bi-globe2 me-2"></i>Paese</label>
                     <select class="form-select" id="inputGroupSelect01" name="country">
                         @foreach($countries as $country)
                             <option value="{{$country->id}}">{{$country->name}}</option>
@@ -117,7 +118,8 @@
             </div>
             <div class=" col-md-4 col-sm-6">
                 <div class="input-group mb-3 col-md-4 col-sm-6">
-                    <label class="input-group-text" for="inputGroupSelect01"><i class="bi bi-person me-2"></i>Cliente</label>
+                    <label class="input-group-text" for="inputGroupSelect01"><i
+                            class="bi bi-person me-2"></i>Cliente</label>
                     <select class="form-select" id="inputGroupSelect01" name="customer">
                         @unless(count($customers) == 0)
                             @foreach($customers as $customer)

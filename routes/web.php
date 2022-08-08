@@ -5,9 +5,6 @@ use App\Http\Controllers\FullCalenderController;
 use App\Http\Controllers\HolidayController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
-use App\Models\Event;
-use App\Models\Holiday;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -22,26 +19,26 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Auth::routes();
-Route::middleware(['auth'])->group(function (){
+Route::middleware(['auth'])->group(function () {
 
-/*
-*  GESTIONE ROUTES COMMESSE
-*/
+    /*
+    *  GESTIONE ROUTES COMMESSE
+    */
 
 // Mostra pagina commesse
     Route::get('/commesse', [OrderController::class, 'index']);
 
 // Mostra dettagli singola commessa
-    Route::get('/commesse/{order}', [OrderController::class, 'show'])->where('order','[0-9]+');
+    Route::get('/commesse/{order}', [OrderController::class, 'show'])->where('order', '[0-9]+');
 
 // Elimina Commessa
-    Route::delete('/commesse/{order}' , [OrderController::class, 'destroy']);
+    Route::delete('/commesse/{order}', [OrderController::class, 'destroy']);
 
 // Mostra pagina aggiungi commessa
-    Route::get('/commesse/create' , [OrderController::class, 'create']);
+    Route::get('/commesse/create', [OrderController::class, 'create']);
 
 // Aggiungi commessa
-    Route::post('/commesse' , [OrderController::class, 'store']);
+    Route::post('/commesse', [OrderController::class, 'store']);
 
 // Mostra pagina modifica commessa
     Route::get('/commesse/{order}/edit', [OrderController::class, 'edit']);
@@ -64,41 +61,41 @@ Route::middleware(['auth'])->group(function (){
     Route::get('/clienti', [CustomerController::class, 'index']);
 
     // Mostra pagina crea cliente
-    Route::get('/clienti/create',[CustomerController::class, 'create']);
+    Route::get('/clienti/create', [CustomerController::class, 'create']);
 
     // Mostra pagina clienti
     Route::post('/clienti', [CustomerController::class, 'store']);
 
     // Mostra pagina modifica
-    Route::get('/clienti/{customer}/edit',[CustomerController::class,'edit']);
+    Route::get('/clienti/{customer}/edit', [CustomerController::class, 'edit']);
 
     // Modifica cliente
     Route::put('/clienti/{customer}', [CustomerController::class, 'update']);
 
     // Elimina cliente
-    Route::delete('/clienti/{customer}',[CustomerController::class, 'destroy']);
+    Route::delete('/clienti/{customer}', [CustomerController::class, 'destroy']);
 
     /*
     *  GESTIONE ROUTES FERIE
     */
 
     // Mostra pannello con ferie rimanenti e calendario
-    Route::get('/ferie',[HolidayController::class, 'index']);
+    Route::get('/ferie', [HolidayController::class, 'index']);
 
     // Mostra pagina crea evento
-    Route::get('/ferie/create',[HolidayController::class, 'create']);
+    Route::get('/ferie/create', [HolidayController::class, 'create']);
 
     // Mostra pagina clienti
     Route::post('/ferie', [HolidayController::class, 'store']);
 
     // Mostra pagina modifica
-    Route::get('/ferie/{holiday}/edit',[HolidayController::class,'edit']);
+    Route::get('/ferie/{holiday}/edit', [HolidayController::class, 'edit']);
 
     // Modifica cliente
     Route::put('/ferie/{holiday}', [HolidayController::class, 'update']);
 
     // Elimina cliente
-    Route::delete('/ferie/{holiday}',[HolidayController::class, 'destroy']);
+    Route::delete('/ferie/{holiday}', [HolidayController::class, 'destroy']);
 
 });
 

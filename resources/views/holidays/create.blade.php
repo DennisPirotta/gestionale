@@ -31,29 +31,29 @@
         <div id='calendar'></div>
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             let calendarEl = document.getElementById('calendar')
-            let colors = ["rgba(215,239,79,0.84)","#497e29"];
-            let borders = ["rgb(250,192,0)","rgb(32,70,15)"];
-            let text = ["rgb(0,0,0)","rgb(255,255,255)"];
+            let colors = ["rgba(215,239,79,0.84)", "#497e29"];
+            let borders = ["rgb(250,192,0)", "rgb(32,70,15)"];
+            let text = ["rgb(0,0,0)", "rgb(255,255,255)"];
             let calendar = new FullCalendar.Calendar(calendarEl, {
                 contentHeight: 550,
                 initialView: 'dayGridMonth',
                 themeSystem: 'bootstrap5',
                 events: [
-                    @foreach($holidays as $event)
-                        {
-                            'title': "{{DB::table('users')->where('id',$event->user)->value('name')}}",
-                            'start': "{{$event->start}}",
-                            'end': "{{$event->end}}",
-                            'editable': true,
-                            'backgroundColor': colors[{{$event->approved}}],
-                            'borderColor': borders[{{$event->approved}}],
-                            'textColor': text[{{$event->approved}}],
-                        },
+                        @foreach($holidays as $event)
+                    {
+                        'title': "{{DB::table('users')->where('id',$event->user)->value('name')}}",
+                        'start': "{{$event->start}}",
+                        'end': "{{$event->end}}",
+                        'editable': true,
+                        'backgroundColor': colors[{{$event->approved}}],
+                        'borderColor': borders[{{$event->approved}}],
+                        'textColor': text[{{$event->approved}}],
+                    },
                     @endforeach
-                    ],
-                })
+                ],
+            })
             calendar.render()
         })
     </script>

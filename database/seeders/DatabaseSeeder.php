@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Customer;
-use App\Models\Event;
 use App\Models\Holiday;
 use App\Models\Order;
 use App\Models\User;
@@ -303,9 +302,9 @@ class DatabaseSeeder extends Seeder
         Order::factory(50)->create();
 
         User::factory()->create([
-             'name' => 'Dennis Pirotta',
-             'email' => 'dennispirotta@gmail.com',
-             'password' => Hash::make('pellio2014'),
-         ]);
+            'name' => 'Dennis Pirotta',
+            'email' => 'dennispirotta@gmail.com',
+            'password' => Hash::make('pellio2014'),
+        ]);
     }
 }

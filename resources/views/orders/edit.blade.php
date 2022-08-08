@@ -41,7 +41,8 @@
             </div>
             <div class=" col-md-4 col-sm-6">
                 <div class="input-group mb-3 col-md-4 col-sm-6">
-                    <label class="input-group-text" for="inputGroupSelect01"><i class="bi bi-globe2 me-2"></i>Paese</label>
+                    <label class="input-group-text" for="inputGroupSelect01"><i
+                            class="bi bi-globe2 me-2"></i>Paese</label>
                     <select class="form-select" id="inputGroupSelect01" name="country">
                         @foreach($countries as $country)
                             @if($country->id == $commessa->country)
@@ -59,7 +60,8 @@
             <div class=" col-md-4 col-sm-6">
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <span class="input-group-text"><i class="bi bi-clipboard-data me-2"></i>Descrizione</span>
-                    <input type="text" class="form-control" aria-label="Descrizione" name="description" value="{{$commessa->description}}">
+                    <input type="text" class="form-control" aria-label="Descrizione" name="description"
+                           value="{{$commessa->description}}">
                 </div>
                 @error('description')
                 <p class="text-danger fs-6">{{$message}}</p>
@@ -68,7 +70,8 @@
             <div class=" col-md-4 col-sm-6">
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <span class="input-group-text"><i class="bi bi-clock me-2"></i>Ore SW</span>
-                    <input type="number" class="form-control" aria-label="Descrizione" name="hourSW" value="{{$commessa->hourSW}}">
+                    <input type="number" class="form-control" aria-label="Descrizione" name="hourSW"
+                           value="{{$commessa->hourSW}}">
                 </div>
                 @error('hourSW')
                 <p class="text-danger fs-6">{{$message}}</p>
@@ -77,7 +80,8 @@
             <div class=" col-md-4 col-sm-6">
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <span class="input-group-text"><i class="bi bi-clock me-2"></i>Ore MS</span>
-                    <input type="number" class="form-control" aria-label="Descrizione" name="hourMS" value="{{$commessa->hourMS}}">
+                    <input type="number" class="form-control" aria-label="Descrizione" name="hourMS"
+                           value="{{$commessa->hourMS}}">
                 </div>
                 @error('hourMS')
                 <p class="text-danger fs-6">{{$message}}</p>
@@ -86,7 +90,8 @@
             <div class=" col-md-4 col-sm-6">
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <span class="input-group-text"><i class="bi bi-clock me-2"></i>Ore FAT</span>
-                    <input type="number" class="form-control" aria-label="Descrizione" name="hourFAT" value="{{$commessa->hourFAT}}">
+                    <input type="number" class="form-control" aria-label="Descrizione" name="hourFAT"
+                           value="{{$commessa->hourFAT}}">
                 </div>
                 @error('hourFAT')
                 <p class="text-danger fs-6">{{$message}}</p>
@@ -95,7 +100,8 @@
             <div class=" col-md-4 col-sm-6">
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <span class="input-group-text"><i class="bi bi-clock me-2"></i>Ore SAF</span>
-                    <input type="number" class="form-control" aria-label="Descrizione" name="hourSAF" value="{{$commessa->hourSAF}}">
+                    <input type="number" class="form-control" aria-label="Descrizione" name="hourSAF"
+                           value="{{$commessa->hourSAF}}">
                 </div>
                 @error('hourSAF')
                 <p class="text-danger fs-6">{{$message}}</p>
@@ -104,7 +110,8 @@
             <div class=" col-md-4 col-sm-6">
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <span class="input-group-text"><i class="bi bi-arrow-clockwise me-2"></i>Progressi</span>
-                    <input type="text" class="form-control" aria-label="Progressi" name="progress" value="{{$commessa->progress}}">
+                    <input type="text" class="form-control" aria-label="Progressi" name="progress"
+                           value="{{$commessa->progress}}">
                 </div>
                 @error('progress')
                 <p class="text-danger fs-6">{{$message}}</p>
@@ -113,7 +120,8 @@
             <div class=" col-md-4 col-sm-6">
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <span class="input-group-text"><i class="bi bi-calendar-check me-2"></i>Apertura</span>
-                    <input type="date" class="form-control" aria-label="Apertura" name="opening" value="{{$commessa->opening}}">
+                    <input type="date" class="form-control" aria-label="Apertura" name="opening"
+                           value="{{$commessa->opening}}">
                 </div>
                 @error('opening')
                 <p class="text-danger fs-6">{{$message}}</p>
@@ -122,7 +130,8 @@
             <div class=" col-md-4 col-sm-6">
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <span class="input-group-text"><i class="bi bi-calendar-x me-2"></i>Chiusura</span>
-                    <input type="date" class="form-control" aria-label="Chiusura" name="closing" value="{{$commessa->closing}}">
+                    <input type="date" class="form-control" aria-label="Chiusura" name="closing"
+                           value="{{$commessa->closing}}">
                 </div>
                 @error('closing')
                 <p class="text-danger fs-6">{{$message}}</p>
@@ -130,15 +139,16 @@
             </div>
             <div class=" col-md-4 col-sm-6">
                 <div class="input-group mb-3 col-md-4 col-sm-6">
-                    <label class="input-group-text" for="inputGroupSelect01"><i class="bi bi-person me-2"></i>Cliente</label>
+                    <label class="input-group-text" for="inputGroupSelect01"><i
+                            class="bi bi-person me-2"></i>Cliente</label>
                     <select class="form-select" id="inputGroupSelect01" name="customer">
-                            @foreach($customers as $customer)
-                                @if($customer->id == $commessa->customer)
-                                    <option value="{{$customer->id}}" selected>{{$customer->name}}</option>
-                                @else
-                                    <option value="{{$customer->id}}">{{$customer->name}}</option>
-                                @endif
-                            @endforeach
+                        @foreach($customers as $customer)
+                            @if($customer->id == $commessa->customer)
+                                <option value="{{$customer->id}}" selected>{{$customer->name}}</option>
+                            @else
+                                <option value="{{$customer->id}}">{{$customer->name}}</option>
+                            @endif
+                        @endforeach
                     </select>
                 </div>
                 @error('customer')

@@ -11,6 +11,9 @@ use App\Models\Status;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
 
 class HourController extends Controller
 {
@@ -24,7 +27,10 @@ class HourController extends Controller
         $formatted = [];
         foreach ($hours as $hour){
 
-            $content = $hour->description ?? null;
+            $start = explode(":",explode(" ",$hour->start)[1])[0] . ":" . explode(":",explode(" ",$hour->start)[1])[1];
+            $end = explode(":",explode(" ",$hour->end)[1])[0] . ":" . explode(":",explode(" ",$hour->end)[1])[1];
+
+            $content = "Inizio: <b>" . $start  . "</b><br> Fine: <b>" . $end . "</b>";
 
             $formatted[] = [
               'title' => $hoursType->where('id',$hour->hour_type)->pluck('description'),
@@ -51,12 +57,21 @@ class HourController extends Controller
             'statuses' => Status::all()
         ]);
     }
-    public function edit()
+    public function edit(): void
     {}
-    public function store()
+    public function store(Request $request): Redirector|Application|RedirectResponse
+    {
+        $data = $request->validate([
+            'start' => 'required',
+            'end' => 'required',
+        ]);
+        unset($data['_token'], $data['fi'], $data['night']);
+        Hour::create(array_merge($data,$request->except(['_token','fi','night'])));
+
+        return redirect('/ore')->with('message', 'Ore inserite con successo');
+    }
+    public function update(): void
     {}
-    public function update()
-    {}
-    public function destroy()
+    public function destroy(): void
     {}
 }

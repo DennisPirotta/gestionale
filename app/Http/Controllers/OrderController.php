@@ -61,8 +61,8 @@ class OrderController extends Controller
             'customer' => 'required',
         ]);
 
-        $formFields['innerCode'] = (Order::all()->last()->innerCode) + 1;
-        $formFields['outerCode'] = (Order::all()->last()->outerCode) + 1;
+        $formFields['innerCode'] = (Order::latest()->first()->innerCode) + 1;
+        $formFields['outerCode'] = (Order::latest()->first()->outerCode) + 1;
 
         $formFields['manager'] = auth()->user()->id;
 

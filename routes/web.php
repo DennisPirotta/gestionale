@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CalenderController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\HolidayController;
 use App\Http\Controllers\HomeController;
@@ -117,5 +118,8 @@ Route::middleware(['auth'])->group(function () {
 
     // Elimina ore
     Route::delete('/ore/{hour}', [HourController::class, 'destroy']);
+
+
+
 
 });

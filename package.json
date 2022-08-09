@@ -18,6 +18,10 @@
     "dependencies": {
         "bootstrap": "^5.2.0",
         "fullcalendar": "^5.11.2",
+        "moment": "^2.29.4",
+        "moment-business": "^3.0.1",
+        "moment-business-days": "^1.2.0",
+        "patch-package": "^6.4.7",
         "superagent": "^8.0.0",
         "watch": "^0.13.0",
         "webextension-polyfill": "^0.9.0"

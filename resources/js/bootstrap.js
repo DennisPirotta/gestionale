@@ -1,13 +1,16 @@
 import loadash from 'lodash'
 import * as Popper from '@popperjs/core'
 import * as bootstrap from 'bootstrap'
+import moment from "moment";
+import business from "moment-business";
 import axios from 'axios'
 
 window._ = loadash
 
 
 window.Popper = Popper
-
+window.moment = moment
+window.business = business
 window.bootstrap = bootstrap
 
 /**

@@ -25,20 +25,20 @@
                                 @if($status->id === $commessa->status)
                                     <div class="col-sm-6 col-md-4 mb-3">
                                         <div
-                                            class="card h-100 bg-opacity-25 bg-{{DB::table('statuses')->where('id',$commessa['status'])->value('color')}}">
+                                            class="card h-100 bg-opacity-25 bg-{{$statuses->where('id',$commessa['status'])->value('color')}}">
                                             <!--  bg-black bg-opacity-25 -->
                                             <div class="card-body">
                                                 <i class="bi bi-building"></i>
                                                 <span class="card-title">Commessa {{$commessa['id']}}</span>
-                                                <a href="?company={{urlencode(DB::table('companies')->where('id',$commessa['company'])->value('name'))}}">
+                                                <a href="?company={{urlencode($companies->where('id',$commessa['company'])->value('name'))}}">
                                                     @if($commessa->company === 1)
                                                         <span class="badge text-bg-primary bg-opacity-100">3D</span>
                                                     @else
                                                         <span class="badge text-bg-success bg-opacity-100">S+H</span>
                                                     @endif
                                                 </a>
-                                                <a href="?customer={{DB::table('customers')->where('id',$commessa['customer'])->value('name')}}">
-                                                    <h6 class="card-subtitle my-2 text-muted">{{DB::table('customers')->where('id',$commessa['customer'])->value('name')}}</h6>
+                                                <a href="?customer={{$customers->where('id',$commessa['customer'])->value('name')}}">
+                                                    <h6 class="card-subtitle my-2 text-muted">{{$customers->where('id',$commessa['customer'])->value('name')}}</h6>
                                                 </a>
                                                 <p class="card-text">{{$commessa['description']}}</p>
                                                 <div class="d-flex justify-content-center">

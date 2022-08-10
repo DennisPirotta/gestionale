@@ -11,6 +11,8 @@
 |
 */
 
+use Cmixin\BusinessTime;
+
 $app = new Illuminate\Foundation\Application(
     $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
 );
@@ -51,5 +53,16 @@ $app->singleton(
 | from the actual running of the application and sending responses.
 |
 */
+
+// Enable BusinessTime option for Carbon
+BusinessTime::enable('Illuminate\Support\Carbon', [
+    'monday' => ['08:00-12:30', '13:30-17:00'],
+    'tuesday' => ['08:00-12:30', '13:30-17:00'],
+    'wednesday' => ['08:00-12:30', '13:30-17:00'],
+    'thursday' => ['08:00-12:30', '13:30-17:00'],
+    'friday' => ['08:00-12:30', '13:30-17:00'],
+    'saturday' => [],
+    'sunday' => [],
+]);
 
 return $app;

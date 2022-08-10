@@ -9,12 +9,14 @@
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
+        "cmixin/business-time": "^1.11",
         "doctrine/dbal": "^3.4",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^2.14.1",
         "laravel/tinker": "^2.7",
-        "laravel/ui": "^4.0"
+        "laravel/ui": "^4.0",
+        "nesbot/carbon": "^2.61"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.7",

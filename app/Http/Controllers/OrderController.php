@@ -13,7 +13,6 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
-use Illuminate\Support\Facades\Session;
 
 class OrderController extends Controller
 {
@@ -29,11 +28,11 @@ class OrderController extends Controller
             $commesse = Order::latest()->filter(request(['company']))->get();
         }
 
-        Session::put('require_navbar_tools', true);
-
         return view('orders.index', [
             'commesse' => $commesse,
-            'statuses' => Status::all()
+            'statuses' => Status::all(),
+            'companies' => Company::all(),
+            'customers' => Customer::all()
         ]);
     }
 

@@ -1,9 +1,5 @@
 @extends('layouts.app')
 @section('content')
-
-    @php($used = 0)
-    @php($percentage = 0)
-
     <div class="container mt-3 mb-1 shadow-sm p-5">
         <div class="row text-center">
             <div class="col-sm-12 col-lg-5 mb-3">
@@ -13,15 +9,18 @@
                         <span class="card-title fs-3">{{auth()->user()->name}}</span>
                         <hr class="w-50 mx-auto mt-0">
 
-                        <p class="card-text">Giorni di ferie rimasti: <b
-                                id="hourLeft">{{auth()->user()->holidays - $used}}</b></p>
+                        <p class="card-text">
+                            Ore di ferie rimaste:
+                            <b id="hourLeft">{{$left_hours}}</b>
+                            ( <b id="daysLeft">{{$left_hours/8}}</b> Giorni )
+                        </p>
 
                         <div class="progress my-3">
                             <div id="progressBar" class="progress-bar" role="progressbar"
                                  aria-label="Example with label"
-                                 style="width: {{$percentage}}%" aria-valuenow="50" aria-valuemin="0"
+                                 style="width: {{($left_hours*100)/160}}%" aria-valuenow="50" aria-valuemin="0"
                                  aria-valuemax="100">
-                                {{$percentage}}% rimasto
+                                {{($left_hours*100)/160}}% rimasto
                             </div>
                         </div>
                         <div class="d-flex justify-content-center">
@@ -103,7 +102,6 @@
                     startTime: '8:00',
                     endTime: '17:00',
                 },
-
                 headerToolbar: {
                     left: 'prev next today',
                     center: 'title',
@@ -125,87 +123,14 @@
                         }
                     ).popover().show()
                 },
-                eventDrop: async function (eventInfo) {
-                    const token = document.querySelector('meta[name="csrf-token"]').content;
-                    let res = await fetch(`/ferie/${eventInfo.event.id}`, {
-                        method: 'POST',
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Accept": "application/json, text/plain, */*",
-                            "X-Requested-With": "XMLHttpRequest",
-                            "X-CSRF-TOKEN": token,
-                        },
-                        credentials: "same-origin",
-                        body: JSON.stringify(
-                            {
-                                "_token": token,
-                                "_method": "PUT",
-                                "id": eventInfo.event.id,
-                                "start": eventInfo.event.start,
-                                "end": eventInfo.event.end,
-                                "old_start": eventInfo.oldEvent.start,
-                                "old_end": eventInfo.oldEvent.end,
-                            }
-                        ),
-                    })
-                    let body = await res.json()
-                    console.log(body)
-                    let toastEl
-                    if (res.status === 200)
-                        toastEl = document.getElementById("success_toast")
-                    else if (res.status === 500)
-                        toastEl = document.getElementById("error_toast")
-
-                    toastEl.querySelector("div.toast-body").innerHTML = body.message
-                    $('#progressBar').css('width', `${body.perc}%`).text(`${body.perc}% rimasto`)
-                    $('#hourLeft').text(body.left)
-                    let toast = new bootstrap.Toast(toastEl)
-                    toast.show()
-
-                },
+                eventDrop: updateEvent,
                 select: function (info) {
                     console.log(moment(info.start).format('YYYY-MM-DD'))
                     $('#myModal').modal('toggle')
                     $('input[name="start"]').val(moment(info.start).format('YYYY-MM-DD'))
                     $('input[name="end"]').val(moment(info.end).format('YYYY-MM-DD'))
                 },
-                eventResize: async function (eventInfo) {
-                    const token = document.querySelector('meta[name="csrf-token"]').content;
-                    let res = await fetch(`/ferie/${eventInfo.event.id}`, {
-                        method: 'POST',
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Accept": "application/json, text/plain, */*",
-                            "X-Requested-With": "XMLHttpRequest",
-                            "X-CSRF-TOKEN": token,
-                        },
-                        credentials: "same-origin",
-                        body: JSON.stringify(
-                            {
-                                "_token": token,
-                                "_method": "PUT",
-                                "id": eventInfo.event.id,
-                                "start": eventInfo.event.start,
-                                "end": eventInfo.event.end,
-                                "old_start": eventInfo.oldEvent.start,
-                                "old_end": eventInfo.oldEvent.end,
-                            }
-                        ),
-                    })
-                    let body = await res.json()
-                    console.log(body)
-                    let toastEl
-                    if (res.status === 200)
-                        toastEl = document.getElementById("success_toast")
-                    else if (res.status === 500)
-                        toastEl = document.getElementById("error_toast")
-
-                    toastEl.querySelector("div.toast-body").innerHTML = body.message
-                    $('#progressBar').css('width', `${body.perc}%`).text(`${body.perc}% rimasto`)
-                    $('#hourLeft').text(body.left)
-                    let toast = new bootstrap.Toast(toastEl)
-                    toast.show()
-                },
+                eventResize: updateEvent
             })
             calendar.render()
         })

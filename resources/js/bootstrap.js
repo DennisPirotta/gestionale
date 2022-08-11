@@ -2,16 +2,17 @@ import loadash from 'lodash'
 import * as Popper from '@popperjs/core'
 import * as bootstrap from 'bootstrap'
 import moment from "moment";
-import business from "moment-business";
+import business from "moment-business"
 import axios from 'axios'
+import DOMPurify from 'isomorphic-dompurify'
+
 
 window._ = loadash
-
-
 window.Popper = Popper
 window.moment = moment
 window.business = business
 window.bootstrap = bootstrap
+window.DOMPurify = DOMPurify
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests

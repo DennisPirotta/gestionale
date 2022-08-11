@@ -1,6 +1,7 @@
 import './bootstrap'
 import '../sass/app.scss'
 import '../css/app.css'
+import DOMPurify from "isomorphic-dompurify";
 
 window.updateEvent = async function (eventInfo) {
     const token = document.querySelector('meta[name="csrf-token"]').content;
@@ -35,7 +36,7 @@ window.updateEvent = async function (eventInfo) {
         eventInfo.revert()
     }
 
-    $(toastEl).find("div.toast-body").html(body.message)
+    $(toastEl).find("div.toast-body").html(DOMPurify.sanitize(body.message))
     $('#progressBar').css('width', `${body.perc}%`).text(`${body.perc}% rimasto`)
     $('#hourLeft').text(body.left)
     $('#daysLeft').text((body.left / 8))

@@ -18,6 +18,7 @@
     "dependencies": {
         "bootstrap": "^5.2.0",
         "fullcalendar": "^5.11.2",
+        "isomorphic-dompurify": "^0.20.0",
         "moment": "^2.29.4",
         "moment-business": "^3.0.1",
         "moment-business-days": "^1.2.0",

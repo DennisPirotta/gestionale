@@ -15,6 +15,7 @@ return new class extends Migration {
         Schema::create('holidays', function (Blueprint $table) {
             $table->id();
             $table->boolean('approved')->default(false);
+            $table->boolean('allDay')->default(true);
             $table->timestamps();
 
             $table->foreignId('user')

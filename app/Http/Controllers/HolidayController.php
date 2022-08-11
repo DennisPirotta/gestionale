@@ -16,6 +16,7 @@ class HolidayController extends Controller
     {
         $events = [];
         $users = User::select('id', 'name')->get();
+        $hours = Hour::all();
 
         foreach (Holiday::all() as $holiday) {
             $editable = false;
@@ -37,15 +38,15 @@ class HolidayController extends Controller
 
             $events[] = [
                 'title' => $title,
-                'start' => $holiday->start,
-                'end' => $holiday->end,
+                'start' => $hours->where('holiday',$holiday->id)->value('start'),
+                'end' => $hours->where('holiday',$holiday->id)->value('end'),
                 'id' => $holiday->id,
                 'user' => $user,
                 'editable' => $editable,
                 'color' => $color,
                 'textColor' => $text,
                 'borderColor' => $border,
-                'allDay' => true,
+                'allDay' => $holiday->allDay,
             ];
         }
 
@@ -57,18 +58,20 @@ class HolidayController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'start' => 'required',
-            'end' => 'required',
-        ]);
-        $data['user'] = auth()->user()->id;
-
         if (!Holiday::isValid($request)) {
             return redirect('/ferie')->with('error', 'Disponibilità di ferie insufficente');
         }
 
-        $holiday = Holiday::create($data);
-        unset($data['user']);
+        $data = $request->validate([
+            'start' => 'required',
+            'end' => 'required',
+        ]);
+
+        $holiday = Holiday::create([
+            'user' => auth()->user()->id,
+            'allDay' => true
+        ]);
+
         $data['holiday'] = $holiday->id;
         Hour::create($data);
 
@@ -94,11 +97,6 @@ class HolidayController extends Controller
                 401
             );
         }
-
-        $holiday->update([
-            'start' => new DateTime($request->start),
-            'end' => new DateTime($request->end)
-        ]);
 
         Hour::where('holiday',$holiday->id)->update([
             'start' => new DateTime($request->start),

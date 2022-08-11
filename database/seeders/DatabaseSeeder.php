@@ -4,7 +4,9 @@ namespace Database\Seeders;
 
 use App\Models\Customer;
 use App\Models\Holiday;
+use App\Models\Hour;
 use App\Models\Order;
+use App\Models\TechnicalReport;
 use App\Models\User;
 use Doctrine\DBAL\Exception;
 use Illuminate\Database\Seeder;
@@ -321,6 +323,8 @@ class DatabaseSeeder extends Seeder
         User::factory(10)->create();
         Holiday::factory(30)->create();
         Order::factory(50)->create();
+        TechnicalReport::factory(20)->create();
+        Hour::factory(20)->create();
 
 
         User::factory()->create([

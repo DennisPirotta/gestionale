@@ -17,13 +17,10 @@ class HolidayFactory extends Factory
      */
     public function definition()
     {
-        $start = fake()->dateTimeThisYear;
-        $end = fake()->dateTimeInInterval($start, "+5 days");
         return [
-            'start' => $start,
-            'end' => $end,
             'approved' => fake()->boolean,
-            'user' => User::all()->random()->id
+            'user' => User::all()->random()->id,
+            'allDay' => fake()->boolean
         ];
     }
 }

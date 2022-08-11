@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->bigInteger('innerCode');
             $table->bigInteger('outerCode');
             $table->string('description');
-            $table->integer('hourSW');
+            $table->integer('hourSW')->default(0);
             $table->integer('hourMS')->default(0);
             $table->integer('hourFAT')->default(0);
             $table->integer('hourSAF')->default(0);

@@ -69,7 +69,6 @@ class HolidayController extends Controller
 
         $holiday = Holiday::create($data);
         unset($data['user']);
-        $data['hour_type'] = 6; // 6 = Ferie
         $data['holiday'] = $holiday->id;
         Hour::create($data);
 
@@ -121,6 +120,7 @@ class HolidayController extends Controller
     {
         if ($holiday->user === auth()->user()->id) {
             $holiday->delete();
+            Hour::where('id',$holiday->id)->delete();
             return back()->with('message', 'Ferie eliminate con successo');
         }
         return back()->with('error', 'Puoi modificare solo le tue ferie');

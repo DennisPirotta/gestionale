@@ -1,7 +1,9 @@
 <nav class="navbar navbar-expand-lg fixed-top bg-light shadow-sm">
     <div class="container-fluid">
-        <a href="{{url('/')}}" class="mx-1"><img src="{{asset("images/logo_3d.jpg")}}" width="30" alt=""/></a>
-        <a href="{{url('/')}}" class="mx-1"><img src="{{asset("images/logo_sph.png")}}" width="30" alt=""/></a>
+        <div>
+            <a href="{{url('/')}}" class="me-1"><img src="{{asset("images/logo_3d.svg")}}" width="30" alt=""/></a>
+            <a href="{{url('/')}}"><img src="{{asset("images/logo_sph.svg")}}" width="30" alt=""/></a>
+        </div>
         <a class="navbar-brand ms-2" href="{{ url('/') }}">
             {{ config('app.name')}}
         </a>

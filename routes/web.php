@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\CalenderController;
+use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\HolidayController;
 use App\Http\Controllers\HomeController;
@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Auth::routes();
+Auth::routes(['verify' => true]);
 Route::middleware(['auth'])->group(function () {
 
     /*
@@ -120,6 +121,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/ore/{hour}', [HourController::class, 'destroy']);
 
 
-
+    Route::get('change-password', [ChangePasswordController::class, 'index']);
+    Route::post('change-password', [ChangePasswordController::class, 'store']);
 
 });

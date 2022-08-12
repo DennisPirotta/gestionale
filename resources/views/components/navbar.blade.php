@@ -48,7 +48,10 @@
                             <a class="dropdown-item" href="{{ route('logout') }}"
                                onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                {{ __('Logout') }}
+                                <i class="bi bi-box-arrow-left me-2"></i>{{ __('Logout') }}
+                            </a>
+                            <a class="dropdown-item" href="{{ url('/change-password') }}" >
+                                <i class="bi bi-key me-2"></i>Cambia password
                             </a>
 
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">

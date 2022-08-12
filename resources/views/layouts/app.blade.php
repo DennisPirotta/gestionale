@@ -14,7 +14,8 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.min.css">
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    <link rel="icon" sizes="96x96" href="{{asset('images/favicon.png')}}">
+    @vite(['resources/js/app.js'])
 
 </head>
 <body>

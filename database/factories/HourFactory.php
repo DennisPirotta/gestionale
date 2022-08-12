@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\Holiday;
 use App\Models\Order;
 use App\Models\TechnicalReport;
 use Exception;
@@ -21,27 +20,22 @@ class HourFactory extends Factory
      */
     public function definition(): array
     {
-        $order = 0;
-        $holiday = 0;
-        $report = 0;
+        $order = null;
+        $holiday = null;
+        $report = null;
+        $description = null;
 
         switch (random_int(0,2)){
             case 0: {
                 $order = Order::all()->random()->id;
-                $holiday = null;
-                $report = null;
                 break;
             }
             case 1: {
-                $order = null;
-                $holiday = Holiday::all()->random()->id;
-                $report = null;
+                $report = TechnicalReport::all()->random()->id;
                 break;
             }
             case 2: {
-                $order = null;
-                $holiday = null;
-                $report = TechnicalReport::all()->random()->id;
+                $description = fake()->text(20);
                 break;
             }
         }
@@ -53,7 +47,8 @@ class HourFactory extends Factory
             'end' => fake()->dateTimeInInterval($start,"+10 days"),
             'order' => $order,
             'report' => $report,
-            'holiday' => $holiday
+            'holiday' => $holiday,
+            'description' => $description
         ];
     }
 }

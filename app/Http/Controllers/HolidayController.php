@@ -8,6 +8,8 @@ use App\Models\User;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Log;
 
 class HolidayController extends Controller
 {
@@ -36,10 +38,18 @@ class HolidayController extends Controller
                 $border = 'rgb(32,70,15)';
             }
 
+            $start = new DateTime($hours->where('holiday',$holiday->id)->value('start'));
+            $end = new DateTime($hours->where('holiday',$holiday->id)->value('end'));
+
+            Log::channel('dev')->info("q-start " . $hours->where('holiday',$holiday->id)->value('start'));
+            Log::channel('dev')->info("q-end " . $hours->where('holiday',$holiday->id)->value('end'));
+            Log::channel('dev')->info("var-start " . $start->format('Y-m-d'));
+            Log::channel('dev')->info("var-end " . $end->format('Y-m-d'));
+
             $events[] = [
                 'title' => $title,
-                'start' => $hours->where('holiday',$holiday->id)->value('start'),
-                'end' => $hours->where('holiday',$holiday->id)->value('end'),
+                'start' => $start->modify('+1 day')->format('Y-m-d'),
+                'end' => $end->format('Y-m-d'),
                 'id' => $holiday->id,
                 'user' => $user,
                 'editable' => $editable,
@@ -125,4 +135,3 @@ class HolidayController extends Controller
     }
 
 }
-

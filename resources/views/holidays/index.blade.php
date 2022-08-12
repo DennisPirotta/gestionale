@@ -97,6 +97,7 @@
                 themeSystem: 'bootstrap5',
                 selectable: true,
                 editable: true,
+                longPressDelay: 1000,
                 businessHours: {
                     daysOfWeek: [1, 2, 3, 4, 5], // Lunedì - Venerdì
                     startTime: '8:00',
@@ -125,10 +126,9 @@
                 },
                 eventDrop: updateEvent,
                 select: function (info) {
-                    console.log(moment(info.start).format('YYYY-MM-DD'))
                     $('#myModal').modal('toggle')
-                    $('input[name="start"]').val(moment(info.start).format('YYYY-MM-DD'))
-                    $('input[name="end"]').val(moment(info.end).format('YYYY-MM-DD'))
+                    $('input[name="start"]').val(info.startStr)
+                    $('input[name="end"]').val(info.endStr)
                 },
                 eventResize: updateEvent
             })

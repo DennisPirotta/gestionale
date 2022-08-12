@@ -321,11 +321,19 @@ class DatabaseSeeder extends Seeder
 
         Customer::factory(10)->create();
         User::factory(10)->create();
-        Holiday::factory(30)->create();
         Order::factory(50)->create();
         TechnicalReport::factory(20)->create();
         Hour::factory(20)->create();
+        Holiday::factory(30)->create();
 
+        foreach (Holiday::all() as $holiday){
+            $start = fake()->dateTimeThisYear;
+            Hour::create([
+                'start' => $start,
+                'end' => fake()->dateTimeInInterval($start,'+15 days'),
+                'holiday' => $holiday->id
+            ]);
+        }
 
         User::factory()->create([
             'name' => 'Dennis Pirotta',

@@ -21,7 +21,6 @@ class HourController extends Controller
     {
 
         $hours = Hour::all();
-        $hoursType = HourType::all();
 
 
         $formatted = [];
@@ -32,8 +31,21 @@ class HourController extends Controller
 
             $content = "Inizio: <b>" . $start  . "</b><br> Fine: <b>" . $end . "</b>";
 
+            $title = "";
+            if ($hour->order !== null){
+                $title = 'Commessa';
+            }
+            if ($hour->report !== null){
+                $title = 'FI';
+            }
+            if ($hour->description !== null){
+                $title = 'Altro';
+            }if ($hour->holiday !== null){
+                $title = 'Ferie';
+            }
+
             $formatted[] = [
-              'title' => $hoursType->where('id',$hour->hour_type)->pluck('description'),
+              'title' => $title,
               'start' => $hour->start,
               'end' => $hour->end,
               'extendedProps' => [

@@ -16,10 +16,19 @@
                     center: 'title',
                     right: 'dayGridMonth,timeGridDay,dayGridWeek'
                 },
-                contentHeight: 550,
+                contentHeight: 'auto',
+                nowIndicator: true,
+                slotDuration: '1:00',
+                slotMinTime: '8:00',
+                slotMaxTime: '18:00',
+                selectable: true,
+                editable: true,
                 initialView: 'dayGridWeek',
                 themeSystem: 'bootstrap5',
                 events: hours,
+                select: function (info){
+                    console.log(info)
+                },
                 eventDidMount: function (info) {
                     $(info.el).popover(
                         {

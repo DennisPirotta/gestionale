@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\Holiday;
 use App\Models\Hour;
 use App\Models\HourType;
 use App\Models\JobType;
 use App\Models\Order;
 use App\Models\Status;
+use App\Models\User;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -32,22 +34,25 @@ class HourController extends Controller
             $content = "Inizio: <b>" . $start  . "</b><br> Fine: <b>" . $end . "</b>";
 
             $title = "";
+            $allDay = false;
             if ($hour->order !== null){
-                $title = 'Commessa';
+                $title = 'Commessa - ';
             }
             if ($hour->report !== null){
-                $title = 'FI';
+                $title = 'FI - ';
             }
             if ($hour->description !== null){
-                $title = 'Altro';
+                $title = 'Altro - ';
             }if ($hour->holiday !== null){
-                $title = 'Ferie';
+                $allDay = Holiday::where('id',$hour->holiday)->pluck('allDay');
+                $title = 'Ferie - ';
             }
 
             $formatted[] = [
-              'title' => $title,
+              'title' => $title . User::where('id',$hour->user)->pluck('name'),
               'start' => $hour->start,
               'end' => $hour->end,
+              'allDay' => $allDay,
               'extendedProps' => [
                   'content' => $content
               ]

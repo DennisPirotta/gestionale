@@ -45,6 +45,14 @@ return new class extends Migration {
                 ->cascadeOnUpdate();
 
 
+            // per ferie
+            $table->foreignId('user')
+                ->nullable() // da rimuovere !!!!
+                ->constrained('users')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
+
+
 
         });
     }

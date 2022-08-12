@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Order;
 use App\Models\TechnicalReport;
+use App\Models\User;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -48,7 +49,8 @@ class HourFactory extends Factory
             'order' => $order,
             'report' => $report,
             'holiday' => $holiday,
-            'description' => $description
+            'description' => $description,
+            'user' => User::all()->random()->id,
         ];
     }
 }

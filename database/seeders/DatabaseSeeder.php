@@ -327,10 +327,10 @@ class DatabaseSeeder extends Seeder
         Holiday::factory(30)->create();
 
         foreach (Holiday::all() as $holiday){
-            $start = fake()->dateTimeThisYear;
+            $start = fake()->dateTimeThisYear->setTime(0,0);
             Hour::create([
                 'start' => $start,
-                'end' => fake()->dateTimeInInterval($start,'+15 days'),
+                'end' => fake()->dateTimeInInterval($start,'+15 days')->setTime(0,0),
                 'holiday' => $holiday->id
             ]);
         }

@@ -38,18 +38,10 @@ class HolidayController extends Controller
                 $border = 'rgb(32,70,15)';
             }
 
-            $start = new DateTime($hours->where('holiday',$holiday->id)->value('start'));
-            $end = new DateTime($hours->where('holiday',$holiday->id)->value('end'));
-
-            Log::channel('dev')->info("q-start " . $hours->where('holiday',$holiday->id)->value('start'));
-            Log::channel('dev')->info("q-end " . $hours->where('holiday',$holiday->id)->value('end'));
-            Log::channel('dev')->info("var-start " . $start->format('Y-m-d'));
-            Log::channel('dev')->info("var-end " . $end->format('Y-m-d'));
-
             $events[] = [
                 'title' => $title,
-                'start' => $start->modify('+1 day')->format('Y-m-d'),
-                'end' => $end->format('Y-m-d'),
+                'start' => $hours->where('holiday',$holiday->id)->value('start'),
+                'end' => $hours->where('holiday',$holiday->id)->value('end'),
                 'id' => $holiday->id,
                 'user' => $user,
                 'editable' => $editable,
@@ -72,17 +64,16 @@ class HolidayController extends Controller
             return redirect('/ferie')->with('error', 'Disponibilità di ferie insufficente');
         }
 
-        $data = $request->validate([
-            'start' => 'required',
-            'end' => 'required',
-        ]);
-
         $holiday = Holiday::create([
             'user' => auth()->user()->id,
             'allDay' => true
         ]);
 
+        $data = [];
         $data['holiday'] = $holiday->id;
+        $data['start'] = new DateTime($request->start);
+        $data['end'] = new DateTime($request->end);
+
         Hour::create($data);
 
         return redirect('/ferie')->with('message', 'Ferie richieste con successo, usate <b>' . abs(Carbon::parse($request->start)->diffInBusinessHours($request->end)) . "</b> ore");
@@ -101,7 +92,7 @@ class HolidayController extends Controller
             return response(
                 json_encode([
                     'message' => 'Disponibilità di ferie insufficente',
-                    'perc' => Holiday::getLeftHours() * 100 / 160,
+                    'perc' => Holiday::getLeftHours() * 100 / auth()->user()->holidays,
                     'left' => Holiday::getLeftHours()
                 ]),
                 401

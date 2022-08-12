@@ -63,7 +63,7 @@
                             <div class="col-md-6 col-sm-12">
                                 <div class="input-group mb-3 col-md-4 col-sm-6">
                                     <span class="input-group-text"><i class="bi bi-calendar me-2"></i>Inizio</span>
-                                    <input type="date" class="form-control" aria-label="Inizio" name="start">
+                                    <input type="date" class="form-control" aria-label="Inizio" name="start" required>
                                 </div>
                                 @error('start')
                                 <p class="text-danger fs-6">{{$message}}</p>
@@ -72,7 +72,7 @@
                             <div class="col-md-6 col-sm-12">
                                 <div class="input-group mb-3 col-md-4 col-sm-6">
                                     <span class="input-group-text"><i class="bi bi-calendar me-2"></i>Fine</span>
-                                    <input type="date" class="form-control" aria-label="Fine" name="end">
+                                    <input type="date" class="form-control" aria-label="Fine" name="end" required>
                                 </div>
                                 @error('end')
                                 <p class="text-danger fs-6">{{$message}}</p>
@@ -97,6 +97,7 @@
                 themeSystem: 'bootstrap5',
                 selectable: true,
                 editable: true,
+                locale: 'it',
                 longPressDelay: 1000,
                 businessHours: {
                     daysOfWeek: [1, 2, 3, 4, 5], // Lunedì - Venerdì

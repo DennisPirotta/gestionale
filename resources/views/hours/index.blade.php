@@ -23,6 +23,7 @@
                 slotMaxTime: '18:00',
                 selectable: true,
                 editable: true,
+                allDaySlot: true,
                 initialView: 'dayGridWeek',
                 themeSystem: 'bootstrap5',
                 events: hours,

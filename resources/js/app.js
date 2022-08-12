@@ -4,6 +4,7 @@ import '../css/app.css'
 import DOMPurify from "isomorphic-dompurify";
 
 window.updateEvent = async function (eventInfo) {
+    console.log(eventInfo)
     const token = document.querySelector('meta[name="csrf-token"]').content;
     let res = await fetch(`/ferie/${eventInfo.event.id}`, {
         method: 'POST',
@@ -19,10 +20,11 @@ window.updateEvent = async function (eventInfo) {
                 "_token": token,
                 "_method": "PUT",
                 "id": eventInfo.event.id,
-                "start": eventInfo.event.start,
-                "end": eventInfo.event.end,
+                "start": moment(eventInfo.event.start).add(1,"d"),
+                "end": moment(eventInfo.event.end).add(1,"d"),
                 "old_start": eventInfo.oldEvent.start,
                 "old_end": eventInfo.oldEvent.end,
+                "allDay": eventInfo.el.fcSeg.eventRange.def.allDay
             }
         ),
     })

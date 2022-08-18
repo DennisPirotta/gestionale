@@ -18,8 +18,8 @@ return new class extends Migration {
             $table->boolean('allDay')->default(true);
             $table->timestamps();
 
-            $table->foreignId('user')
-                ->constrained('users')
+            $table->foreignId('user_id')
+                ->constrained()
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
         });

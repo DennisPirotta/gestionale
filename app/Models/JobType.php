@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class JobType extends Model
 {
     use HasFactory;
+
+    public function order(){
+        return $this->hasMany(Order::class,'job_type_id');
+    }
 }

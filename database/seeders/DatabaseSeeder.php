@@ -8,11 +8,11 @@ use App\Models\Hour;
 use App\Models\Order;
 use App\Models\TechnicalReport;
 use App\Models\User;
+use DateTime;
 use Doctrine\DBAL\Exception;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Schema;
 
 class DatabaseSeeder extends Seeder
 {
@@ -24,10 +24,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        Schema::disableForeignKeyConstraints();
-        $tableNames = Schema::getConnection()->getDoctrineSchemaManager()->listTableNames();
-        foreach ($tableNames as $name) { DB::table($name)->truncate(); }
-        Schema::enableForeignKeyConstraints();
 
         $jobTypes = [
           ['description' => 'Sviluppo Software', 'color' => 'light'],
@@ -331,7 +327,8 @@ class DatabaseSeeder extends Seeder
             Hour::create([
                 'start' => $start,
                 'end' => fake()->dateTimeInInterval($start,'+15 days')->setTime(0,0),
-                'holiday' => $holiday->id
+                'hour_type' => 6,
+                'user' => $holiday->user->id
             ]);
         }
 
@@ -340,5 +337,10 @@ class DatabaseSeeder extends Seeder
             'email' => 'dennispirotta@gmail.com',
             'password' => Hash::make('pellio2014'),
         ]);
+
+        DB::table('access_keys')->insert([
+            'key' => Hash::make('3DAutomation')
+        ]);
+
     }
 }

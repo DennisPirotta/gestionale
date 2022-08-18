@@ -62,7 +62,7 @@
                     <div class="card-body">
                         <i class="bi bi-battery-charging fs-3"></i>
                         <p class="card-title">Progressi</p>
-                        <b>{{$commessa['progress']}}</b>
+                        <b>{{DB::table('job_types')->where('id',$commessa['progress'])->value('description')}}</b>
                     </div>
                 </div>
             </div>

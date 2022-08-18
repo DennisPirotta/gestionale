@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use PHP_CodeSniffer\Tests\Core\File\testFIINNamespacedClass;
 
 class Order extends Model
 {
@@ -18,7 +19,7 @@ class Order extends Model
             foreach (DB::table('customers')->where('name', 'like', '%' . $filters['customer'] . '%')->get() as $customer) {
                 $customers[] = $customer->id;
             }
-            $query->whereIn('customer', $customers);
+            $query->whereIn('customer_id', $customers);
         }
 
         if ($filters['company'] ?? false) {
@@ -26,7 +27,7 @@ class Order extends Model
             foreach (DB::table('companies')->where('name', 'like', '%' . $filters['company'] . '%')->get() as $company) {
                 $companies[] = $company->id;
             }
-            $query->whereIn('company', $companies);
+            $query->whereIn('company_id', $companies);
         }
 
         if ($filters['search'] ?? false) {
@@ -56,13 +57,38 @@ class Order extends Model
                 $users[] = $user->id;
             }
 
-            $query->whereIn('customer', $customers)
-                ->orWhereIn('manager', $users)
-                ->orWhereIn('company', $companies)
-                ->orWhereIn('country', $countries)
-                ->orWhereIn('status', $statuses)
+            $query->whereIn('customer_id', $customers)
+                ->orWhereIn('user_id', $users)
+                ->orWhereIn('company_id', $companies)
+                ->orWhereIn('country_id', $countries)
+                ->orWhereIn('status_id', $statuses)
                 ->orWhere('description', 'like', '%' . $filters['search'] . '%')
                 ->orWhere('progress', 'like', '%' . $filters['search'] . '%');
         }
     }
+
+    public function customer(){
+        return $this->belongsTo(Customer::class,'customer_id');
+    }
+
+    public function user(){
+        return $this->belongsTo(User::class,'user_id');
+    }
+
+    public function company(){
+        return $this->belongsTo(Company::class,'company_id');
+    }
+
+    public function country(){
+        return $this->belongsTo(Country::class,'country_id');
+    }
+
+    public function status(){
+        return $this->belongsTo(Status::class,'status_id');
+    }
+
+    public function job_type(){
+        return $this->belongsTo(JobType::class,'job_type_id');
+    }
+
 }

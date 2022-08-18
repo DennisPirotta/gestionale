@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Company;
 use App\Models\Country;
 use App\Models\Customer;
+use App\Models\HourType;
+use App\Models\JobType;
 use App\Models\Order;
 use App\Models\Status;
 use Illuminate\Contracts\Foundation\Application;
@@ -78,7 +80,10 @@ class OrderController extends Controller
             'customers' => Customer::all(),
             'countries' => Country::all(),
             'companies' => Company::all(),
-            'statuses' => Status::all()
+            'statuses' => Status::all(),
+            'hour_types' => HourType::all(),
+            'job_types' => JobType::all(),
+            'orders' => Order::all()
         ]);
     }
 

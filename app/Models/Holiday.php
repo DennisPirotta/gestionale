@@ -49,4 +49,8 @@ class Holiday extends Model
         }
         return auth()->user()->holidays - $count;
     }
+
+    public function user(){
+        return $this->belongsTo(User::class,'user_id');
+    }
 }

@@ -8,14 +8,18 @@ use App\Models\Hour;
 use App\Models\HourType;
 use App\Models\JobType;
 use App\Models\Order;
+use App\Models\OrderDetails;
 use App\Models\Status;
 use App\Models\User;
+use DateTime;
+use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Validator;
 
 class HourController extends Controller
 {
@@ -23,7 +27,8 @@ class HourController extends Controller
     {
 
         $hours = Hour::all();
-
+        $users = User::all();
+        $holidays = Holiday::all();
 
         $formatted = [];
         foreach ($hours as $hour){
@@ -44,12 +49,12 @@ class HourController extends Controller
             if ($hour->description !== null){
                 $title = 'Altro - ';
             }if ($hour->holiday !== null){
-                $allDay = Holiday::where('id',$hour->holiday)->pluck('allDay');
+                $allDay = $holidays->where('id',$hour->holiday)->pluck('allDay');
                 $title = 'Ferie - ';
             }
 
             $formatted[] = [
-              'title' => $title . User::where('id',$hour->user)->pluck('name'),
+              'title' => $title . $users->where('id',$hour->user)->value('name'),
               'start' => $hour->start,
               'end' => $hour->end,
               'allDay' => $allDay,
@@ -78,12 +83,57 @@ class HourController extends Controller
     {}
     public function store(Request $request): Redirector|Application|RedirectResponse
     {
-        $data = $request->validate([
+
+        $data = Validator::make($request->only(['start','end','hour_type']),[
             'start' => 'required',
             'end' => 'required',
+            'hour_type' => 'required'
         ]);
-        unset($data['_token'], $data['fi'], $data['night']);
-        Hour::create(array_merge($data,$request->except(['_token','fi','night'])));
+
+        try {
+            $start = new DateTime($data->getData()['start']);
+            $end = new DateTime($data->getData()['end']);
+        }catch (Exception $e){
+            return response($e,500);
+        }
+
+        $hour = Hour::create([
+            'start' => $start,
+            'end' => $end,
+            'user' => auth()->user()['id'],
+            'hour_type' => $data->getData()['hour_type']
+        ]);
+        // se stai leggendo scusa per questo
+
+        switch ($data->getData()['hour_type']){
+            case 1: {
+                // commessa
+                OrderDetails::create([
+                    'order' => $request->get('order'),
+                    'hour' => $hour->id,
+                    'hourSW' => $request['hourSW'],
+                    'hourMS' => $request['hourMS'],
+                    'hourFAT' => $request['hourFAT'],
+                    'hourSAF' => $request['hourSAF'],
+                ]);
+            }
+            case 2: {
+                // fi
+
+            }
+            case 6: {
+                // ferie
+
+            }
+            default: {
+                // Altro
+
+            }
+        }
+
+
+
+
 
         return redirect('/ore')->with('message', 'Ore inserite con successo');
     }

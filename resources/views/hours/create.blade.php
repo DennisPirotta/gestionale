@@ -8,7 +8,7 @@
             <div class="col-sm-6 col-md-6">
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <span class="input-group-text"><i class="bi bi-clipboard-data me-2"></i>Inizio</span>
-                    <input type="datetime-local" class="form-control" aria-label="Inizio" name="start">
+                    <input type="time" class="form-control" aria-label="Inizio" name="start" value="08:00">
                 </div>
                 @error('start')
                 <p class="text-danger fs-6">{{$message}}</p>
@@ -17,7 +17,7 @@
             <div class="col-sm-6 col-md-6">
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <span class="input-group-text"><i class="bi bi-clipboard-data me-2"></i>Fine</span>
-                    <input type="datetime-local" class="form-control" aria-label="Fine" name="end">
+                    <input type="time" class="form-control" aria-label="Fine" name="end" value="17:00">
                 </div>
                 @error('end')
                 <p class="text-danger fs-6">{{$message}}</p>

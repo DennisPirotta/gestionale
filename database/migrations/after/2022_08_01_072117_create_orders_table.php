@@ -14,40 +14,44 @@ return new class extends Migration {
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('innerCode');
-            $table->bigInteger('outerCode');
+            $table->bigInteger('innerCode')->unique();
+            $table->bigInteger('outerCode')->unique();
             $table->string('description');
             $table->integer('hourSW')->default(0);
             $table->integer('hourMS')->default(0);
             $table->integer('hourFAT')->default(0);
             $table->integer('hourSAF')->default(0);
-            $table->string('progress');
             $table->dateTime('opening');
             $table->dateTime('closing')->nullable();
             $table->timestamps();
 
-            $table->foreignId('customer')
-                ->constrained('customers')
+            $table->foreignId('customer_id')
+                ->constrained()
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
 
-            $table->foreignId('manager')
-                ->constrained('users')
+            $table->foreignId('user_id')
+                ->constrained()
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
 
-            $table->foreignId('company')
-                ->constrained('companies')
+            $table->foreignId('company_id')
+                ->constrained()
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
 
-            $table->foreignId('country')
-                ->constrained('countries')
+            $table->foreignId('country_id')
+                ->constrained()
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
 
-            $table->foreignId('status')
-                ->constrained('statuses')
+            $table->foreignId('status_id')
+                ->constrained()
+                ->cascadeOnUpdate()
+                ->cascadeOnDelete();
+
+            $table->foreignId('job_type_id')
+                ->constrained()
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
         });

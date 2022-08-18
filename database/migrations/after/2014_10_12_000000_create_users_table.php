@@ -17,14 +17,14 @@ return new class extends Migration {
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->float('holidays')->default(160.00);
+            $table->integer('holidays')->default(160);
             $table->integer('level')->default(0);
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
 
-            $table->foreignId('company')
-                ->constrained('companies')
+            $table->foreignId('company_id')
+                ->constrained()
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
         });

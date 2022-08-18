@@ -1,7 +1,10 @@
 @extends('layouts.app')
 @php($require_navbar_tools = true)
 
+
+
 @section('content')
+
     <div class="container shadow-sm my-3 text-center justify-content-center p-3">
         @unless(count($commesse) === 0)
             <nav>
@@ -22,34 +25,34 @@
                          tabindex="0">
                         <div class="row">
                             @foreach($commesse as $commessa)
-                                @if($status->id === $commessa->status)
+                                @if($status->id === $commessa->status_id)
                                     <div class="col-sm-6 col-md-4 mb-3">
                                         <div
-                                            class="card h-100 bg-opacity-25 bg-{{$statuses->where('id',$commessa['status'])->value('color')}}">
+                                            class="card h-100 bg-opacity-25 bg-{{$commessa->status->color}}">
                                             <!--  bg-black bg-opacity-25 -->
                                             <div class="card-body">
                                                 <i class="bi bi-building"></i>
-                                                <span class="card-title">Commessa {{$commessa['id']}}</span>
-                                                <a href="?company={{urlencode($companies->where('id',$commessa['company'])->value('name'))}}">
-                                                    @if($commessa->company === 1)
+                                                <span class="card-title">Commessa {{$commessa->id}}</span>
+                                                <a href="?company={{$commessa->company->name}}">
+                                                    @if($commessa->company->id === 1)
                                                         <span class="badge text-bg-primary bg-opacity-100">3D</span>
                                                     @else
                                                         <span class="badge text-bg-success bg-opacity-100">S+H</span>
                                                     @endif
                                                 </a>
-                                                <a href="?customer={{$customers->where('id',$commessa['customer'])->value('name')}}">
-                                                    <h6 class="card-subtitle my-2 text-muted">{{$customers->where('id',$commessa['customer'])->value('name')}}</h6>
+                                                <a href="?customer={{$commessa->customer->name}}">
+                                                    <h6 class="card-subtitle my-2 text-muted">{{$commessa->customer->name}}</h6>
                                                 </a>
-                                                <p class="card-text">{{$commessa['description']}}</p>
+                                                <p class="card-text">{{$commessa->description}}</p>
                                                 <div class="d-flex justify-content-center">
-                                                    <a href="/commesse/{{$commessa['id']}}">
+                                                    <a href="/commesse/{{$commessa->id}}">
                                                         <button class="btn btn-outline-primary me-2">
                                                             <i class="bi bi-info-circle me-1"></i>
                                                             Dettagli
                                                         </button>
                                                     </a>
 
-                                                    <form method="POST" action="/commesse/{{$commessa['id']}}">
+                                                    <form method="POST" action="/commesse/{{$commessa->id}}">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button class="btn btn-outline-danger"

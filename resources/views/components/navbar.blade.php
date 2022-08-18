@@ -6,6 +6,9 @@
         </div>
         <a class="navbar-brand ms-2" href="{{ url('/') }}">
             {{ config('app.name')}}
+            {{-- <span class="border border-2 badge border-danger mx-2 text-black bg-danger bg-opacity-25 border-opacity-50">Alpha</span> --}}
+            {{-- <span class="border border-2 badge border-primary mx-2 text-black bg-primary bg-opacity-25 border-opacity-50">Beta</span> --}}
+             <span class="border border-2 badge border-success ms-2 text-black bg-success bg-opacity-25 border-opacity-50">Dev</span>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
@@ -14,12 +17,20 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <!-- Center Of Navbar -->
+
             @if(str_contains(str_replace('/',' ',request()->route()->uri),'commesse'))
-                <form class="d-flex ms-auto" role="search" method="get" action="/commesse">
-                    <input class="form-control me-2" type="search" placeholder="Cerca" aria-label="Search" name="search"
-                           required>
-                    <button class="btn btn-outline-success" type="submit"><i class="bi bi-search"></i></button>
-                </form>
+                <div class="d-flex ms-auto">
+                    <button class="btn btn-outline-primary me-2" onclick="window.location.href = window.location.href.split('?')[0]">
+                        <i class="bi bi-eraser"></i>
+                    </button>
+                    <form class="d-flex" role="search" method="get" action="/commesse">
+
+                        <input class="form-control me-2" type="search" placeholder="Cerca" aria-label="Search" name="search"
+                               required>
+                        <button class="btn btn-outline-success" type="submit"><i class="bi bi-search"></i></button>
+                    </form>
+                </div>
+
             @endif
 
             <!-- Right Side Of Navbar -->

@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\HourType;
 use App\Models\Order;
 use App\Models\TechnicalReport;
 use App\Models\User;
@@ -21,35 +22,14 @@ class HourFactory extends Factory
      */
     public function definition(): array
     {
-        $order = null;
-        $holiday = null;
-        $report = null;
-        $description = null;
-
-        switch (random_int(0,2)){
-            case 0: {
-                $order = Order::all()->random()->id;
-                break;
-            }
-            case 1: {
-                $report = TechnicalReport::all()->random()->id;
-                break;
-            }
-            case 2: {
-                $description = fake()->text(20);
-                break;
-            }
-        }
 
         $start = fake()->dateTimeThisYear;
+        $end = fake()->dateTimeInInterval($start,"+2 days");
 
         return [
             'start' => $start,
-            'end' => fake()->dateTimeInInterval($start,"+10 days"),
-            'order' => $order,
-            'report' => $report,
-            'holiday' => $holiday,
-            'description' => $description,
+            'end' => $end,
+            'hour_type' => HourType::all()->random()['id'],
             'user' => User::all()->random()->id,
         ];
     }

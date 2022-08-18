@@ -18,37 +18,13 @@ return new class extends Migration {
             $table->dateTime('end');
             $table->timestamps();
 
-
-            // per commesse
-            $table  ->foreignId('order')
-                    ->nullable()
-                    ->constrained('orders')
-                    ->cascadeOnUpdate()
-                    ->cascadeOnDelete();
-
-            // per foglio intervento
-            $table->foreignId('report')
-                ->nullable()
-                ->constrained('technical_reports')
-                ->cascadeOnUpdate()
-                ->cascadeOnDelete();
-
-
-            // per singoli campi di descrizione (nome corso / tipo lavoro ufficio / altro)
-            $table->string('description')->nullable();
-
-            // per ferie
-            $table->foreignId('holiday')
-                ->nullable()
-                ->constrained('holidays')
+            $table->foreignId('user')
+                ->constrained('users')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
 
-
-            // per ferie
-            $table->foreignId('user')
-                ->nullable() // da rimuovere !!!!
-                ->constrained('users')
+            $table->foreignId('hour_type')
+                ->constrained('hour_types')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
 

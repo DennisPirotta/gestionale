@@ -20,7 +20,7 @@ class UserFactory extends Factory
      * @return array<string, mixed>
      * @throws Exception
      */
-    #[ArrayShape(['name' => "string", 'email' => "string", 'email_verified_at' => Carbon::class, 'password' => "string", 'holidays' => "int", 'level' => "int", 'company' => "\Illuminate\Support\HigherOrderCollectionProxy|mixed", 'remember_token' => "string"])] public function definition(): array
+    public function definition()
     {
         return [
             'name' => fake()->name(),
@@ -29,7 +29,7 @@ class UserFactory extends Factory
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'holidays' => 160.00,
             'level' => random_int(0, 2),
-            'company' => Company::all()->random()->id,
+            'company_id' => Company::all()->random(),
             'remember_token' => Str::random(10),
 
         ];

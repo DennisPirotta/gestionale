@@ -19,7 +19,7 @@ class HolidayFactory extends Factory
     {
         return [
             'approved' => fake()->boolean,
-            'user' => User::all()->random()->id,
+            'user_id' => User::all()->random()->id,
             'allDay' => fake()->boolean
         ];
     }

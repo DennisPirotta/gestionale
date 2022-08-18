@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Company;
 use App\Models\Country;
 use App\Models\Customer;
+use App\Models\JobType;
 use App\Models\Status;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -21,24 +22,24 @@ class OrderFactory extends Factory
      */
     public function definition()
     {
-        static $inner = 1;
-        static $outer = 1;
+        static $inner = 20220001;
+        static $outer = 20220001;
         return [
-            'company' => Company::all()->random()->id,
+            'company_id' => Company::all()->random()->id,
             'innerCode' => $inner++,
             'outerCode' => $outer++,
             'description' => fake()->text,
-            'status' => Status::all()->random()->id,
-            'country' => Country::all()->random()->id,
-            'hourSW' => fake()->randomNumber(2),
-            'hourMS' => fake()->randomNumber(2),
-            'hourFAT' => fake()->randomNumber(2),
-            'hourSAF' => fake()->randomNumber(2),
-            'progress' => fake()->text,
+            'status_id' => Status::all()->random()->id,
+            'country_id' => Country::all()->random()->id,
+            'hourSW' => 0,
+            'hourMS' => 0,
+            'hourFAT' => 0,
+            'hourSAF' => 0,
+            'job_type_id' => JobType::all()->random()->id,
             'opening' => fake()->dateTime,
             'closing' => fake()->dateTime,
-            'customer' => Customer::all()->random()->id,
-            'manager' => User::all()->random()->id
+            'customer_id' => Customer::all()->random()->id,
+            'user_id' => User::all()->random()->id
         ];
     }
 }

@@ -16,7 +16,6 @@
                     center: 'title',
                     right: 'dayGridMonth,timeGridDay,dayGridWeek'
                 },
-                contentHeight: 'auto',
                 nowIndicator: true,
                 slotDuration: '1:00',
                 slotMinTime: '8:00',

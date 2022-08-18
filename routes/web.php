@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\ChangePasswordController;
+use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\HolidayController;
 use App\Http\Controllers\HomeController;

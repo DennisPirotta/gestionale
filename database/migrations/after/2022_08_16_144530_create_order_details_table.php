@@ -16,13 +16,13 @@ return new class extends Migration
         Schema::create('order_details', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('order')
-                ->constrained('orders')
+            $table->foreignId('order_id')
+                ->constrained()
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
 
-            $table->foreignId('hour')
-                ->constrained('hours')
+            $table->foreignId('hour_id')
+                ->constrained()
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
 

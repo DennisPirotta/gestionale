@@ -47,6 +47,8 @@ Route::middleware(['auth'])->group(function () {
 
 // Salva modifiche commessa
     Route::put('/commesse/{order}', [OrderController::class, 'update']);
+// Mostra report commesse
+    Route::get('/commesse/report', [OrderController::class, 'report']);
 
     /*
     *  GESTIONE ROUTES UTENTI

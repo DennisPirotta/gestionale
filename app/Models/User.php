@@ -56,5 +56,8 @@ class User extends Authenticatable implements MustVerifyEmail
     public function holidays(){
         return $this->hasMany(Holiday::class,'user_id');
     }
+    public function hours(){
+        return $this->hasMany(Hour::class,'user_id');
+    }
 
 }

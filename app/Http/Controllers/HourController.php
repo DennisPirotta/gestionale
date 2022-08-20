@@ -26,38 +26,22 @@ class HourController extends Controller
     public function index(): Factory|View|Application
     {
 
-        $hours = Hour::all();
+        $holidays = Holiday::with(['hour']);
         $users = User::all();
-        $holidays = Holiday::all();
 
         $formatted = [];
-        foreach ($hours as $hour){
+        foreach (Hour::with(['user'])->get() as $hour){
 
-            $start = explode(":",explode(" ",$hour->start)[1])[0] . ":" . explode(":",explode(" ",$hour->start)[1])[1];
-            $end = explode(":",explode(" ",$hour->end)[1])[0] . ":" . explode(":",explode(" ",$hour->end)[1])[1];
+            $start = new DateTime($hour->start);
+            $end = new DateTime($hour->end);
 
-            $content = "Inizio: <b>" . $start  . "</b><br> Fine: <b>" . $end . "</b>";
-
-            $title = "";
-            $allDay = false;
-            if ($hour->order !== null){
-                $title = 'Commessa - ';
-            }
-            if ($hour->report !== null){
-                $title = 'FI - ';
-            }
-            if ($hour->description !== null){
-                $title = 'Altro - ';
-            }if ($hour->holiday !== null){
-                $allDay = $holidays->where('id',$hour->holiday)->pluck('allDay');
-                $title = 'Ferie - ';
-            }
+            $content = "Inizio: <b>" . $start->format('Y-m-d H:i')  . "</b><br> Fine: <b>" . $end->format('H:i') . "</b>";
 
             $formatted[] = [
-              'title' => $title . $users->where('id',$hour->user)->value('name'),
+              'title' => $hour->user->name,
               'start' => $hour->start,
               'end' => $hour->end,
-              'allDay' => $allDay,
+              'allDay' => $holidays->where('hour_id',$hour->id)->get()->value('allDay'),
               'extendedProps' => [
                   'content' => $content
               ]
@@ -65,7 +49,11 @@ class HourController extends Controller
         }
 
         return view('hours.index',[
-            'hours' => $formatted
+            'hours' => $formatted,
+            'hour_types' => HourType::all(),
+            'job_types' => JobType::all(),
+            'orders' => Order::with(['status','customer'])->orderBy('status_id')->get(),
+            'customers' => Customer::all()
         ]);
     }
 
@@ -83,58 +71,72 @@ class HourController extends Controller
     {}
     public function store(Request $request): Redirector|Application|RedirectResponse
     {
+        //creare bene tabella order hours
+        /*
+                $data = [];
+                try {
+                    $data[] =
+                }cch (Exception $e){ }
 
-        $data = Validator::make($request->only(['start','end','hour_type']),[
-            'start' => 'required',
-            'end' => 'required',
-            'hour_type' => 'required'
-        ]);
+                /*
+                 *
+                 *
+                 *
+                 *
+                 *
+                 *
 
-        try {
-            $start = new DateTime($data->getData()['start']);
-            $end = new DateTime($data->getData()['end']);
-        }catch (Exception $e){
-            return response($e,500);
-        }
-
-        $hour = Hour::create([
-            'start' => $start,
-            'end' => $end,
-            'user' => auth()->user()['id'],
-            'hour_type' => $data->getData()['hour_type']
-        ]);
-        // se stai leggendo scusa per questo
-
-        switch ($data->getData()['hour_type']){
-            case 1: {
-                // commessa
-                OrderDetails::create([
-                    'order' => $request->get('order'),
-                    'hour' => $hour->id,
-                    'hourSW' => $request['hourSW'],
-                    'hourMS' => $request['hourMS'],
-                    'hourFAT' => $request['hourFAT'],
-                    'hourSAF' => $request['hourSAF'],
+                $data = Validator::make($request->only(['start','end','hour_type']),[
+                    'start' => 'required',
+                    'end' => 'required',
+                    'hour_type' => 'required'
                 ]);
-            }
-            case 2: {
-                // fi
 
-            }
-            case 6: {
-                // ferie
+                try {
+                    $start = new DateTime($data->getData()['start']);
+                    $end = new DateTime($data->getData()['end']);
+                }catch (Exception $e){
+                    return response($e,500);
+                }
 
-            }
-            default: {
-                // Altro
+                $hour = Hour::create([
+                    'start' => $start,
+                    'end' => $end,
+                    'user' => auth()->user()['id'],
+                    'hour_type' => $data->getData()['hour_type']
+                ]);
+                // se stai leggendo scusa per questo
 
-            }
-        }
+                switch ($data->getData()['hour_type']){
+                    case 1: {
+                        // commessa
+                        OrderDetails::create([
+                            'order' => $request->get('order'),
+                            'hour' => $hour->id,
+                            'hourSW' => $request['hourSW'],
+                            'hourMS' => $request['hourMS'],
+                            'hourFAT' => $request['hourFAT'],
+                            'hourSAF' => $request['hourSAF'],
+                        ]);
+                    }
+                    case 2: {
+                        // fi
+
+                    }
+                    case 6: {
+                        // ferie
+
+                    }
+                    default: {
+                        // Altro
+
+                    }
+                }
 
 
 
 
-
+         */
         return redirect('/ore')->with('message', 'Ore inserite con successo');
     }
     public function update(): void

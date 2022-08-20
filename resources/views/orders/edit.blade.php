@@ -10,7 +10,7 @@
                     <label class="input-group-text" for="inputGroupSelect01"><i class="bi bi-building me-2"></i>Compagnia</label>
                     <select class="form-select" id="inputGroupSelect01" name="company">
                         @foreach($companies as $company)
-                            @if($company->id == $commessa->company)
+                            @if($company->id == $commessa->company->id)
                                 <option value="{{$company->id}}" selected>{{$company->name}}</option>
                             @else
                                 <option value="{{$company->id}}">{{$company->name}}</option>
@@ -27,7 +27,7 @@
                     <label class="input-group-text" for="inputGroupSelect01"><i class="bi bi-lightning-charge me-2"></i>Stato</label>
                     <select class="form-select" id="inputGroupSelect01" name="status">
                         @foreach($statuses as $status)
-                            @if($status->id == $commessa->status)
+                            @if($status->id == $commessa->status->id)
                                 <option value="{{$status->id}}" selected>{{$status->description}}</option>
                             @else
                                 <option value="{{$status->id}}">{{$status->description}}</option>
@@ -45,7 +45,7 @@
                             class="bi bi-globe2 me-2"></i>Paese</label>
                     <select class="form-select" id="inputGroupSelect01" name="country">
                         @foreach($countries as $country)
-                            @if($country->id == $commessa->country)
+                            @if($country->id == $commessa->country->id)
                                 <option value="{{$country->id}}" selected>{{$country->name}}</option>
                             @else
                                 <option value="{{$country->id}}">{{$country->name}}</option>
@@ -143,7 +143,7 @@
                             class="bi bi-person me-2"></i>Cliente</label>
                     <select class="form-select" id="inputGroupSelect01" name="customer">
                         @foreach($customers as $customer)
-                            @if($customer->id == $commessa->customer)
+                            @if($customer->id == $commessa->customer->id)
                                 <option value="{{$customer->id}}" selected>{{$customer->name}}</option>
                             @else
                                 <option value="{{$customer->id}}">{{$customer->name}}</option>

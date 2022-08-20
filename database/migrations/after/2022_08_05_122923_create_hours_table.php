@@ -18,13 +18,13 @@ return new class extends Migration {
             $table->dateTime('end');
             $table->timestamps();
 
-            $table->foreignId('user')
-                ->constrained('users')
+            $table->foreignId('user_id')
+                ->constrained()
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
 
-            $table->foreignId('hour_type')
-                ->constrained('hour_types')
+            $table->foreignId('hour_type_id')
+                ->constrained()
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
 

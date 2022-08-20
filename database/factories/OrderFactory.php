@@ -28,7 +28,7 @@ class OrderFactory extends Factory
             'company_id' => Company::all()->random()->id,
             'innerCode' => $inner++,
             'outerCode' => $outer++,
-            'description' => fake()->text,
+            'description' => fake()->text(10),
             'status_id' => Status::all()->random()->id,
             'country_id' => Country::all()->random()->id,
             'hourSW' => 0,

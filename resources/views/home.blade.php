@@ -43,6 +43,16 @@
                     </div>
                 </a>
             </div>
+            <div class="col-xl-3 col-md-4 col-sm-6 mb-3">
+                <a href="{{url('/commesse/report')}}">
+                    <div class="card">
+                        <div class="card-body">
+                            <i class="bi bi-journals fs-1"></i>
+                            <h5 class="card-title">Gestione ore</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
         </div>
     </div>
 @endsection

@@ -11,59 +11,31 @@ class Order extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+      'user_id','customer_id'
+    ];
+
     public function scopeFilter($query, array $filters): void
     {
 
         if ($filters['customer'] ?? false) {
-            $customers = [];
-            foreach (DB::table('customers')->where('name', 'like', '%' . $filters['customer'] . '%')->get() as $customer) {
-                $customers[] = $customer->id;
-            }
-            $query->whereIn('customer_id', $customers);
+            $query->where('customer_id', Customer::where('name', 'like', '%' . request('customer') . '%')->value('id'));
         }
 
         if ($filters['company'] ?? false) {
-            $companies = [];
-            foreach (DB::table('companies')->where('name', 'like', '%' . $filters['company'] . '%')->get() as $company) {
-                $companies[] = $company->id;
-            }
-            $query->whereIn('company_id', $companies);
+            $query->where('company_id', Company::where('name', 'like', '%' . $filters['company'] . '%')->value('id'));
         }
 
         if ($filters['search'] ?? false) {
 
-            $customers = [];
-            foreach (DB::table('customers')->where('name', 'like', '%' . $filters['search'] . '%')->get() as $customer) {
-                $customers[] = $customer->id;
-            }
 
-            $companies = [];
-            foreach (DB::table('companies')->where('name', 'like', '%' . $filters['search'] . '%')->get() as $company) {
-                $companies[] = $company->id;
-            }
-
-            $countries = [];
-            foreach (DB::table('countries')->where('name', 'like', '%' . $filters['search'] . '%')->get() as $country) {
-                $countries[] = $country->id;
-            }
-
-            $statuses = [];
-            foreach (DB::table('statuses')->where('description', 'like', '%' . $filters['search'] . '%')->get() as $status) {
-                $statuses[] = $status->id;
-            }
-
-            $users = [];
-            foreach (DB::table('users')->where('name', 'like', '%' . $filters['search'] . '%')->get() as $user) {
-                $users[] = $user->id;
-            }
-
-            $query->whereIn('customer_id', $customers)
-                ->orWhereIn('user_id', $users)
-                ->orWhereIn('company_id', $companies)
-                ->orWhereIn('country_id', $countries)
-                ->orWhereIn('status_id', $statuses)
-                ->orWhere('description', 'like', '%' . $filters['search'] . '%')
-                ->orWhere('progress', 'like', '%' . $filters['search'] . '%');
+            $query  ->where  ('customer_id', Customer::where('name', 'like', '%' . request('search') . '%')->value('id'))
+                    ->orWhere('user_id', User::where('name', 'like', '%' . request('search') . '%')->value('id'))
+                    ->orWhere('company_id', Company::where('name', 'like', '%' . $filters['search'] . '%')->value('id'))
+                    ->orWhere('country_id', Country::where('name', 'like', '%' . request('search') . '%')->value('id'))
+                    ->orWhere('status_id', Status::where('description', 'like', '%' . request('search') . '%')->value('id'))
+                    ->orWhere('description', 'like', '%' . request('search') . '%')
+                    ->orWhere('job_type_id', 'like', '%' . request('search') . '%');
         }
     }
 
@@ -89,6 +61,10 @@ class Order extends Model
 
     public function job_type(){
         return $this->belongsTo(JobType::class,'job_type_id');
+    }
+
+    public function order_details(){
+        return $this->hasMany(OrderDetails::class,'order_id');
     }
 
 }

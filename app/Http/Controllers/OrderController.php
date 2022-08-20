@@ -8,7 +8,10 @@ use App\Models\Customer;
 use App\Models\HourType;
 use App\Models\JobType;
 use App\Models\Order;
+use App\Models\OrderDetails;
 use App\Models\Status;
+use App\Models\User;
+use Cassandra\Custom;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -21,20 +24,18 @@ class OrderController extends Controller
     // Visualizza tutte le commesse
     public function index(): Factory|View|Application
     {
-        $commesse = Order::latest()->get();
+        $commesse = Order::with(['user','status','company','customer']);
         if (request('customer')) {
-            $commesse = Order::latest()->filter(request(['customer']))->get();
+            $commesse = $commesse->filter(request(['customer']));
         } elseif (request('search')) {
-            $commesse = Order::latest()->filter(request(['search']))->get();
+            $commesse = $commesse->filter(request(['search']));
         } elseif (request('company')) {
-            $commesse = Order::latest()->filter(request(['company']))->get();
+            $commesse = $commesse->filter(request(['company']));
         }
 
         return view('orders.index', [
-            'commesse' => $commesse,
-            'statuses' => Status::all(),
-            'companies' => Company::all(),
-            'customers' => Customer::all()
+            'commesse' => $commesse->get(),
+            'statuses' => Status::all()
         ]);
     }
 
@@ -93,10 +94,10 @@ class OrderController extends Controller
     {
         return view('orders.edit', [
             'commessa' => $order,
-            'customers' => Customer::all(),
-            'countries' => Country::all(),
             'companies' => Company::all(),
-            'statuses' => Status::all()
+            'statuses' => Status::all(),
+            'countries' => Country::all(),
+            'customers' => Customer::all()
         ]);
     }
 
@@ -130,5 +131,14 @@ class OrderController extends Controller
     {
         $order->delete();
         return back()->with('message', 'Commessa eliminata con successo');
+    }
+
+    // Report commesse
+    public function report()
+    {
+        return view('orders.report',[
+            'orders' => Order::with(['job_type','status','country','company','user','customer'])->orderBy('status_id')->get(),
+            'order_details' => OrderDetails::with(['hour','order'])
+        ]);
     }
 }

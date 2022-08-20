@@ -2,7 +2,6 @@
 @php($require_navbar_tools = true)
 
 
-
 @section('content')
 
     <div class="container shadow-sm my-3 text-center justify-content-center p-3">
@@ -25,7 +24,7 @@
                          tabindex="0">
                         <div class="row">
                             @foreach($commesse as $commessa)
-                                @if($status->id === $commessa->status_id)
+                                @if($status->id === $commessa->status->id)
                                     <div class="col-sm-6 col-md-4 mb-3">
                                         <div
                                             class="card h-100 bg-opacity-25 bg-{{$commessa->status->color}}">
@@ -33,7 +32,7 @@
                                             <div class="card-body">
                                                 <i class="bi bi-building"></i>
                                                 <span class="card-title">Commessa {{$commessa->id}}</span>
-                                                <a href="?company={{$commessa->company->name}}">
+                                                <a href="?company={{urlencode($commessa->company->name)}}">
                                                     @if($commessa->company->id === 1)
                                                         <span class="badge text-bg-primary bg-opacity-100">3D</span>
                                                     @else

@@ -6,13 +6,16 @@ use App\Models\Customer;
 use App\Models\Holiday;
 use App\Models\Hour;
 use App\Models\Order;
+use App\Models\OrderDetails;
 use App\Models\TechnicalReport;
 use App\Models\User;
+use Database\Factories\OrderDetailsFactory;
 use DateTime;
 use Doctrine\DBAL\Exception;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class DatabaseSeeder extends Seeder
 {
@@ -321,16 +324,7 @@ class DatabaseSeeder extends Seeder
         TechnicalReport::factory(20)->create();
         Hour::factory(20)->create();
         Holiday::factory(30)->create();
-
-        foreach (Holiday::all() as $holiday){
-            $start = fake()->dateTimeThisYear->setTime(0,0);
-            Hour::create([
-                'start' => $start,
-                'end' => fake()->dateTimeInInterval($start,'+15 days')->setTime(0,0),
-                'hour_type' => 6,
-                'user' => $holiday->user->id
-            ]);
-        }
+        OrderDetails::factory(10)->create();
 
         User::factory()->create([
             'name' => 'Dennis Pirotta',
@@ -341,6 +335,7 @@ class DatabaseSeeder extends Seeder
         DB::table('access_keys')->insert([
             'key' => Hash::make('3DAutomation')
         ]);
+        Log::channel('dev')->info('Chiave di acceso creata');
 
     }
 }

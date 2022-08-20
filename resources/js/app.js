@@ -3,6 +3,7 @@ import '../sass/app.scss'
 import '../css/app.css'
 import DOMPurify from "isomorphic-dompurify";
 
+
 window.updateEvent = async function (eventInfo) {
     console.log(eventInfo)
     const token = document.querySelector('meta[name="csrf-token"]').content;

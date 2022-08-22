@@ -5,9 +5,9 @@ import moment from "moment";
 import business from "moment-business"
 import axios from 'axios'
 import DOMPurify from 'isomorphic-dompurify'
-import * as ProgressBar from 'progressbar.js'
+import CircleProgress from 'js-circle-progress'
 
-window.ProgressBar = ProgressBar
+window.CircleProgress = CircleProgress
 
 window._ = loadash
 window.Popper = Popper

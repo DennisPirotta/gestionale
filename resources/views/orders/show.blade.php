@@ -98,7 +98,7 @@
                     <div class="card-body">
                         <i class="bi bi-person-check fs-3"></i>
                         <p class="card-title">Responsabile</p>
-                        <b>{{$commessa->user->name}}</b>
+                        <b>{{$commessa->user->name . " " . $commessa->user->surname}}</b>
                     </div>
                 </div>
             </div>

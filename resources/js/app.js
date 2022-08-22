@@ -40,9 +40,11 @@ window.updateEvent = async function (eventInfo) {
     }
 
     $(toastEl).find("div.toast-body").html(DOMPurify.sanitize(body.message))
-    $('#progressBar').css('width', `${body.perc}%`).text(`${body.perc}% rimasto`)
+    $('#progressBar').attr('data-value', `${body.perc}`)
+    $('#perc').text( `${body.perc}`)
     $('#hourLeft').text(body.left)
     $('#daysLeft').text((body.left / 8))
+    inizializeProgressBar()
     let toast = new bootstrap.Toast(toastEl)
     toast.show()
 

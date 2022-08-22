@@ -38,7 +38,7 @@ class HourController extends Controller
             $content = "Inizio: <b>" . $start->format('Y-m-d H:i')  . "</b><br> Fine: <b>" . $end->format('H:i') . "</b>";
 
             $formatted[] = [
-              'title' => $hour->user->name,
+              'title' => $hour->user->name . " " . $hour->user->surname,
               'start' => $hour->start,
               'end' => $hour->end,
               'allDay' => $holidays->where('hour_id',$hour->id)->get()->value('allDay'),

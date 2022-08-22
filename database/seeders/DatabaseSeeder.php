@@ -327,7 +327,8 @@ class DatabaseSeeder extends Seeder
         OrderDetails::factory(10)->create();
 
         User::factory()->create([
-            'name' => 'Dennis Pirotta',
+            'name' => 'Dennis',
+            'surname' => 'Pirotta',
             'email' => 'dennispirotta@gmail.com',
             'password' => Hash::make('pellio2014'),
         ]);

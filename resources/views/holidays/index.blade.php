@@ -10,19 +10,12 @@
                         <hr class="w-50 mx-auto mt-0">
 
                         <p class="card-text">
-                            Ore di ferie rimaste:
+                            <p>Ore di ferie rimaste:
                             <b id="hourLeft">{{$left_hours}}</b>
                             ( <b id="daysLeft">{{$left_hours/8}}</b> Giorni )
+                            <div id="progress" class="my-3"></div>
                         </p>
 
-                        <div class="progress my-3">
-                            <div id="progressBar" class="progress-bar" role="progressbar"
-                                 aria-label="Example with label"
-                                 style="width: {{($left_hours*100)/160}}%" aria-valuenow="50" aria-valuemin="0"
-                                 aria-valuemax="100">
-                                {{($left_hours*100)/160}}% rimasto
-                            </div>
-                        </div>
                         <div class="d-flex justify-content-center">
                             <a href="#">
                                 <button class="btn btn-outline-primary me-2">
@@ -90,6 +83,12 @@
     </div>
     <script>
         $(document).ready(function () {
+
+            new CircleProgress('#progress', {
+                value: {{\App\Models\Holiday::getLeftHours()}},
+                max: {{auth()->user()->holidays}},
+            })
+
             let events = @json($holidays, JSON_THROW_ON_ERROR);
             let calendarEl = document.getElementById('calendar')
             let calendar = new FullCalendar.Calendar(calendarEl, {

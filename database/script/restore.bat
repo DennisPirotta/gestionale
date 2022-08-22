@@ -1,5 +1,4 @@
-c:/xampp/mysql/bin/mysql.exe -u root < C:\Users\denni\Desktop\gestionale\database\script\restore.sql
-Rem c:/xampp/mysql/bin/mysql.exe -u root < C:\Users\denni\PhpstormProjects\gestionale\database\script\restore.sql
+php artisan db:wipe
 php artisan migrate
 php artisan migrate --path=database/migrations/after/2014_10_12_000000_create_users_table.php
 php artisan migrate --path=database/migrations/after/2022_08_22_063440_create_where_am_i_table.php

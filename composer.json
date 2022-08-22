@@ -19,8 +19,10 @@
         "nesbot/carbon": "^2.61"
     },
     "require-dev": {
+        "arcanedev/laravel-lang": "^10.0",
         "barryvdh/laravel-debugbar": "^3.7",
         "fakerphp/faker": "^1.9.1",
+        "laravel-lang/lang": "^10.9.5",
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.4",
@@ -28,6 +30,7 @@
         "nunomaduro/larastan": "^2.1",
         "nunomaduro/phpinsights": "^2.4",
         "phpunit/phpunit": "^9.5.10",
+        "roave/security-advisories": "dev-latest",
         "spatie/laravel-ignition": "^1.0",
         "squizlabs/php_codesniffer": "^3.7"
     },

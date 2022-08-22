@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+
+use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Support\Facades\Session;
+
 class HomeController extends Controller
 {
     /**
@@ -17,10 +21,11 @@ class HomeController extends Controller
     /**
      * Show the application dashboard.
      *
-     * @return \Illuminate\Contracts\Support\Renderable
+     * @return Renderable
      */
-    public function index()
+    public function index(): Renderable
     {
+        Session::put('whereami',auth()->user()->position);
         return view('home')->with('message', 'Login effettuato con successo');
     }
 }

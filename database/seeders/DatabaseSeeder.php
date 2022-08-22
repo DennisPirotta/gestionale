@@ -335,7 +335,6 @@ class DatabaseSeeder extends Seeder
         DB::table('access_keys')->insert([
             'key' => Hash::make('3DAutomation')
         ]);
-        Log::channel('dev')->info('Chiave di acceso creata');
 
     }
 }

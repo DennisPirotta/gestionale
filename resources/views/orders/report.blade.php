@@ -4,12 +4,12 @@
         <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
                 <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Tabella</button>
-                <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Grafici</button>
+                <button class="nav-link disabled" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Grafici</button>
             </div>
         </nav>
         <div class="tab-content" id="nav-tabContent">
-            <div class="tab-pane fade show active p-3" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0" style="height: 70vh">
-                <table class="table pt-3" style="overflow-y: scroll;">
+            <div class="tab-pane fade show active p-3 mt-3" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0" style="overflow-y: scroll;height: 70vh">
+                <table class="table" >
                     <thead>
                         <tr>
                             <th scope="col">#</th>

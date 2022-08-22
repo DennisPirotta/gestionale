@@ -6,7 +6,10 @@ use App\Http\Controllers\HolidayController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\HourController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\LocationController;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,6 +22,8 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+App::setLocale('it');
+Lang::setLocale('it');
 Auth::routes();
 Auth::routes(['verify' => true]);
 Route::middleware(['auth'])->group(function () {
@@ -125,5 +130,19 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('change-password', [ChangePasswordController::class, 'index']);
     Route::post('change-password', [ChangePasswordController::class, 'store']);
+
+    Route::post('/whereami', [LocationController::class, 'store']);
+
+    Route::post('/debug/change_permissions', static function (){
+        try {
+            auth()->user()->update([
+                'level' => request('level')
+            ]);
+            return redirect('/')->with('message','livello di accesso cambiato');
+        }catch (Exception $e){
+            return redirect('/')->with('error',$e);
+        }
+
+    });
 
 });

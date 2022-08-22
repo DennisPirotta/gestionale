@@ -23,6 +23,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
+        'position',
+        'level'
     ];
 
     /**
@@ -58,6 +60,9 @@ class User extends Authenticatable implements MustVerifyEmail
     }
     public function hours(){
         return $this->hasMany(Hour::class,'user_id');
+    }
+    public function locations(){
+        return $this->hasMany(Location::class,'user_id');
     }
 
 }

@@ -42,7 +42,7 @@
                             <td>{{$order->opening}}</td>
                             <td>{{$order->closing}}</td>
                             <td>{{$order->customer->name}}</td>
-                            <td>{{$order->user->name}}</td>
+                            <td>{{$order->user->name . " " . $order->user->surname}}</td>
                             <td>{{$order->status->description}}</td>
                         </tr>
                     @endforeach

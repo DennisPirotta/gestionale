@@ -24,7 +24,7 @@ class HolidayController extends Controller
         foreach (Holiday::with(['user','hour'])->get() as $holiday) {
             $editable = false;
             $user = $holiday->user->id;
-            $title = $holiday->user->name;
+            $title = $holiday->user->name . " " . $holiday->user->surname;
 
             if ($holiday->user->id === auth()->id()) {
                 $editable = true;

@@ -29,6 +29,6 @@
         "progressbar.js": "^1.1.0",
         "superagent": "^8.0.0",
         "watch": "^0.13.0",
-        "webextension-polyfill": "^0.9.0"
+        "webextension-polyfill": "^0.10.0"
     }
 }

@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('content')
+
     <div class="container mt-3 mb-1 shadow-sm p-5">
         <div class="row text-center">
             <div class="col-sm-12 col-lg-5 mb-3">
@@ -9,12 +10,38 @@
                         <span class="card-title fs-3">{{auth()->user()->name}}</span>
                         <hr class="w-50 mx-auto mt-0">
 
-                        <p class="card-text">
+                        <div class="card-text" >
                             <p>Ore di ferie rimaste:
                             <b id="hourLeft">{{$left_hours}}</b>
                             ( <b id="daysLeft">{{$left_hours/8}}</b> Giorni )
-                            <div id="progress" class="my-3"></div>
-                        </p>
+                            <div id="progress" class="my-3 w-25 mx-auto"></div>
+                            <div class="h-100 overflow-auto mb-3" style="max-height: 15vw">
+                                <table class="table text-center ">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Inizio</th>
+                                        <th scope="col">Fine</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @php($count = 1)
+                                    @foreach($holidays as $event)
+                                        @if($event['user'] === auth()->user()->id)
+                                            <tr>
+                                                <th scope="row">{{$count++}}</th>
+                                                <td>{{$event['start']}}</td>
+                                                <td>{{$event['end']}}</td>
+                                            </tr>
+                                        @endif
+                                    @endforeach
+                                    </tbody>
+                                </table>
+
+                            </div>
+
+
+                        </div>
 
                         <div class="d-flex justify-content-center">
                             <a href="#">
@@ -82,12 +109,35 @@
         </div>
     </div>
     <script>
-        $(document).ready(function () {
+        $(document).ready(async function () {
 
-            new CircleProgress('#progress', {
-                value: {{\App\Models\Holiday::getLeftHours()}},
-                max: {{auth()->user()->holidays}},
+            let progressBar = new ProgressBar.Circle('#progress', {
+                color: '#000000',
+                // This has to be the same size as the maximum width to
+                // prevent clipping
+                strokeWidth: 4,
+                trailWidth: 1,
+                easing: 'easeInOut',
+                duration: 1400,
+                from: { color: '#FF0000', width: 1 },
+                to: { color: '#00FF00', width: 4 },
+                // Set default step function for all animate calls
+                step: function(state, circle) {
+                    circle.path.setAttribute('stroke', state.color);
+                    circle.path.setAttribute('stroke-width', state.width);
+
+                    let value = Math.round(circle.value() * 100);
+                    if (value === 0) {
+                        circle.setText('');
+                    } else {
+                        circle.setText(value + "%");
+                    }
+
+                }
             })
+            progressBar.text.style.fontFamily = '"Raleway", Helvetica, sans-serif';
+            progressBar.text.style.fontSize = '1.5rem';
+            progressBar.animate({{\App\Models\Holiday::getLeftHours() / auth()->user()->holidays}})
 
             let events = @json($holidays, JSON_THROW_ON_ERROR);
             let calendarEl = document.getElementById('calendar')
@@ -130,9 +180,14 @@
                     $('input[name="start"]').val(info.startStr)
                     $('input[name="end"]').val(info.endStr)
                 },
-                eventResize: updateEvent
+                eventResize: async (info) => {
+                    let progress = updateEvent(info)
+                    progressBar.animate(await progress)
+                }
             })
             calendar.render()
         })
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/progressbar.js/1.1.0/progressbar.min.js" integrity="sha512-EZhmSl/hiKyEHklogkakFnSYa5mWsLmTC4ZfvVzhqYNLPbXKAXsjUYRf2O9OlzQN33H0xBVfGSEIUeqt9astHQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://fonts.googleapis.com/css?family=Raleway:400,300,600,800,900" rel="stylesheet" type="text/css">
 @endsection

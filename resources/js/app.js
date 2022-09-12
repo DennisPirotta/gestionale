@@ -3,9 +3,7 @@ import '../sass/app.scss'
 import '../css/app.css'
 import DOMPurify from "isomorphic-dompurify";
 
-
 window.updateEvent = async function (eventInfo) {
-    console.log(eventInfo)
     const token = document.querySelector('meta[name="csrf-token"]').content;
     let res = await fetch(`/ferie/${eventInfo.event.id}`, {
         method: 'POST',
@@ -30,7 +28,6 @@ window.updateEvent = async function (eventInfo) {
         ),
     })
     let body = await res.json()
-    console.log(body)
     let toastEl
     if (res.status === 200)
         toastEl = document.getElementById("success_toast")
@@ -44,10 +41,10 @@ window.updateEvent = async function (eventInfo) {
     $('#perc').text( `${body.perc}`)
     $('#hourLeft').text(body.left)
     $('#daysLeft').text((body.left / 8))
-    inizializeProgressBar()
+
     let toast = new bootstrap.Toast(toastEl)
     toast.show()
-
+    return body.perc / 100
 }
 
 window.unescapeHTML = (text) => {

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
 
 class HomeController extends Controller
@@ -27,5 +27,14 @@ class HomeController extends Controller
     {
         Session::put('whereami',auth()->user()->position);
         return view('home')->with('message', 'Login effettuato con successo');
+    }
+    public function store(): RedirectResponse
+    {
+        $user = auth()->user();
+        if ($user !== null) {
+            $user->first_login = false;
+        }
+        $user->save();
+        return back();
     }
 }

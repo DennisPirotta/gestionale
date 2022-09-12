@@ -26,6 +26,7 @@
         "moment-business": "^3.0.1",
         "moment-business-days": "^1.2.0",
         "patch-package": "^6.4.7",
+        "progress.js": "^1.1.3",
         "progressbar.js": "^1.1.0",
         "superagent": "^8.0.0",
         "watch": "^0.13.0",

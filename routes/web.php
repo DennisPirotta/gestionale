@@ -7,6 +7,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\HourController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\LocationController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
@@ -61,6 +62,8 @@ Route::middleware(['auth'])->group(function () {
 
     // Sezione utenti
     Route::get('/', [HomeController::class, 'index']);
+
+    Route::post('/', [HomeController::class,'store']); // delete first login popup
 
     /*
     *  GESTIONE ROUTES CLIENTI
@@ -144,5 +147,24 @@ Route::middleware(['auth'])->group(function () {
         }
 
     });
+
+    /*
+     *
+     *  GESTIONE ROUTE DIPENDENTI
+     *
+     */
+
+
+    // Mostra tutti i dipendenti
+    Route::get('/dipendenti',[UserController::class,'index']);
+
+    // Aggiorna dati dipendente
+    Route::get('/dipendenti/{id}',[UserController::class,'update']);
+
+    // Mostra pagina crea nuovo dipendente
+    Route::get('/dipendenti/create',[UserController::class,'create']);
+
+    // Salva nuovo dipendente
+    Route::post('/dipendenti',[UserController::class,'create']);
 
 });

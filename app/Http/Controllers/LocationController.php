@@ -10,6 +10,12 @@ use Illuminate\Routing\Redirector;
 
 class LocationController extends Controller
 {
+
+    public function index()
+    {
+        return view('locations.index');
+    }
+
     public function store(Request $request): Redirector|Application|RedirectResponse
     {
         try {

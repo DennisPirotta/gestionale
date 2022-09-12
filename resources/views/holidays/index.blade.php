@@ -15,45 +15,39 @@
                             <b id="hourLeft">{{$left_hours}}</b>
                             ( <b id="daysLeft">{{$left_hours/8}}</b> Giorni )
                             <div id="progress" class="my-3 w-25 mx-auto"></div>
-                            <div class="h-100 overflow-auto mb-3" style="max-height: 15vw">
-                                <table class="table text-center ">
-                                    <thead>
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">Inizio</th>
-                                        <th scope="col">Fine</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    @php($count = 1)
-                                    @foreach($holidays as $event)
-                                        @if($event['user'] === auth()->user()->id)
-                                            <tr>
-                                                <th scope="row">{{$count++}}</th>
-                                                <td>{{$event['start']}}</td>
-                                                <td>{{$event['end']}}</td>
-                                            </tr>
-                                        @endif
-                                    @endforeach
-                                    </tbody>
-                                </table>
-
-                            </div>
-
-
-                        </div>
-
-                        <div class="d-flex justify-content-center">
-                            <a href="#">
-                                <button class="btn btn-outline-primary me-2">
-                                    <i class="bi bi-pencil-square me-1"></i>
-                                    Modifica
-                                </button>
-                            </a>
-
-                            <form method="POST" action="#">
+                            <form method="POST" action="{{ route('holidays.destroyMore') }}">
                                 @csrf
-                                @method('DELETE')
+                                <div class="h-100 overflow-auto mb-3 fancy-scrollbar" style="max-height: 15vw">
+
+                                    <table class="table text-center ">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col" id="header" style="cursor:pointer;">#</th>
+                                            <th scope="col">Inizio</th>
+                                            <th scope="col">Fine</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        @php($count = 1)
+                                            @foreach($holidays as $event)
+                                                @if($event['user'] === auth()->user()->id)
+                                                    @php($start = \Carbon\Carbon::createFromTimeString($event['start']))
+                                                    @php($end = \Carbon\Carbon::createFromTimeString($event['end']))
+                                                    <tr>
+                                                        <th scope="row">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" value="{{$event['id']}}" id="{{$event['id']}}" name="ferie[]">
+                                                                <label class="form-check-label" for="{{$event['id']}}"></label>
+                                                            </div>
+                                                        </th>
+                                                        <td>{{ $start->translatedFormat('D d F Y') }}</td>
+                                                        <td>{{ $end->translatedFormat('D d F Y') }}</td>
+                                                    </tr>
+                                                @endif
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
                                 <button class="btn btn-outline-danger"
                                         onclick="return confirm('Sicuro di voler Eliminare?')">
                                     <i class="bi bi-trash me-1"></i>
@@ -138,7 +132,6 @@
             progressBar.text.style.fontFamily = '"Raleway", Helvetica, sans-serif';
             progressBar.text.style.fontSize = '1.5rem';
             progressBar.animate({{\App\Models\Holiday::getLeftHours() / auth()->user()->holidays}})
-
             let events = @json($holidays, JSON_THROW_ON_ERROR);
             let calendarEl = document.getElementById('calendar')
             let calendar = new FullCalendar.Calendar(calendarEl, {
@@ -186,6 +179,9 @@
                 }
             })
             calendar.render()
+            $("#header").click(function(){
+                $('input:checkbox').prop('checked', true);
+            });
         })
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/progressbar.js/1.1.0/progressbar.min.js" integrity="sha512-EZhmSl/hiKyEHklogkakFnSYa5mWsLmTC4ZfvVzhqYNLPbXKAXsjUYRf2O9OlzQN33H0xBVfGSEIUeqt9astHQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>

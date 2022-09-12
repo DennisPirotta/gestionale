@@ -18,3 +18,23 @@ table {
     position: relative;
     border-collapse: collapse;
 }
+
+.fancy-scrollbar::-webkit-scrollbar-track
+{
+    -webkit-box-shadow: inset 0 0 6px rgba(238, 232, 232, 0.3);
+    background-color: #d9d4d4;
+    border-radius: 6px;
+}
+
+.fancy-scrollbar::-webkit-scrollbar
+{
+    width: 6px;
+    background-color: #beb1b1;
+    border-radius: 6px;
+}
+
+.fancy-scrollbar::-webkit-scrollbar-thumb
+{
+    border-radius: 6px;
+    background-color: #7c7676;
+}

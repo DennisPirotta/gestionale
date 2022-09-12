@@ -108,6 +108,12 @@ Route::middleware(['auth'])->group(function () {
 
     // Elimina cliente
     Route::delete('/ferie/{holiday}', [HolidayController::class, 'destroy']);
+
+    // Elimina cliente multiplo
+    Route::post('/ferie/delete', [HolidayController::class, 'destroyMore'])->name('holidays.destroyMore');
+
+
+
     /*
     *  GESTIONE ROUTES ORE
     */
@@ -134,7 +140,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('change-password', [ChangePasswordController::class, 'index']);
     Route::post('change-password', [ChangePasswordController::class, 'store']);
 
-    Route::post('/whereami', [LocationController::class, 'store']);
+
 
     Route::post('/debug/change_permissions', static function (){
         try {
@@ -147,6 +153,17 @@ Route::middleware(['auth'])->group(function () {
         }
 
     });
+
+    /*
+     *
+     *  GESTIONE ROUTE DOVE SONO
+     *
+     */
+
+
+    Route::post('/whereami', [LocationController::class, 'store']);
+    Route::get('/dove_siamo', [LocationController::class, 'index']);
+
 
     /*
      *

@@ -139,4 +139,17 @@ class HolidayController extends Controller
         return back()->with('error', 'Puoi modificare solo le tue ferie');
     }
 
+    public function destroyMore(Request $request){
+
+
+        $holidays = Holiday::with(['hour','user'])->get();
+        foreach ($request->ferie as $event){
+            $holiday = $holidays->find($event);
+            if ($holiday->user->id === auth()->id()) {
+                $holiday->delete();
+                $holiday->hour->delete();
+            }
+        }
+        return back()->with('message', 'Ferie eliminate con successo');
+    }
 }

@@ -1,0 +1,17 @@
+{
+    "name": "Gestionale",
+    "short_name": "GEST",
+    "start_url": "/",
+    "background_color": "#6777ef",
+    "description": "Gestionale 3D Automation ed SPH Technologies",
+    "display": "fullscreen",
+    "theme_color": "#6777ef",
+    "icons": [
+        {
+            "src": "images/favicon.png",
+            "sizes": "96x96",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}

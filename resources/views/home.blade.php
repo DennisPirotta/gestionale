@@ -50,7 +50,6 @@
                                 <i class="bi bi-exclamation-triangle fs-4 me-2"></i>
                                 In caso dovessi riscontare <b>bug</b> o <b>malfunzionamenti</b> segnalali nell'apposita sezione di <a href="/bug-report" class="text-decoration-underline">Bug Report</a>
                             </div>
-
                         </div>
                         <div class="modal-footer">
                             <form method="post" action="/" class="w-100 justify-content-center d-flex">

@@ -54,7 +54,7 @@
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="bi bi-clipboard-data me-2"></i>Nome Cliente</span>
                                     <input type="text" class="form-control" aria-label="Nome Cliente" name="name"
-                                           value="" placeholder="Test">
+                                           value="{{ old('name') }}" placeholder="Test" id="name">
                                 </div>
 
                             </div>

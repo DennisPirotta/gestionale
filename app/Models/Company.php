@@ -10,11 +10,11 @@ class Company extends Model
 {
     use HasFactory;
 
-    public function users()
+    public function users(): HasMany
     {
         return $this->hasMany(User::class,'company_id');
     }
-    public function orders()
+    public function orders(): HasMany
     {
         return $this->hasMany(Order::class,'company_id');
     }

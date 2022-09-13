@@ -7,6 +7,7 @@ use DateTime;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Http\Request;
 
 class Holiday extends Model
@@ -58,10 +59,12 @@ class Holiday extends Model
         return auth()->user()->holidays - $count;
     }
 
-    public function user(){
+    public function user(): BelongsTo
+    {
         return $this->belongsTo(User::class,'user_id');
     }
-    public function hour(){
+    public function hour(): BelongsTo
+    {
         return $this->belongsTo(Hour::class,'hour_id');
     }
 }

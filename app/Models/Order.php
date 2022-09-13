@@ -4,15 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
-use PHP_CodeSniffer\Tests\Core\File\testFIINNamespacedClass;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Order extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-      'user_id','customer_id'
+      'user_id','customer_id','innerCode','outerCode','hourSW','hourMS','hourFAT','hourSAF','country_id','job_type_id','status_id','description','opening','closing','company_id'
     ];
 
     public function scopeFilter($query, array $filters): void
@@ -39,31 +39,38 @@ class Order extends Model
         }
     }
 
-    public function customer(){
+    public function customer(): BelongsTo
+    {
         return $this->belongsTo(Customer::class,'customer_id');
     }
 
-    public function user(){
+    public function user(): BelongsTo
+    {
         return $this->belongsTo(User::class,'user_id');
     }
 
-    public function company(){
+    public function company(): BelongsTo
+    {
         return $this->belongsTo(Company::class,'company_id');
     }
 
-    public function country(){
+    public function country(): BelongsTo
+    {
         return $this->belongsTo(Country::class,'country_id');
     }
 
-    public function status(){
+    public function status(): BelongsTo
+    {
         return $this->belongsTo(Status::class,'status_id');
     }
 
-    public function job_type(){
+    public function job_type(): BelongsTo
+    {
         return $this->belongsTo(JobType::class,'job_type_id');
     }
 
-    public function order_details(){
+    public function order_details(): HasMany
+    {
         return $this->hasMany(OrderDetails::class,'order_id');
     }
 

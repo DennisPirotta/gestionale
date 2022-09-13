@@ -52,21 +52,21 @@ class OrderController extends Controller
     public function store(Request $request): Redirector|Application|RedirectResponse
     {
         $formFields = $request->validate([
-            'company' => 'required',
-            'status' => 'required',
-            'country' => 'required',
+            'company_id' => 'required',
+            'status_id' => 'required',
+            'country_id' => 'required',
             'description' => 'required',
             'hourSW' => 'required',
-            'progress' => 'required',
+            'job_type_id' => 'required',
             'opening' => 'required',
             'closing' => 'required',
-            'customer' => 'required',
+            'customer_id' => 'required',
         ]);
 
-        $formFields['innerCode'] = (Order::latest()->first()->innerCode) + 1;
-        $formFields['outerCode'] = (Order::latest()->first()->outerCode) + 1;
+        $formFields['innerCode'] = (Order::orderBy('innerCode','desc')->first()->innerCode) + 1;
+        $formFields['outerCode'] = (Order::orderBy('outerCode','desc')->first()->innerCode) + 1;
 
-        $formFields['manager'] = auth()->user()->id;
+        $formFields['user_id'] = auth()->user()->id;
 
         Order::create($formFields);
 
@@ -138,7 +138,7 @@ class OrderController extends Controller
     {
         return view('orders.report',[
             'orders' => Order::with(['job_type','status','country','company','user','customer'])->orderBy('status_id')->get(),
-            'order_details' => OrderDetails::with(['hour','order'])
+            'order_details' => OrderDetails::with(['hour','order'])->get()
         ]);
     }
 }

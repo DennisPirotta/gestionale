@@ -77,7 +77,7 @@
                             <div class="col-md-6 col-sm-12">
                                 <div class="input-group mb-3 col-md-4 col-sm-6">
                                     <span class="input-group-text"><i class="bi bi-calendar me-2"></i>Inizio</span>
-                                    <input type="date" class="form-control" aria-label="Inizio" name="start" required>
+                                    <input type="date" class="form-control" aria-label="Inizio" name="start" id="start" value="{{ old('start') }}" required>
                                 </div>
                                 @error('start')
                                 <p class="text-danger fs-6">{{$message}}</p>
@@ -86,7 +86,7 @@
                             <div class="col-md-6 col-sm-12">
                                 <div class="input-group mb-3 col-md-4 col-sm-6">
                                     <span class="input-group-text"><i class="bi bi-calendar me-2"></i>Fine</span>
-                                    <input type="date" class="form-control" aria-label="Fine" name="end" required>
+                                    <input type="date" class="form-control" aria-label="Fine" name="end" id="end" value="{{ old('end') }}" required>
                                 </div>
                                 @error('end')
                                 <p class="text-danger fs-6">{{$message}}</p>

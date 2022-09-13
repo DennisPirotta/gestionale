@@ -8,7 +8,7 @@
             <div class="col-sm-6 col-md-6">
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <span class="input-group-text"><i class="bi bi-clipboard-data me-2"></i>Inizio</span>
-                    <input type="time" class="form-control" aria-label="Inizio" name="start" value="08:00">
+                    <input type="time" class="form-control" aria-label="Inizio" name="start" id="start" value="{{ old('start') }}" placeholder="08:00">
                 </div>
                 @error('start')
                 <p class="text-danger fs-6">{{$message}}</p>
@@ -17,7 +17,7 @@
             <div class="col-sm-6 col-md-6">
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <span class="input-group-text"><i class="bi bi-clipboard-data me-2"></i>Fine</span>
-                    <input type="time" class="form-control" aria-label="Fine" name="end" value="17:00">
+                    <input type="time" class="form-control" aria-label="Fine" name="end" id="end" placeholder="17:00" value="{{ old('end') }}">
                 </div>
                 @error('end')
                 <p class="text-danger fs-6">{{$message}}</p>
@@ -46,7 +46,7 @@
                                 <label class="input-group-text" for="year"><i
                                         class="bi bi-building me-2"></i>Anno</label>
                                 <input type="number" id="year" name="year" class="form-control" min="1970" max="2099"
-                                       step="1" value="{{date('Y')}}"/>
+                                       step="1" value="{{ old('year') }}" placeholder="{{date('Y')}}"/>
                             </div>
                             @error('year')
                             <p class="text-danger fs-6">{{$message}}</p>
@@ -196,7 +196,7 @@
                         <div class="col-md-12 col-sm-12 col-lg-12">
                             <div class="input-group mb-3">
                                 <label class="input-group-text" for="description"><i class="bi bi-building me-2"></i>Descrizione</label>
-                                <input type="text" class="form-control" name="description" id="description">
+                                <input type="text" class="form-control" name="description" id="description" value="{{ old('description') }}">
                             </div>
                             @error('description')
                             <p class="text-danger fs-6">{{$message}}</p>

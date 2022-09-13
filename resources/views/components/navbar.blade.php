@@ -25,7 +25,7 @@
                     </button>
                     <form class="d-flex" role="search" method="get" action="/commesse">
 
-                        <input class="form-control me-2" type="search" placeholder="Cerca" aria-label="Search" name="search"
+                        <input class="form-control me-2" type="search" placeholder="Cerca" aria-label="Search" name="search" id="search" value="{{ old('search') }}"
                                required>
                         <button class="btn btn-outline-success" type="submit"><i class="bi bi-search"></i></button>
                     </form>

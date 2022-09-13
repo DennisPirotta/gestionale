@@ -7,7 +7,7 @@
             <div class="col-md-4 col-sm-6">
                 <div class="input-group mb-3">
                     <label class="input-group-text" for="inputGroupSelect01"><i class="bi bi-building me-2"></i>Compagnia</label>
-                    <select class="form-select" id="inputGroupSelect01" name="company">
+                    <select class="form-select" id="inputGroupSelect01" name="company_id">
                         @foreach($companies as $company)
                             <option value="{{$company->id}}">{{$company->name}}</option>
                         @endforeach
@@ -20,7 +20,7 @@
             <div class=" col-md-4 col-sm-6">
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <label class="input-group-text" for="inputGroupSelect01"><i class="bi bi-lightning-charge me-2"></i>Stato</label>
-                    <select class="form-select" id="inputGroupSelect01" name="status">
+                    <select class="form-select" id="inputGroupSelect01" name="status_id">
                         @foreach($statuses as $status)
                             <option value="{{$status->id}}">{{$status->description}}</option>
                         @endforeach
@@ -34,7 +34,7 @@
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <label class="input-group-text" for="inputGroupSelect01"><i
                             class="bi bi-globe2 me-2"></i>Paese</label>
-                    <select class="form-select" id="inputGroupSelect01" name="country">
+                    <select class="form-select" id="inputGroupSelect01" name="country_id">
                         @foreach($countries as $country)
                             <option value="{{$country->id}}">{{$country->name}}</option>
                         @endforeach
@@ -47,7 +47,7 @@
             <div class=" col-md-4 col-sm-6">
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <span class="input-group-text"><i class="bi bi-clipboard-data me-2"></i>Descrizione</span>
-                    <input type="text" class="form-control" aria-label="Descrizione" name="description">
+                    <input type="text" class="form-control" aria-label="Descrizione" name="description" value="{{ old('description') }}">
                 </div>
                 @error('description')
                 <p class="text-danger fs-6">{{$message}}</p>
@@ -65,7 +65,7 @@
             <div class=" col-md-4 col-sm-6">
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <span class="input-group-text"><i class="bi bi-clock me-2"></i>Ore MS</span>
-                    <input type="number" class="form-control" aria-label="Descrizione" name="hourMS">
+                    <input type="number" class="form-control" aria-label="Descrizione" name="hourMS" value="{{ old('hourMS') }}">
                 </div>
                 @error('hourMS')
                 <p class="text-danger fs-6">{{$message}}</p>
@@ -74,7 +74,7 @@
             <div class=" col-md-4 col-sm-6">
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <span class="input-group-text"><i class="bi bi-clock me-2"></i>Ore FAT</span>
-                    <input type="number" class="form-control" aria-label="Descrizione" name="hourFAT">
+                    <input type="number" class="form-control" aria-label="Descrizione" name="hourFAT" value="{{ old('hourFAT') }}">
                 </div>
                 @error('hourFAT')
                 <p class="text-danger fs-6">{{$message}}</p>
@@ -83,7 +83,7 @@
             <div class=" col-md-4 col-sm-6">
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <span class="input-group-text"><i class="bi bi-clock me-2"></i>Ore SAF</span>
-                    <input type="number" class="form-control" aria-label="Descrizione" name="hourSAF">
+                    <input type="number" class="form-control" aria-label="Descrizione" name="hourSAF"  value="{{ old('hourSAF') }}">
                 </div>
                 @error('hourSAF')
                 <p class="text-danger fs-6">{{$message}}</p>
@@ -91,8 +91,15 @@
             </div>
             <div class=" col-md-4 col-sm-6">
                 <div class="input-group mb-3 col-md-4 col-sm-6">
-                    <span class="input-group-text"><i class="bi bi-arrow-clockwise me-2"></i>Progressi</span>
-                    <input type="text" class="form-control" aria-label="Progressi" name="progress">
+                    <label class="input-group-text" for="inputGroupSelect01"><i
+                                class="bi bi-person me-2"></i>Progresso</label>
+                    <select class="form-select" id="inputGroupSelect01" name="job_type_id">
+                        @unless(count($job_types) === 0)
+                            @foreach($job_types as $job_type)
+                                <option value="{{$job_type->id}}">{{$job_type->description}}</option>
+                            @endforeach
+                        @endunless
+                    </select>
                 </div>
                 @error('progress')
                 <p class="text-danger fs-6">{{$message}}</p>
@@ -101,7 +108,7 @@
             <div class=" col-md-4 col-sm-6">
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <span class="input-group-text"><i class="bi bi-calendar-check me-2"></i>Apertura</span>
-                    <input type="date" class="form-control" aria-label="Apertura" name="opening">
+                    <input type="date" class="form-control" aria-label="Apertura" name="opening" value="{{ old('opening') }}">
                 </div>
                 @error('opening')
                 <p class="text-danger fs-6">{{$message}}</p>
@@ -110,7 +117,7 @@
             <div class=" col-md-4 col-sm-6">
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <span class="input-group-text"><i class="bi bi-calendar-x me-2"></i>Chiusura</span>
-                    <input type="date" class="form-control" aria-label="Chiusura" name="closing">
+                    <input type="date" class="form-control" aria-label="Chiusura" name="closing" value="{{ old('closing') }}">
                 </div>
                 @error('closing')
                 <p class="text-danger fs-6">{{$message}}</p>
@@ -120,8 +127,8 @@
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <label class="input-group-text" for="inputGroupSelect01"><i
                             class="bi bi-person me-2"></i>Cliente</label>
-                    <select class="form-select" id="inputGroupSelect01" name="customer">
-                        @unless(count($customers) == 0)
+                    <select class="form-select" id="inputGroupSelect01" name="customer_id">
+                        @unless(count($customers) === 0)
                             @foreach($customers as $customer)
                                 <option value="{{$customer->id}}">{{$customer->name}}</option>
                             @endforeach

@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -46,22 +47,26 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
-    public function company()
+    public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class,'company_id');
     }
 
-    public function orders(){
+    public function orders(): HasMany
+    {
         return $this->hasMany(Order::class,'user_id');
     }
 
-    public function holidays(){
+    public function holidays(): HasMany
+    {
         return $this->hasMany(Holiday::class,'user_id');
     }
-    public function hours(){
+    public function hours(): HasMany
+    {
         return $this->hasMany(Hour::class,'user_id');
     }
-    public function locations(){
+    public function locations(): HasMany
+    {
         return $this->hasMany(Location::class,'user_id');
     }
 

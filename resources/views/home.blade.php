@@ -176,6 +176,7 @@
             deferredPrompt = e;
         });
 
+        /*
         // Installation must be done by a user gesture! Here, the button click
         btnAdd.addEventListener('click', (e) => {
             // hide our user interface that shows our A2HS button
@@ -193,6 +194,8 @@
                     deferredPrompt = null;
                 });
         });
+
+         */
 
     </script>
 @endsection

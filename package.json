@@ -18,7 +18,7 @@
     },
     "dependencies": {
         "bootstrap": "^5.2.0",
-        "fullcalendar": "^5.11.2",
+        "fullcalendar": "^5.11.3",
         "isomorphic-dompurify": "^0.20.0",
         "jquery-circle-progress": "^1.2.2",
         "js-circle-progress": "^0.2.4",

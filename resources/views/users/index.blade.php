@@ -5,7 +5,7 @@
             <div class="row">
                 @foreach($users as $user)
                     <div class="col-sm-6 col-md-4 mb-3">
-                        @if($user->id === auth()->user()->id)
+                        @if($user->id === auth()->id())
                             <div class="card h-100 bg-secondary bg-opacity-25"> <!--  bg-primary bg-opacity-25 -->
                         @else
                             <div class="card h-100"> <!--  bg-primary bg-opacity-25 -->

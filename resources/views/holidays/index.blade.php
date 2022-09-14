@@ -30,7 +30,7 @@
                                         <tbody>
                                         @php($count = 1)
                                             @foreach($holidays as $event)
-                                                @if($event['user'] === auth()->user()->id)
+                                                @if($event['user'] === auth()->id())
                                                     @php($start = \Carbon\Carbon::createFromTimeString($event['start']))
                                                     @php($end = \Carbon\Carbon::createFromTimeString($event['end']))
                                                     <tr>

@@ -10,7 +10,7 @@ use App\Models\JobType;
 use App\Models\Order;
 use App\Models\OrderDetails;
 use App\Models\Status;
-use App\Models\User;
+use Carbon\Carbon;
 use DateTime;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
@@ -19,29 +19,30 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
-use Illuminate\Support\Facades\Validator;
 
 class HourController extends Controller
 {
     public function index(): Factory|View|Application
     {
 
-        $holidays = Holiday::with(['hour']);
-        $users = User::all();
+        $holidays = Holiday::all();
+        $hours = Hour::with(['user'])->get();
 
         $formatted = [];
-        foreach (Hour::with(['user'])->get() as $hour){
-
-            $start = new DateTime($hour->start);
-            $end = new DateTime($hour->end);
-
-            $content = "Inizio: <b>" . $start->format('Y-m-d H:i')  . "</b><br> Fine: <b>" . $end->format('H:i') . "</b>";
+        foreach ($hours as $hour){
+            $start = null;
+            $end = null;
+            try {
+                $start = new DateTime($hour->start);
+                $end = new DateTime($hour->end);
+            } catch (Exception) { }
+            $content = "Inizio: <b>" . $start->format('H:i')  . "</b><br> Fine: <b>" . $end->format('H:i') . "</b>";
 
             $formatted[] = [
               'title' => $hour->user->name . " " . $hour->user->surname,
               'start' => $hour->start,
               'end' => $hour->end,
-              'allDay' => $holidays->where('hour_id',$hour->id)->get()->value('allDay'),
+              'allDay' => $holidays->where('hour_id',$hour->id)->value('allDay'),
               'extendedProps' => [
                   'content' => $content
               ]
@@ -71,72 +72,82 @@ class HourController extends Controller
     {}
     public function store(Request $request): Redirector|Application|RedirectResponse
     {
-        //creare bene tabella order hours
-        /*
-                $data = [];
-                try {
-                    $data[] =
-                }cch (Exception $e){ }
+        $default = $request->validate([
+            'start' => 'required',
+            'end' => 'required',
+            'hour_type_id' => 'required'
+        ]);
 
-                /*
-                 *
-                 *
-                 *
-                 *
-                 *
-                 *
+        $default['start'] = DateTime::createFromFormat('Y-m-d H:i',$request['day_start'] . " " . $default['start']);
+        $default['end'] = DateTime::createFromFormat('Y-m-d H:i',$request['day_end'] . " " . $default['end'])->modify('-1 day');
 
-                $data = Validator::make($request->only(['start','end','hour_type']),[
-                    'start' => 'required',
-                    'end' => 'required',
-                    'hour_type' => 'required'
+        if ($default['start']->format('Y-m-d') !== $default['end']->format('Y-m-d')) {
+            return back()->with('error', "L'inserimento multiplo non è ancora disponibile per questa sezione");
+        }
+
+        $default['user_id'] = auth()->id();
+
+
+        $used = 0;
+        foreach (Hour::where('user_id',auth()->id())->get() as $hour){
+            $used += Carbon::parse($hour->start)->diffInBusinessHours($hour->end);
+        }
+
+        if ($used >= 8 ) {
+            return back()->with('error', 'hai già inserito il numero massimo di ore per oggi');
+        }
+
+        $hour = Hour::create($default);
+
+
+        switch ($request->hour_type){
+            case 1: {   // Commessa
+                $data = $request->validate([
+                    'job_type_id' => 'required',
+                    'order_id' => 'required',
+                    'extra' => 'required',
                 ]);
 
-                try {
-                    $start = new DateTime($data->getData()['start']);
-                    $end = new DateTime($data->getData()['end']);
-                }catch (Exception $e){
-                    return response($e,500);
-                }
+                $orderDetails = [
+                    'order_id' => $data['order_id'],
+                    'hour_id' => $hour->id,
 
-                $hour = Hour::create([
-                    'start' => $start,
-                    'end' => $end,
-                    'user' => auth()->user()['id'],
-                    'hour_type' => $data->getData()['hour_type']
-                ]);
-                // se stai leggendo scusa per questo
+                ];
 
-                switch ($data->getData()['hour_type']){
-                    case 1: {
-                        // commessa
-                        OrderDetails::create([
-                            'order' => $request->get('order'),
-                            'hour' => $hour->id,
-                            'hourSW' => $request['hourSW'],
-                            'hourMS' => $request['hourMS'],
-                            'hourFAT' => $request['hourFAT'],
-                            'hourSAF' => $request['hourSAF'],
-                        ]);
-                    }
-                    case 2: {
-                        // fi
+                OrderDetails::create();
+                break;
+            }
+            case 2: {   // FI
+                break;
+            }
+            case 3: {   // Assistenza ??
+                break;
+            }
+            case 4: {   // AVIS
+                break;
+            }
+            case 5: {   // Corso
+                break;
+            }
+            case 6: {   // Ferie
+                break;
+            }
+            case 7: {   // Malattia
+                break;
+            }
+            case 8: {   // Ufficio
+                break;
+            }
+            case 9: {   // Visita Medica
+                break;
+            }
+            case 10: {  // Altro
+                break;
+            }
+            default:{
 
-                    }
-                    case 6: {
-                        // ferie
-
-                    }
-                    default: {
-                        // Altro
-
-                    }
-                }
-
-
-
-
-         */
+            }
+        }
         return redirect('/ore')->with('message', 'Ore inserite con successo');
     }
     public function update(): void

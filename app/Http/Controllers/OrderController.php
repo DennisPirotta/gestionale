@@ -66,7 +66,7 @@ class OrderController extends Controller
         $formFields['innerCode'] = (Order::orderBy('innerCode','desc')->first()->innerCode) + 1;
         $formFields['outerCode'] = (Order::orderBy('outerCode','desc')->first()->innerCode) + 1;
 
-        $formFields['user_id'] = auth()->user()->id;
+        $formFields['user_id'] = auth()->id();
 
         Order::create($formFields);
 

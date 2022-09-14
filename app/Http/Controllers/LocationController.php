@@ -21,7 +21,7 @@ class LocationController extends Controller
             $events[] = [
               'start' => Carbon::parse($location->date),
               'end' => Carbon::parse($location->date),
-              'title' => auth()->id(),
+              'title' => auth()->user()->name . ' ' . auth()->user()->surname,
             ];
         }
 

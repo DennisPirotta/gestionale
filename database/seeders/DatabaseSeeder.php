@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\AccessKey;
 use App\Models\Customer;
 use App\Models\Holiday;
 use App\Models\Hour;
@@ -326,16 +327,16 @@ class DatabaseSeeder extends Seeder
         Holiday::factory(30)->create();
         OrderDetails::factory(10)->create();
 
+        /*
         User::factory()->create([
             'name' => 'Dennis',
             'surname' => 'Pirotta',
             'email' => 'dennispirotta@gmail.com',
             'password' => Hash::make('pellio2014'),
         ]);
+        */
 
-        DB::table('access_keys')->insert([
-            'key' => Hash::make('3DAutomation')
-        ]);
+        AccessKey::factory()->create();
 
     }
 }

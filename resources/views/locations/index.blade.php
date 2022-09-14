@@ -63,7 +63,7 @@
                     center: 'title',
                     right: 'listWeek timeGridWeek dayGridMonth'
                 },
-                events: {{ $locations }},
+                events: @json($locations, JSON_THROW_ON_ERROR),
                 eventDidMount: function (info) {
                     let content = `<form method="POST" action="/ferie/${info.event.id}">@csrf @method('DELETE')<button class="btn btn-outline-danger" onclick="return confirm('Sicuro di voler Eliminare?')"><i class="bi bi-trash me-1 fs-4"></i></button></form>`
                     $(info.el).popover(

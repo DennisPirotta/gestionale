@@ -2,9 +2,10 @@
 
 namespace App\Rules;
 
+use App\Models\AccessKey;
 use Illuminate\Contracts\Validation\Rule;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Log;
 
 class MatchAccessKey implements Rule
 {
@@ -25,9 +26,17 @@ class MatchAccessKey implements Rule
      * @param  mixed  $value
      * @return bool
      */
-    public function passes($attribute, $value)
+    public function passes($attribute, $value): bool
     {
-        return Hash::check($value, DB::table('access_keys')->latest()->value('key'));
+        $match = false;
+        foreach (AccessKey::all() as $accessKey){
+            if($value === Crypt::decryptString($accessKey->key)) {
+                Log::channel('dev')->info('Access Key Match');
+                $match = true;
+            }
+        }
+        Log::channel('dev')->info('Access Key Dont Match');
+        return $match;
     }
 
     /**
@@ -35,7 +44,7 @@ class MatchAccessKey implements Rule
      *
      * @return string
      */
-    public function message()
+    public function message(): string
     {
         return 'The :attribute is incorrect.';
     }

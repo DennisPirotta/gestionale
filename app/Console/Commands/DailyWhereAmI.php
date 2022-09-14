@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\User;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class DailyWhereAmI extends Command
 {
@@ -24,8 +25,7 @@ class DailyWhereAmI extends Command
 
     public function handle(): void
     {
-        $users = User::where('position',true)->get();
-        foreach ($users as $user){
+        foreach (User::all() as $user){
             $user->update([
                 'position' => false,
             ]);

@@ -1,12 +1,13 @@
 <?php
 
+use App\Http\Controllers\AccessKeyController;
 use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\HolidayController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\HourController;
-use App\Http\Controllers\OrderController;
 use App\Http\Controllers\LocationController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -33,85 +34,86 @@ Route::middleware(['auth'])->group(function () {
     *  GESTIONE ROUTES COMMESSE
     */
 
-// Mostra pagina commesse
-    Route::get('/commesse', [OrderController::class, 'index']);
+    // Mostra pagina commesse
+    Route::get('/commesse', [OrderController::class, 'index'])->name('orders.index');
 
-// Mostra dettagli singola commessa
-    Route::get('/commesse/{order}', [OrderController::class, 'show'])->where('order', '[0-9]+');
+    // Mostra dettagli singola commessa
+    Route::get('/commesse/{order}', [OrderController::class, 'show'])->where('order', '[0-9]+')->name('orders.show');
 
-// Elimina Commessa
-    Route::delete('/commesse/{order}', [OrderController::class, 'destroy']);
+    // Elimina Commessa
+    Route::delete('/commesse/{order}', [OrderController::class, 'destroy'])->name('orders.destroy');
 
-// Mostra pagina aggiungi commessa
-    Route::get('/commesse/create', [OrderController::class, 'create']);
+    // Mostra pagina aggiungi commessa
+    Route::get('/commesse/create', [OrderController::class, 'create'])->name('orders.create');
 
-// Aggiungi commessa
-    Route::post('/commesse', [OrderController::class, 'store']);
+    // Aggiungi commessa
+    Route::post('/commesse', [OrderController::class, 'store'])->name('orders.store');
 
-// Mostra pagina modifica commessa
-    Route::get('/commesse/{order}/edit', [OrderController::class, 'edit']);
+    // Mostra pagina modifica commessa
+    Route::get('/commesse/{order}/edit', [OrderController::class, 'edit'])->name('orders.edit');
 
-// Salva modifiche commessa
-    Route::put('/commesse/{order}', [OrderController::class, 'update']);
-// Mostra report commesse
-    Route::get('/commesse/report', [OrderController::class, 'report']);
+    // Salva modifiche commessa
+    Route::put('/commesse/{order}', [OrderController::class, 'update'])->name('orders.update');
+
+    // Mostra report commesse
+    Route::get('/commesse/report', [OrderController::class, 'report'])->name('orders.report');
 
     /*
-    *  GESTIONE ROUTES UTENTI
+    *  GESTIONE ROUTES HOME
     */
 
-    // Sezione utenti
-    Route::get('/', [HomeController::class, 'index']);
+    // Mostra pagina principale
+    Route::get('/', [HomeController::class, 'index'])->name('home.index');
 
-    Route::post('/', [HomeController::class,'store']); // delete first login popup
+    // Rimuovi popup del primo login
+    Route::post('/', [HomeController::class,'store'])->name('home.store');
 
     /*
     *  GESTIONE ROUTES CLIENTI
     */
 
     // Mostra pagina clienti
-    Route::get('/clienti', [CustomerController::class, 'index']);
+    Route::get('/clienti', [CustomerController::class, 'index'])->name('customer.index');
 
     // Mostra pagina crea cliente
-    Route::get('/clienti/create', [CustomerController::class, 'create']);
+    Route::get('/clienti/create', [CustomerController::class, 'create'])->name('customer.create');
 
     // Mostra pagina clienti
-    Route::post('/clienti', [CustomerController::class, 'store']);
+    Route::post('/clienti', [CustomerController::class, 'store'])->name('customer.store');
 
     // Mostra pagina modifica
-    Route::get('/clienti/{customer}/edit', [CustomerController::class, 'edit']);
+    Route::get('/clienti/{customer}/edit', [CustomerController::class, 'edit'])->name('customer.edit');
 
     // Modifica cliente
-    Route::put('/clienti/{customer}', [CustomerController::class, 'update']);
+    Route::put('/clienti/{customer}', [CustomerController::class, 'update'])->name('customer.update');
 
     // Elimina cliente
-    Route::delete('/clienti/{customer}', [CustomerController::class, 'destroy']);
+    Route::delete('/clienti/{customer}', [CustomerController::class, 'destroy'])->name('customer.destroy');
 
     /*
     *  GESTIONE ROUTES FERIE
     */
 
     // Mostra pannello con ferie rimanenti e calendario
-    Route::get('/ferie', [HolidayController::class, 'index']);
+    Route::get('/ferie', [HolidayController::class, 'index'])->name('holidays.index');
 
     // Mostra pagina crea evento
-    Route::get('/ferie/create', [HolidayController::class, 'create']);
+    Route::get('/ferie/create', [HolidayController::class, 'create'])->name('holidays.create');
 
     // Crea ferie
-    Route::post('/ferie', [HolidayController::class, 'store']);
+    Route::post('/ferie', [HolidayController::class, 'store'])->name('holidays.store');
 
     // Mostra pagina modifica
-    Route::get('/ferie/{holiday}/edit', [HolidayController::class, 'edit']);
+    Route::get('/ferie/{holiday}/edit', [HolidayController::class, 'edit'])->name('holidays.edit');
 
     // Modifica cliente
-    Route::put('/ferie/{holiday}', [HolidayController::class, 'update']);
+    Route::put('/ferie/{holiday}', [HolidayController::class, 'update'])->name('holidays.update');
 
     // Elimina cliente
-    Route::delete('/ferie/{holiday}', [HolidayController::class, 'destroy']);
+    Route::delete('/ferie/{holiday}', [HolidayController::class, 'destroy'])->name('holidays.destroy');
 
     // Elimina cliente multiplo
     Route::post('/ferie/delete', [HolidayController::class, 'destroyMore'])->name('holidays.destroyMore');
-
 
 
     /*
@@ -119,22 +121,22 @@ Route::middleware(['auth'])->group(function () {
     */
 
     // Mostra pannello ore
-    Route::get('/ore', [HourController::class, 'index']);
+    Route::get('/ore', [HourController::class, 'index'])->name('hours.index');
 
     // Mostra pagina inserisci ore
-    Route::get('/ore/create', [HourController::class, 'create']);
+    Route::get('/ore/create', [HourController::class, 'create'])->name('hours.create');
 
     // Inserisci ore
-    Route::post('/ore', [HourController::class, 'store']);
+    Route::post('/ore', [HourController::class, 'store'])->name('hours.store');
 
     // Mostra pagina modifica
-    Route::get('/ore/{hour}/edit', [HourController::class, 'edit']);
+    Route::get('/ore/{hour}/edit', [HourController::class, 'edit'])->name('hours.edit');
 
     // Modifica ore
-    Route::put('/ore/{hour}', [HourController::class, 'update']);
+    Route::put('/ore/{hour}', [HourController::class, 'update'])->name('hours.update');
 
     // Elimina ore
-    Route::delete('/ore/{hour}', [HourController::class, 'destroy']);
+    Route::delete('/ore/{hour}', [HourController::class, 'destroy'])->name('hours.destroy');
 
 
     Route::get('change-password', [ChangePasswordController::class, 'index']);
@@ -155,33 +157,46 @@ Route::middleware(['auth'])->group(function () {
     });
 
     /*
-     *
      *  GESTIONE ROUTE DOVE SONO
-     *
      */
 
-
+    // Salva dove sono
     Route::post('/whereami', [LocationController::class, 'store']);
+
+    // Mostra tabella dove siamo
     Route::get('/dove_siamo', [LocationController::class, 'index']);
+
+    /*
+     *  GESTIONE ROUTE DIPENDENTI
+     */
+
+    // Mostra tutti i dipendenti
+    Route::get('/dipendenti',[UserController::class,'index'])->name('users.index');
+
+    // Aggiorna dati dipendente
+    Route::get('/dipendenti/{id}', [UserController::class, 'update'])->name('users.update');
+
+    // Mostra pagina crea nuovo dipendente
+    Route::get('/dipendenti/create', [UserController::class, 'create'])->name('users.create');
+
+    // Salva nuovo dipendente
+    Route::post('/dipendenti', [UserController::class, 'store'])->name('users.store');
 
 
     /*
-     *
-     *  GESTIONE ROUTE DIPENDENTI
-     *
+     * GESTIONE ROUTE CHIAVI DI ACCESSO
      */
 
+    // Mostra pagina chiavi di accesso
+    Route::get('/access-keys', [AccessKeyController::class, 'index'])->name('access.index');
 
-    // Mostra tutti i dipendenti
-    Route::get('/dipendenti',[UserController::class,'index']);
+    // Salva nuova chiave di accesso
+    Route::post('/access-keys', [AccessKeyController::class, 'store'])->name('access.store');
 
-    // Aggiorna dati dipendente
-    Route::get('/dipendenti/{id}',[UserController::class,'update']);
+    // Modifica chiave di accesso
+    Route::put('/access-keys/{id}', [AccessKeyController::class, 'update'])->name('access.update');
 
-    // Mostra pagina crea nuovo dipendente
-    Route::get('/dipendenti/create',[UserController::class,'create']);
-
-    // Salva nuovo dipendente
-    Route::post('/dipendenti',[UserController::class,'create']);
+    // Modifica chiave di accesso
+    Route::delete('/access-keys/{key}', [AccessKeyController::class, 'destroy'])->name('access.destroy');
 
 });

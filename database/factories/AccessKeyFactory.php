@@ -19,7 +19,8 @@ class AccessKeyFactory extends Factory
     public function definition()
     {
         return [
-            'key' => Crypt::encryptString('3DAutomation')
+            'name' => fake()->firstName,
+            'key' => Crypt::encryptString(fake()->text(20))
         ];
     }
 }

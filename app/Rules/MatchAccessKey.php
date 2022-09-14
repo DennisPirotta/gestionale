@@ -5,7 +5,6 @@ namespace App\Rules;
 use App\Models\AccessKey;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\Log;
 
 class MatchAccessKey implements Rule
 {
@@ -31,11 +30,9 @@ class MatchAccessKey implements Rule
         $match = false;
         foreach (AccessKey::all() as $accessKey){
             if($value === Crypt::decryptString($accessKey->key)) {
-                Log::channel('dev')->info('Access Key Match');
                 $match = true;
             }
         }
-        Log::channel('dev')->info('Access Key Dont Match');
         return $match;
     }
 

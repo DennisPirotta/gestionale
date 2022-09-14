@@ -38,3 +38,28 @@ table {
     border-radius: 6px;
     background-color: #7c7676;
 }
+
+.custom-popover {
+    --bs-popover-max-width: 200px;
+    --bs-popover-border-color: var(--bs-primary);
+    --bs-popover-body-padding-x: 1rem;
+    --bs-popover-body-padding-y: .5rem;
+}
+
+/* Styling for access keys */
+.txt:focus-visible {
+    outline: none;
+}
+
+.hide {
+    display: none;
+    white-space: pre;
+}
+
+.key {
+    border: none;
+    cursor: pointer;
+}
+.key:focus{
+    outline: none;
+}

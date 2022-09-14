@@ -14,6 +14,7 @@ use Database\Factories\OrderDetailsFactory;
 use DateTime;
 use Doctrine\DBAL\Exception;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -327,16 +328,19 @@ class DatabaseSeeder extends Seeder
         Holiday::factory(30)->create();
         OrderDetails::factory(10)->create();
 
-        /*
+
         User::factory()->create([
             'name' => 'Dennis',
             'surname' => 'Pirotta',
             'email' => 'dennispirotta@gmail.com',
             'password' => Hash::make('pellio2014'),
         ]);
-        */
 
-        AccessKey::factory()->create();
+        AccessKey::factory(4)->create();
+        AccessKey::factory()->create([
+            'key' => Crypt::encryptString('3DAutomation'),
+            'name' => 'default'
+        ]);
 
     }
 }

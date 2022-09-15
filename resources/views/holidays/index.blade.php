@@ -1,6 +1,10 @@
 @extends('layouts.app')
 @section('content')
-
+    <style>
+        p{
+            margin-bottom: 0;
+        }
+    </style>
     <div class="container mt-3 mb-1 shadow-sm p-5">
         <div class="row text-center">
             <div class="col-sm-12 col-lg-5 mb-3">
@@ -40,8 +44,24 @@
                                                                 <label class="form-check-label" for="{{$event['id']}}"></label>
                                                             </div>
                                                         </th>
-                                                        <td>{{ $start->translatedFormat('D d F Y') }}</td>
-                                                        <td>{{ $end->translatedFormat('D d F Y') }}</td>
+                                                        @if($event['allDay'])
+                                                            <td id="start_{{ $event['id'] }}">
+                                                                <p>{{ $start->translatedFormat('D d F Y') }}</p>
+                                                            </td>
+                                                            <td id="end_{{ $event['id'] }}">
+                                                                <p>{{ $end->translatedFormat('D d F Y') }}</p>
+                                                            </td>
+                                                        @else
+                                                            <td id="start_{{ $event['id'] }}">
+                                                                <p>{{ $start->translatedFormat('D d F Y') }}</p>
+                                                                <p>{{ $start->translatedFormat('H:i') }}</p>
+                                                            </td>
+                                                            <td id="end_{{ $event['id'] }}">
+                                                                <p>{{ $end->translatedFormat('D d F Y') }}</p>
+                                                                <p>{{ $end->translatedFormat('H:i') }}</p>
+                                                            </td>
+                                                        @endif
+
                                                     </tr>
                                                 @endif
                                             @endforeach
@@ -71,6 +91,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form method="post" action="/ferie">
+                    <label for="allDay"></label><input name="allDay" class="d-none">
                     @csrf
                     <div class="modal-body">
                         <div class="row">
@@ -103,6 +124,7 @@
         </div>
     </div>
     <script>
+
         $(document).ready(async function () {
 
             let progressBar = new ProgressBar.Circle('#progress', {
@@ -139,6 +161,9 @@
                 themeSystem: 'bootstrap5',
                 selectable: true,
                 editable: true,
+                slotDuration: '1:00',
+                slotMinTime: '8:00',
+                slotMaxTime: '18:00',
                 locale: 'it',
                 longPressDelay: 1000,
                 businessHours: {
@@ -149,7 +174,7 @@
                 headerToolbar: {
                     left: 'prev next today',
                     center: 'title',
-                    right: 'listWeek timeGridWeek dayGridMonth'
+                    right: 'listWeek timeGridDay dayGridMonth'
                 },
                 events: events,
                 eventDidMount: function (info) {
@@ -170,12 +195,31 @@
                 eventDrop: updateEvent,
                 select: function (info) {
                     $('#myModal').modal('toggle')
-                    $('input[name="start"]').val(info.startStr)
-                    $('input[name="end"]').val(info.endStr)
+                    $('input[name="allDay"]').val(info.allDay)
+                    let inputStart = $('input[name="start"]')
+                    let inputEnd = $('input[name="end"]')
+                    if (info.allDay){
+                        inputStart.attr('type','date')
+                        inputEnd.attr('type','date')
+                        inputStart.val(info.startStr)
+                        inputEnd.val(info.endStr)
+                    }else {
+                        inputStart.attr('type','time')
+                        inputEnd.attr('type','time')
+                        inputStart.val(moment(info.start).format('HH:mm'))
+                        inputEnd.val(moment(info.end).format('HH:mm'))
+                    }
                 },
                 eventResize: async (info) => {
                     let progress = updateEvent(info)
+                    let start = new moment(info.event.start)
+                    let end = new moment(info.event.end)
                     progressBar.animate(await progress)
+                    $(`#start_${info.event.id}`).text(start.format('ddd DD MMMM YYYY'))
+                    $(`#end_${info.event.id}`).text(end.format('ddd DD MMMM YYYY'))
+                    console.log(info.event.id)
+                    console.log(start)
+                    console.log(end)
                 }
             })
             calendar.render()

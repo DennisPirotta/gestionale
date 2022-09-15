@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @section('content')
     @if(!session('whereami'))
+        {{--
         <div class="modal fade" id="whereami" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -28,8 +29,9 @@
         <script>
             $(() => $('#whereami').modal('toggle'))
         </script>
+        --}}
     @endif
-    {{--@if()--}}
+
     @if(auth()->user()->first_login)
         <div class="modal modal-xl fade" id="first_login" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -71,9 +73,15 @@
         </script>
     @endif
     <div class="container my-5 p-3">
+        @if(!session('whereami'))
+            <div class="alert alert-warning fs-5" role="alert">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                <span>Non hai ancora inserito dove sei, <a href="{{ route('locations.index') }}">inserisci ora</a></span>
+            </div>
+        @endif
         <div class="row g-3 justify-content-center text-center d-flex">
             <div class="col-xl-3 col-md-4 col-sm-6 mb-3">
-                <a href="{{url('/commesse')}}">
+                <a href="{{ route('orders.index') }}">
                     <div class="card">
                         <div class="card-body">
                             <i class="bi bi-clipboard-plus fs-1"></i>
@@ -83,7 +91,7 @@
                 </a>
             </div>
             <div class="col-xl-3 col-md-4 col-sm-6 mb-3">
-                <a href="{{url('/dove_siamo')}}">
+                <a href="{{ route('locations.index') }}">
                     <div class="card">
                         <div class="card-body">
                             <i class="bi bi-globe2 fs-1"></i>
@@ -93,7 +101,7 @@
                 </a>
             </div>
             <div class="col-xl-3 col-md-4 col-sm-6 mb-3">
-                <a href="{{url('/ore')}}">
+                <a href="{{ route('hours.index') }}">
                     <div class="card">
                         <div class="card-body">
                             <i class="bi bi-clock-history fs-1"></i>
@@ -103,7 +111,7 @@
                 </a>
             </div>
             <div class="col-xl-3 col-md-4 col-sm-6 mb-3">
-                <a href="{{url('/ferie')}}">
+                <a href="{{ route('holidays.index') }}">
                     <div class="card">
                         <div class="card-body">
                             <i class="bi bi-calendar4-week fs-1"></i>
@@ -118,7 +126,7 @@
                 </div>
 
             <div class="col-xl-3 col-md-4 col-sm-6 mb-3">
-                <a href="{{url('/clienti')}}">
+                <a href="{{ route('customers.index') }}">
                     <div class="card">
                         <div class="card-body">
                             <i class="bi bi-people fs-1"></i>
@@ -128,7 +136,7 @@
                 </a>
             </div>
             <div class="col-xl-3 col-md-4 col-sm-6 mb-3">
-                <a href="{{url('/commesse/report')}}">
+                <a href="{{ route('orders.report') }}">
                     <div class="card">
                         <div class="card-body">
                             <i class="bi bi-journals fs-1"></i>
@@ -138,7 +146,7 @@
                 </a>
             </div>
             <div class="col-xl-3 col-md-4 col-sm-6 mb-3">
-                <a href="{{url('/dipendenti')}}">
+                <a href="{{ route('users.index') }}">
                     <div class="card">
                         <div class="card-body">
                             <i class="bi bi-person-workspace fs-1"></i>
@@ -155,7 +163,9 @@
                         <div class="card-body">
                             <i class="bi bi-bug fs-1"></i>
                             <h5 class="card-title">Debug</h5>
-                            <input name="level" type="number" max="2" min="0" class="form-control"/>
+                            <label>
+                                <input name="level" type="number" max="2" min="0" class="form-control"/>
+                            </label>
                         </div>
                         <div class="card-footer">
                             <button type="submit" class="btn btn-success">{{ __('Cambia') }}</button>

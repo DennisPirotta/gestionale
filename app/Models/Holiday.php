@@ -15,7 +15,7 @@ class Holiday extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id','hour_id'
+        'user_id','hour_id','approved','allDay'
     ];
 
     /**

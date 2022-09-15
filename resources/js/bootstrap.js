@@ -1,11 +1,14 @@
 import loadash from 'lodash'
 import * as Popper from '@popperjs/core'
 import * as bootstrap from 'bootstrap'
-import moment from "moment";
+import moment from 'moment/min/moment-with-locales';
+import itLocale from 'moment/locale/it'
 import business from "moment-business"
 import axios from 'axios'
 import DOMPurify from 'isomorphic-dompurify'
 import CircleProgress from 'js-circle-progress'
+
+moment.locale('it')
 
 window.CircleProgress = CircleProgress
 
@@ -15,6 +18,7 @@ window.moment = moment
 window.business = business
 window.bootstrap = bootstrap
 window.DOMPurify = DOMPurify
+
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests

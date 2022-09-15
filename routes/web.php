@@ -73,22 +73,22 @@ Route::middleware(['auth'])->group(function () {
     */
 
     // Mostra pagina clienti
-    Route::get('/clienti', [CustomerController::class, 'index'])->name('customer.index');
+    Route::get('/clienti', [CustomerController::class, 'index'])->name('customers.index');
 
     // Mostra pagina crea cliente
-    Route::get('/clienti/create', [CustomerController::class, 'create'])->name('customer.create');
+    Route::get('/clienti/create', [CustomerController::class, 'create'])->name('customers.create');
 
     // Mostra pagina clienti
-    Route::post('/clienti', [CustomerController::class, 'store'])->name('customer.store');
+    Route::post('/clienti', [CustomerController::class, 'store'])->name('customers.store');
 
     // Mostra pagina modifica
-    Route::get('/clienti/{customer}/edit', [CustomerController::class, 'edit'])->name('customer.edit');
+    Route::get('/clienti/{customer}/edit', [CustomerController::class, 'edit'])->name('customers.edit');
 
     // Modifica cliente
-    Route::put('/clienti/{customer}', [CustomerController::class, 'update'])->name('customer.update');
+    Route::put('/clienti/{customer}', [CustomerController::class, 'update'])->name('customers.update');
 
     // Elimina cliente
-    Route::delete('/clienti/{customer}', [CustomerController::class, 'destroy'])->name('customer.destroy');
+    Route::delete('/clienti/{customer}', [CustomerController::class, 'destroy'])->name('customers.destroy');
 
     /*
     *  GESTIONE ROUTES FERIE
@@ -161,10 +161,10 @@ Route::middleware(['auth'])->group(function () {
      */
 
     // Salva dove sono
-    Route::post('/whereami', [LocationController::class, 'store']);
+    Route::post('/dove-siamo', [LocationController::class, 'store'])->name('locations.store');
 
     // Mostra tabella dove siamo
-    Route::get('/dove_siamo', [LocationController::class, 'index']);
+    Route::get('/dove-siamo', [LocationController::class, 'index'])->name('locations.index');
 
     /*
      *  GESTIONE ROUTE DIPENDENTI
@@ -193,10 +193,7 @@ Route::middleware(['auth'])->group(function () {
     // Salva nuova chiave di accesso
     Route::post('/access-keys', [AccessKeyController::class, 'store'])->name('access.store');
 
-    // Modifica chiave di accesso
-    Route::put('/access-keys/{id}', [AccessKeyController::class, 'update'])->name('access.update');
-
-    // Modifica chiave di accesso
+    // Elimina chiave di accesso
     Route::delete('/access-keys/{key}', [AccessKeyController::class, 'destroy'])->name('access.destroy');
 
 });

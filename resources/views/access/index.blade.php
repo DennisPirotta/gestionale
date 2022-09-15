@@ -28,6 +28,7 @@
                     <td class="d-flex">
                         <form action="{{ route('access.destroy',$key->id) }}" method="POST">
                             @csrf
+                            @method('DELETE')
                             <button class="btn btn-danger" onclick="return confirm('Sicuro di voler eliminare la chiave?')"><i class="bi bi-trash"></i></button>
                         </form>
                     </td>
@@ -45,16 +46,16 @@
                     <h5 class="modal-title" id="exampleModalLabel">Aggiungi Chiave</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="post" action="{{ route('access.store') }}">
+                <form method="POST" action="{{ route('access.store') }}">
+                    @csrf
                     <div class="modal-body">
-                        @csrf
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1"><i class="bi bi-key fs-5"></i></span>
-                            <input type="text" class="form-control" placeholder="Chiave" aria-label="Chiave" aria-describedby="basic-addon1">
+                            <input type="text" class="form-control" placeholder="Chiave" aria-label="Chiave" aria-describedby="basic-addon1" name="key">
                         </div>
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon2"><i class="bi bi-braces fs-5"></i></span>
-                            <input type="text" class="form-control" placeholder="Nome" aria-label="Nome" aria-describedby="basic-addon2">
+                            <input type="text" class="form-control" placeholder="Nome" aria-label="Nome" aria-describedby="basic-addon2" name="name">
                         </div>
                     </div>
                     <div class="modal-footer">

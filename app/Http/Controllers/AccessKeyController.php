@@ -24,21 +24,14 @@ class AccessKeyController extends Controller
     public function store(Request $request): Redirector|Application|RedirectResponse
     {
         $formFields = $request->validate([
-            'key' => 'required'
+            'key' => ['required','unique:access_keys'],
+            'name' => ['required','unique:access_keys']
         ]);
         AccessKey::create([
-            'key' => Crypt::encryptString($formFields['key'])
+            'key' => Crypt::encryptString($formFields['key']),
+            'name' => $formFields['name']
         ]);
         return redirect('/access-keys')->with('message', 'Chiave di accesso inserita correttamente');
-    }
-
-    public function update(Request $request, AccessKey $key): Redirector|Application|RedirectResponse
-    {
-        $formFields = $request->validate([
-            'key' => 'required'
-        ]);
-        $key->update($formFields);
-        return redirect('/access-keys')->with('message', 'Chiave di accesso aggiornata con successo');
     }
 
     public function destroy(AccessKey $key): RedirectResponse

@@ -19,7 +19,6 @@ class HolidayController extends Controller
     public function index()
     {
         $events = [];
-        $users = User::select('id', 'name')->get();
 
         foreach (Holiday::with(['user','hour'])->get() as $holiday) {
             $editable = false;
@@ -51,7 +50,15 @@ class HolidayController extends Controller
                 'borderColor' => $border,
                 'allDay' => $holiday->allDay,
             ];
+
+
         }
+
+        usort($events,function ($date1,$date2){
+            $datetime1 = strtotime($date1['start']);
+            $datetime2 = strtotime($date2['start']);
+            return $datetime1 - $datetime2;
+        });
 
         return view('holidays.index', [
             'holidays' => $events,
@@ -65,8 +72,12 @@ class HolidayController extends Controller
             return redirect('/ferie')->with('error', 'Disponibilità di ferie insufficente');
         }
 
-        $start = new DateTime($request->start);
-        $end = new DateTime($request->end);
+
+
+        $start = Carbon::parse($request->start);
+        $end = Carbon::parse($request->end);
+        $allDay = $request->allDay === 'true'? true: false;
+        $approved = false;
 
         $hour = Hour::create([
             'start' => $start->format('Y-m-d H:i:s'),
@@ -75,12 +86,15 @@ class HolidayController extends Controller
             'hour_type_id' => 6,
         ]);
 
-
+        if ($end->isPast()){
+            $approved = true;
+        }
 
         Holiday::create([
-            'allDay' => true,
+            'allDay' => $allDay,
             'user_id' => auth()->id(),
-            'hour_id' => $hour->id
+            'hour_id' => $hour->id,
+            'approved' => $approved
         ]);
 
         return redirect('/ferie')->with('message', 'Ferie richieste con successo, usate <b>' . abs(Carbon::parse($request->start)->diffInBusinessHours($request->end)) . "</b> ore");

@@ -37,8 +37,6 @@ window.updateEvent = async function (eventInfo) {
     }
 
     $(toastEl).find("div.toast-body").html(DOMPurify.sanitize(body.message))
-    $('#progressBar').attr('data-value', `${body.perc}`)
-    $('#perc').text( `${body.perc}`)
     $('#hourLeft').text(body.left)
     $('#daysLeft').text((body.left / 8))
 

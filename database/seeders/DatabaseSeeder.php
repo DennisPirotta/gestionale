@@ -328,7 +328,6 @@ class DatabaseSeeder extends Seeder
         Holiday::factory(30)->create();
         OrderDetails::factory(10)->create();
 
-
         User::factory()->create([
             'name' => 'Dennis',
             'surname' => 'Pirotta',

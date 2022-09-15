@@ -156,23 +156,25 @@
                 </a>
             </div>
             @endif
-            <div class="col-12 mb-3">
-                <form method="post" action="/debug/change_permissions">
-                    @csrf
-                    <div class="card w-50 mx-auto">
-                        <div class="card-body">
-                            <i class="bi bi-bug fs-1"></i>
-                            <h5 class="card-title">Debug</h5>
-                            <label>
-                                <input name="level" type="number" max="2" min="0" class="form-control"/>
-                            </label>
+            @if(env('APP_DEBUG'))
+                <div class="col-12 mb-3">
+                    <form method="post" action="/debug/change_permissions">
+                        @csrf
+                        <div class="card w-50 mx-auto">
+                            <div class="card-body">
+                                <i class="bi bi-bug fs-1"></i>
+                                <h5 class="card-title">Debug</h5>
+                                <label>
+                                    <input name="level" type="number" max="2" min="0" class="form-control"/>
+                                </label>
+                            </div>
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-success">{{ __('Cambia') }}</button>
+                            </div>
                         </div>
-                        <div class="card-footer">
-                            <button type="submit" class="btn btn-success">{{ __('Cambia') }}</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
+                    </form>
+                </div>
+            @endif
         </div>
     </div>
     <script>

@@ -166,6 +166,9 @@ Route::middleware(['auth'])->group(function () {
     // Mostra tabella dove siamo
     Route::get('/dove-siamo', [LocationController::class, 'index'])->name('locations.index');
 
+    // aggiorna posizione
+    Route::put('/dove-siamo/{location}', [LocationController::class, 'update'])->name('locations.update');
+
     /*
      *  GESTIONE ROUTE DIPENDENTI
      */

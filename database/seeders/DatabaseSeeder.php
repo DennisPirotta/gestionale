@@ -335,6 +335,13 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('pellio2014'),
         ]);
 
+        User::factory()->create([
+            'name' => 'Prove',
+            'surname' => 'Gestionale',
+            'email' => 'provegestionale@test.com',
+            'password' => Hash::make('pellio2014'),
+        ]);
+
         AccessKey::factory(4)->create();
         AccessKey::factory()->create([
             'key' => Crypt::encryptString('3DAutomation'),

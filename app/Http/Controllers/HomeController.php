@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Session;
 
 class HomeController extends Controller
 {
@@ -25,7 +24,9 @@ class HomeController extends Controller
      */
     public function index(): Renderable
     {
-        Session::put('whereami',auth()->user()->position);
+        if (!auth()->user()->position){
+            session()->put('whereami',false);
+        }
         return view('home')->with('message', 'Login effettuato con successo');
     }
     public function store(): RedirectResponse

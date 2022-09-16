@@ -1,37 +1,5 @@
 @extends('layouts.app')
 @section('content')
-    @if(!session('whereami'))
-        {{--
-        <div class="modal fade" id="whereami" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="whereami">Dove sei</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <form action="/whereami" method="post">
-                        @csrf
-                        <div class="modal-body">
-                            <div class="input-group mb-3">
-                                <span class="input-group-text" id="basic-addon1"><i class="bi bi-geo-alt"></i></span>
-                                <input type="text" class="form-control" name="whereami" placeholder="Dove sei?" aria-label="Dove sono" aria-describedby="basic-addon1" required>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancella</button>
-                            <button type="submit" class="btn btn-primary">Salva</button>
-                        </div>
-                    </form>
-
-                </div>
-            </div>
-        </div>
-        <script>
-            $(() => $('#whereami').modal('toggle'))
-        </script>
-        --}}
-    @endif
-
     @if(auth()->user()->first_login)
         <div class="modal modal-xl fade" id="first_login" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -73,7 +41,7 @@
         </script>
     @endif
     <div class="container my-5 p-3">
-        @if(!session('whereami'))
+        @if(session()->has('whereami'))
             <div class="alert alert-warning fs-5" role="alert">
                 <i class="bi bi-exclamation-triangle me-2"></i>
                 <span>Non hai ancora inserito dove sei, <a href="{{ route('locations.index') }}">inserisci ora</a></span>

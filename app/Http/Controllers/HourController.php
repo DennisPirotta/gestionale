@@ -101,7 +101,7 @@ class HourController extends Controller
 
 
         switch ($request->hour_type){
-            case 1: {   // Commessa
+            case '1': {   // Commessa
                 $data = $request->validate([
                     'job_type_id' => 'required',
                     'order_id' => 'required',
@@ -117,31 +117,31 @@ class HourController extends Controller
                 OrderDetails::create();
                 break;
             }
-            case 2: {   // FI
+            case '2': {   // FI
                 break;
             }
-            case 3: {   // Assistenza ??
+            case '3': {   // Assistenza ??
                 break;
             }
-            case 4: {   // AVIS
+            case '4': {   // AVIS
                 break;
             }
-            case 5: {   // Corso
+            case '5': {   // Corso
                 break;
             }
-            case 6: {   // Ferie
+            case '6': {   // Ferie
                 break;
             }
-            case 7: {   // Malattia
+            case '7': {   // Malattia
                 break;
             }
-            case 8: {   // Ufficio
+            case '8': {   // Ufficio
                 break;
             }
-            case 9: {   // Visita Medica
+            case '9': {   // Visita Medica
                 break;
             }
-            case 10: {  // Altro
+            case '10': {  // Altro
                 break;
             }
             default:{

@@ -217,9 +217,6 @@
                     progressBar.animate(await progress)
                     $(`#start_${info.event.id}`).text(start.format('ddd DD MMMM YYYY'))
                     $(`#end_${info.event.id}`).text(end.format('ddd DD MMMM YYYY'))
-                    console.log(info.event.id)
-                    console.log(start)
-                    console.log(end)
                 }
             })
             calendar.render()

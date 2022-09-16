@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Location;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
@@ -12,16 +15,26 @@ use Illuminate\Routing\Redirector;
 class LocationController extends Controller
 {
 
-    public function index()
+    public function index(): Factory|View|Application
     {
         $locations = Location::with('user')->get();
         $events = [];
+        $color = '#6C757DFF';
 
         foreach ($locations as $location){
+            if ($location->user->id === auth()->id()){
+                $color = '#0D6EFDFF';
+            }
             $events[] = [
               'start' => Carbon::parse($location->date),
               'end' => Carbon::parse($location->date),
-              'title' => auth()->user()->name . ' ' . auth()->user()->surname,
+              'title' => substr($location->user->name,0,1) . '. ' . substr($location->user->surname,0,1) . '. - ' . $location->description,
+              'allDay' => true,
+              'description' => $location->description,
+              'name' => $location->user->name,
+              'surname' => $location->user->surname,
+              'locationId' => $location->id,
+              'backgroundColor' => $color
             ];
         }
 
@@ -32,19 +45,33 @@ class LocationController extends Controller
 
     public function store(Request $request): Redirector|Application|RedirectResponse
     {
+        foreach (Location::with('user')->get() as $location){
+            if ($request->date === $location->date && $location->user->id === auth()->id()){
+                return back()->with('error','Hai gia inserito dove ti trovi in questa data');
+            }
+        }
         try {
             Location::create([
-                'date' => now(),
+                'date' => $request->date,
                 'description' => $request->whereami,
                 'user_id' => auth()->id()
             ]);
             auth()->user()->update([
                 'position' => true
             ]);
-            return redirect('/')->with('message','Posizione inserita con successo');
-        }catch (\Exception $e ){
-            return redirect('/')->with('error','Impossibile inserire la posizione');
-        }
+            session()->forget('whereami');
 
+            return back()->with('message','Posizione inserita con successo');
+        }catch (Exception $e){
+            return back()->with('error','Impossibile inserire la posizione ' . $e);
+        }
+    }
+
+    public function update(Request $request, Location $location): RedirectResponse
+    {
+        $location->update([
+            'description' => $request->whereami
+        ]);
+        return back()->with('message','Posizione modificata con successo');
     }
 }

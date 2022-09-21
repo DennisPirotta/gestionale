@@ -59,7 +59,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Order::class,'user_id');
     }
 
-    public function holidays(): HasMany
+    public function holidayList(): HasMany
     {
         return $this->hasMany(Holiday::class,'user_id');
     }

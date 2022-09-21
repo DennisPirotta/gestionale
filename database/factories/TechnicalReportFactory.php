@@ -19,9 +19,9 @@ class TechnicalReportFactory extends Factory
     public function definition()
     {
         return [
-            'customer' => Customer::all()->random()->id,
-            'customer2' => Customer::all()->random()->id,
-            'order' => Order::all()->random()->id,
+            'customer_id' => Customer::all()->random()->id,
+            'secondary_customer_id' => Customer::all()->random()->id,
+            'order_id' => Order::all()->random()->id,
             'number' => fake()->randomNumber(5)
         ];
     }

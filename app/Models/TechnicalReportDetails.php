@@ -6,24 +6,20 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class OrderDetails extends Model
+class TechnicalReportDetails extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'hour_id','job_type_id','order_id','description','signed'
+        'hour_id','technical_report_id'
     ];
 
-    public function order(): BelongsTo
-    {
-        return $this->belongsTo(Order::class,'order_id');
-    }
     public function hour(): BelongsTo
     {
         return $this->belongsTo(Hour::class,'hour_id');
     }
-    public function job_type(): BelongsTo
+    public function technical_report(): BelongsTo
     {
-        return $this->belongsTo(JobType::class,'job_type_id');
+        return $this->belongsTo(TechnicalReport::class,'technical_report_id');
     }
 }

@@ -26,11 +26,13 @@ return new class extends Migration
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
 
-            $table->integer('hourSW');
-            $table->integer('hourMS');
-            $table->integer('hourFAT');
-            $table->integer('hourSAF');
+            $table->foreignId('job_type_id')
+                ->constrained()
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
 
+            $table->string('description')->nullable();
+            $table->boolean('signed')->nullable(); // timbrate / con modulo
             $table->timestamps();
         });
     }

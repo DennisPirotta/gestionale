@@ -23,6 +23,10 @@ class Hour extends Model
     {
         return $this->hasMany(OrderDetails::class,'hour_id');
     }
+    public function technical_report_details(): HasMany
+    {
+        return $this->hasMany(TechnicalReportDetails::class,'hour_id');
+    }
 
     public function user(): BelongsTo
     {

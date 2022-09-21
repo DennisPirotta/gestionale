@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Holiday;
 use App\Models\Hour;
 use App\Models\HourType;
+use App\Models\Location;
 use App\Models\User;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
@@ -62,7 +64,8 @@ class HolidayController extends Controller
 
         return view('holidays.index', [
             'holidays' => $events,
-            'left_hours' => Holiday::getLeftHours()
+            'left_hours' => Holiday::getLeftHours(),
+            'users' => User::with(['holidayList.hour'])->get()
         ]);
     }
 
@@ -72,12 +75,11 @@ class HolidayController extends Controller
             return redirect('/ferie')->with('error', 'Disponibilità di ferie insufficente');
         }
 
-
-
         $start = Carbon::parse($request->start);
         $end = Carbon::parse($request->end);
         $allDay = $request->allDay === 'true'? true: false;
         $approved = false;
+        $period = CarbonPeriod::create($start,$end);
 
         $hour = Hour::create([
             'start' => $start->format('Y-m-d H:i:s'),
@@ -96,6 +98,14 @@ class HolidayController extends Controller
             'hour_id' => $hour->id,
             'approved' => $approved
         ]);
+
+        foreach ($period as $date){
+            Location::create([
+                'date' => $date->format('Y-m-d'),
+                'description' => 'Ferie',
+                'user_id' => auth()->id()
+            ]);
+        }
 
         return redirect('/ferie')->with('message', 'Ferie richieste con successo, usate <b>' . abs(Carbon::parse($request->start)->diffInBusinessHours($request->end)) . "</b> ore");
     }
@@ -147,6 +157,16 @@ class HolidayController extends Controller
     public function destroy(Holiday $holiday)
     {
         if ($holiday->user->id === auth()->id()) {
+
+            $period = CarbonPeriod::create($holiday->hour->start,$holiday->hour->end);
+            foreach ($period as $date){
+                foreach (Location::where('user_id',auth()->id())->get() as $location){
+                    if ($location->date === $date->format('Y-m-d') && $location->description === 'Ferie'){
+                        $location->delete();
+                    }
+                };
+            }
+            $holiday->hour->delete();
             $holiday->delete();
             return back()->with('message', 'Ferie eliminate con successo');
         }
@@ -159,10 +179,7 @@ class HolidayController extends Controller
         $holidays = Holiday::with(['hour','user'])->get();
         foreach ($request->ferie as $event){
             $holiday = $holidays->find($event);
-            if ($holiday->user->id === auth()->id()) {
-                $holiday->delete();
-                $holiday->hour->delete();
-            }
+            $this->destroy($holiday);
         }
         return back()->with('message', 'Ferie eliminate con successo');
     }

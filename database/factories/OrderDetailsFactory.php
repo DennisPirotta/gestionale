@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Hour;
 use App\Models\HourType;
+use App\Models\JobType;
 use App\Models\Order;
 use App\Models\OrderDetails;
 use App\Models\User;
@@ -32,21 +33,10 @@ class OrderDetailsFactory extends Factory
             'user_id' => User::all()->random()->id,
         ]);
 
-        $job = [
-            'hourSW' => 0,
-            'hourMS' => 0,
-            'hourFAT' => 0,
-            'hourSAF' => 0,
+        return [
+            'order_id' => Order::all()->random()->id,
+            'hour_id' => $hour->id,
+            'job_type_id' => JobType::all()->random()->id
         ];
-
-        $job[array_rand($job)] = fake()->numberBetween(1,8);
-
-        $data = array_merge(
-            [
-                'order_id' => Order::all()->random()->id,
-                'hour_id' => $hour->id,
-            ], $job);
-
-        return $data;
     }
 }

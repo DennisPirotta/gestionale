@@ -9,6 +9,7 @@ use App\Models\Hour;
 use App\Models\Order;
 use App\Models\OrderDetails;
 use App\Models\TechnicalReport;
+use App\Models\TechnicalReportDetails;
 use App\Models\User;
 use Database\Factories\OrderDetailsFactory;
 use DateTime;
@@ -327,6 +328,7 @@ class DatabaseSeeder extends Seeder
         Hour::factory(20)->create();
         Holiday::factory(30)->create();
         OrderDetails::factory(10)->create();
+        TechnicalReportDetails::factory(10)->create();
 
         User::factory()->create([
             'name' => 'Dennis',

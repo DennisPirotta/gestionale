@@ -14,4 +14,13 @@ class Customer extends Model
     {
         return $this->hasMany(Order::class,'customer_id');
     }
+
+    public function technical_reports_first(): HasMany
+    {
+        return $this->hasMany(TechnicalReport::class,'customer_id');
+    }
+    public function technical_reports_second(): HasMany
+    {
+        return $this->hasMany(TechnicalReport::class,'secondary_customer_id');
+    }
 }

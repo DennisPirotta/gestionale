@@ -11,20 +11,23 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Log;
 
 class LocationController extends Controller
 {
-
     public function index(): Factory|View|Application
     {
         $locations = Location::with('user')->get();
         $events = [];
-        $color = '#6C757DFF';
 
         foreach ($locations as $location){
+            $color = '#6C757DFF';
             if ($location->user->id === auth()->id()){
                 $color = '#0D6EFDFF';
+                Log::channel('dev')->info('Uguale, cambio colore');
             }
+            Log::channel('dev')->info('Colore -> ' . $color);
+            Log::channel('dev')->info('------------------------');
             $events[] = [
               'start' => Carbon::parse($location->date),
               'end' => Carbon::parse($location->date),
@@ -62,16 +65,19 @@ class LocationController extends Controller
             session()->forget('whereami');
 
             return back()->with('message','Posizione inserita con successo');
-        }catch (Exception $e){
-            return back()->with('error','Impossibile inserire la posizione ' . $e);
+        }catch (Exception){
+            return back()->with('error','Impossibile inserire la posizione ');
         }
     }
 
     public function update(Request $request, Location $location): RedirectResponse
     {
-        $location->update([
-            'description' => $request->whereami
-        ]);
-        return back()->with('message','Posizione modificata con successo');
+        if($location->user->id === auth()->id()){
+            $location->update([
+                'description' => $request->whereami
+            ]);
+            return back()->with('message','Posizione modificata con successo');
+        }
+        return back()->with('error', 'Puoi modificare solo la tua posizione');
     }
 }

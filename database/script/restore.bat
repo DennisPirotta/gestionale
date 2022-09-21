@@ -8,4 +8,5 @@ php artisan migrate --path=database/migrations/after/2022_08_08_114154_create_ho
 php artisan migrate --path=database/migrations/after/2022_08_05_122923_create_hours_table.php
 php artisan migrate --path=database/migrations/after/2022_08_03_144409_create_holidays_table.php
 php artisan migrate --path=database/migrations/after/2022_08_16_144530_create_order_details_table.php
+php artisan migrate --path=database/migrations/after/2022_09_21_124145_create_technical_reports_details_table.php
 php artisan db:seed

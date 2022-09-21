@@ -10,8 +10,14 @@ class JobType extends Model
 {
     use HasFactory;
 
-    public function order(): HasMany
+    public function orders(): HasMany
     {
         return $this->hasMany(Order::class,'job_type_id');
     }
+    public function order_details(): HasMany
+    {
+        return $this->hasMany(OrderDetails::class,'job_type_id');
+    }
+
+
 }

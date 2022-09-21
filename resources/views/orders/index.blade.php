@@ -8,6 +8,11 @@
         @unless(count($commesse) === 0)
             <nav>
                 <div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
+                    <button class="nav-link" id="nav-all-tab"
+                            data-bs-toggle="tab" data-bs-target="#nav-all"
+                            type="button" role="tab"
+                            aria-controls="nav-all"
+                            aria-selected="true">Tutte</button>
                     @foreach($statuses as $status)
                         <button class="nav-link" id="nav-{{str_replace(' ','',$status->description)}}-tab"
                                 data-bs-toggle="tab" data-bs-target="#nav-{{str_replace(' ','',$status->description)}}"
@@ -18,6 +23,53 @@
                 </div>
             </nav>
             <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="nav-all"
+                     role="tabpanel" aria-labelledby="nav-all-tab"
+                     tabindex="0">
+                    <div class="row">
+                        @foreach($commesse->sortBy('status_id') as $commessa)
+                                <div class="col-sm-6 col-md-4 mb-3">
+                                    <div
+                                            class="card h-100 bg-opacity-25 bg-{{$commessa->status->color}}">
+                                        <!--  bg-black bg-opacity-25 -->
+                                        <div class="card-body">
+                                            <i class="bi bi-building"></i>
+                                            <span class="card-title">Commessa {{$commessa->id}}</span>
+                                            <a href="?company={{urlencode($commessa->company->name)}}">
+                                                @if($commessa->company->id === 1)
+                                                    <span class="badge text-bg-primary bg-opacity-100">3D</span>
+                                                @else
+                                                    <span class="badge text-bg-success bg-opacity-100">S+H</span>
+                                                @endif
+                                            </a>
+                                            <a href="?customer={{$commessa->customer->name}}">
+                                                <h6 class="card-subtitle my-2 text-muted">{{$commessa->customer->name}}</h6>
+                                            </a>
+                                            <p class="card-text">{{$commessa->description}}</p>
+                                            <div class="d-flex justify-content-center">
+                                                <a href="/commesse/{{$commessa->id}}">
+                                                    <button class="btn btn-outline-primary me-2">
+                                                        <i class="bi bi-info-circle me-1"></i>
+                                                        Dettagli
+                                                    </button>
+                                                </a>
+
+                                                <form method="POST" action="/commesse/{{$commessa->id}}">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button class="btn btn-outline-danger"
+                                                            onclick="return confirm('Sicuro di voler Eliminare?')">
+                                                        <i class="bi bi-trash me-1"></i>
+                                                        Elimina
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        @endforeach
+                    </div>
+                </div>
                 @foreach($statuses as $status)
                     <div class="tab-pane fade show" id="nav-{{str_replace(' ','',$status->description)}}"
                          role="tabpanel" aria-labelledby="nav-{{str_replace(' ','',$status->description)}}-tab"

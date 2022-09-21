@@ -11,31 +11,21 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up(): void
+    public function up()
     {
-        Schema::create('technical_reports', function (Blueprint $table) {
+        Schema::create('technical_report_details', function (Blueprint $table) {
             $table->id();
+            $table  ->foreignId('hour_id')
+                    ->constrained()
+                    ->cascadeOnUpdate()
+                    ->cascadeOnDelete();
+
+            $table  ->foreignId('technical_report_id')
+                    ->constrained()
+                    ->cascadeOnUpdate()
+                    ->cascadeOnDelete();
+
             $table->timestamps();
-
-            $table  ->foreignId('customer_id')
-                    ->constrained()
-                    ->cascadeOnUpdate()
-                    ->cascadeOnDelete();
-
-            $table  ->foreignId('secondary_customer_id')
-                    ->nullable()
-                    ->constrained('customers')
-                    ->cascadeOnUpdate()
-                    ->cascadeOnDelete();
-
-            $table  ->foreignId('order_id')
-                    ->nullable()
-                    ->constrained()
-                    ->cascadeOnUpdate()
-                    ->cascadeOnDelete();
-
-            $table->integer('number')->unique();
-
         });
     }
 
@@ -44,8 +34,8 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down(): void
+    public function down()
     {
-        Schema::dropIfExists('technical_reports');
+        Schema::dropIfExists('technical_report_details');
     }
 };

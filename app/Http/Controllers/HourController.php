@@ -10,6 +10,8 @@ use App\Models\JobType;
 use App\Models\Order;
 use App\Models\OrderDetails;
 use App\Models\Status;
+use App\Models\TechnicalReport;
+use App\Models\TechnicalReportDetails;
 use Carbon\Carbon;
 use DateTime;
 use Exception;
@@ -54,7 +56,8 @@ class HourController extends Controller
             'hour_types' => HourType::all(),
             'job_types' => JobType::all(),
             'orders' => Order::with(['status','customer'])->orderBy('status_id')->get(),
-            'customers' => Customer::all()
+            'customers' => Customer::all(),
+            'technical_reports' => TechnicalReport::with(['customer','secondary_customer'])->orderBy('customer_id')->get()
         ]);
     }
 
@@ -89,8 +92,11 @@ class HourController extends Controller
 
 
         $used = 0;
-        foreach (Hour::where('user_id',auth()->id())->get() as $hour){
-            $used += Carbon::parse($hour->start)->diffInBusinessHours($hour->end);
+        $hours = Hour::where('user_id',auth()->id())->get();
+        foreach ($hours as $hour){
+            if (Carbon::parse($hour->start)->isSameDay(Carbon::parse($default['start']))) {
+                $used += Carbon::parse($hour->start)->diffInBusinessHours($hour->end);
+            }
         }
 
         if ($used >= 8 ) {
@@ -99,56 +105,75 @@ class HourController extends Controller
 
         $hour = Hour::create($default);
 
+        $message = '';
 
-        switch ($request->hour_type){
+        switch ($request['hour_type_id']){
             case '1': {   // Commessa
                 $data = $request->validate([
                     'job_type_id' => 'required',
-                    'order_id' => 'required',
-                    'extra' => 'required',
+                    'order_id' => 'required'
                 ]);
-
-                $orderDetails = [
-                    'order_id' => $data['order_id'],
+                OrderDetails::create(array_merge($data,[
                     'hour_id' => $hour->id,
-
-                ];
-
-                OrderDetails::create();
+                    'description' => $request->job_description ?? null,
+                    'signed' => isset($request->signed) ? (bool)$request->signed : null
+                ]));
+                $message = 'Ore commessa inserite con successo';
                 break;
             }
             case '2': {   // FI
+                $data = $request->validate(['number' => 'required']);
+                if ($request->fi_new === '0'){
+                    TechnicalReport::create(array_merge($data,[
+                        'secondary_customer_id' => $request['secondary_customer_id'] ?? null,
+                        'order_id' => $request['fi_order_id'] ?? null,
+                        'customer_id' => $request['customer_id']
+                    ]));
+                }
+                TechnicalReportDetails::create([
+                    'hour_id' => $hour->id,
+                    'technical_report_id' => TechnicalReport::where('number',$data['number'])->get()[0]->id
+                ]);
+                $message = 'Ore foglio intervento inserite con successo';
                 break;
             }
             case '3': {   // Assistenza ??
+                $message = 'Ore di assistenza inserite con successo';
                 break;
             }
             case '4': {   // AVIS
+                $message = 'Ore di AVIS inserite con successo';
                 break;
             }
             case '5': {   // Corso
+                $message = 'Ore di corso inserite con successo';
                 break;
             }
             case '6': {   // Ferie
+                $message = 'Ore di ferie inserite con successo';
                 break;
             }
             case '7': {   // Malattia
+                $message = 'Ore di malattia inserite con successo';
                 break;
             }
             case '8': {   // Ufficio
+                $message = 'Ore di ufficio inserite con successo';
                 break;
             }
             case '9': {   // Visita Medica
+                $message = 'Ore visita medica inserite con successo';
                 break;
             }
             case '10': {  // Altro
+                $message = 'Ore inserite con successo';
                 break;
             }
             default:{
 
             }
         }
-        return redirect('/ore')->with('message', 'Ore inserite con successo');
+        return redirect('/ore')->with('message', $message);
     }
     public function update(): void
     {}

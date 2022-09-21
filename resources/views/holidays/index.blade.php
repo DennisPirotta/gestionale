@@ -1,7 +1,8 @@
+@php use Carbon\Carbon; @endphp
 @extends('layouts.app')
 @section('content')
     <style>
-        p{
+        p {
             margin-bottom: 0;
         }
     </style>
@@ -14,10 +15,10 @@
                         <span class="card-title fs-3">{{auth()->user()->name}}</span>
                         <hr class="w-50 mx-auto mt-0">
 
-                        <div class="card-text" >
+                        <div class="card-text">
                             <p>Ore di ferie rimaste:
-                            <b id="hourLeft">{{$left_hours}}</b>
-                            ( <b id="daysLeft">{{$left_hours/8}}</b> Giorni )
+                                <b id="hourLeft">{{$left_hours}}</b>
+                                ( <b id="daysLeft">{{$left_hours/8}}</b> Giorni )
                             <div id="progress" class="my-3 w-25 mx-auto"></div>
                             <form method="POST" action="{{ route('holidays.destroyMore') }}">
                                 @csrf
@@ -33,38 +34,41 @@
                                         </thead>
                                         <tbody>
                                         @php($count = 1)
-                                            @foreach($holidays as $event)
-                                                @if($event['user'] === auth()->id())
-                                                    @php($start = \Carbon\Carbon::createFromTimeString($event['start']))
-                                                    @php($end = \Carbon\Carbon::createFromTimeString($event['end']))
-                                                    <tr>
-                                                        <th scope="row">
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" value="{{$event['id']}}" id="{{$event['id']}}" name="ferie[]">
-                                                                <label class="form-check-label" for="{{$event['id']}}"></label>
-                                                            </div>
-                                                        </th>
-                                                        @if($event['allDay'])
-                                                            <td id="start_{{ $event['id'] }}">
-                                                                <p>{{ $start->translatedFormat('D d F Y') }}</p>
-                                                            </td>
-                                                            <td id="end_{{ $event['id'] }}">
-                                                                <p>{{ $end->translatedFormat('D d F Y') }}</p>
-                                                            </td>
-                                                        @else
-                                                            <td id="start_{{ $event['id'] }}">
-                                                                <p>{{ $start->translatedFormat('D d F Y') }}</p>
-                                                                <p>{{ $start->translatedFormat('H:i') }}</p>
-                                                            </td>
-                                                            <td id="end_{{ $event['id'] }}">
-                                                                <p>{{ $end->translatedFormat('D d F Y') }}</p>
-                                                                <p>{{ $end->translatedFormat('H:i') }}</p>
-                                                            </td>
-                                                        @endif
+                                        @foreach($holidays as $event)
+                                            @if($event['user'] === auth()->id())
+                                                @php($start = Carbon::createFromTimeString($event['start']))
+                                                @php($end = Carbon::createFromTimeString($event['end']))
+                                                <tr>
+                                                    <th scope="row">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                   value="{{$event['id']}}" id="{{$event['id']}}"
+                                                                   name="ferie[]">
+                                                            <label class="form-check-label"
+                                                                   for="{{$event['id']}}"></label>
+                                                        </div>
+                                                    </th>
+                                                    @if($event['allDay'])
+                                                        <td id="start_{{ $event['id'] }}">
+                                                            <p>{{ $start->translatedFormat('D d F Y') }}</p>
+                                                        </td>
+                                                        <td id="end_{{ $event['id'] }}">
+                                                            <p>{{ $end->translatedFormat('D d F Y') }}</p>
+                                                        </td>
+                                                    @else
+                                                        <td id="start_{{ $event['id'] }}">
+                                                            <p>{{ $start->translatedFormat('D d F Y') }}</p>
+                                                            <p>{{ $start->translatedFormat('H:i') }}</p>
+                                                        </td>
+                                                        <td id="end_{{ $event['id'] }}">
+                                                            <p>{{ $end->translatedFormat('D d F Y') }}</p>
+                                                            <p>{{ $end->translatedFormat('H:i') }}</p>
+                                                        </td>
+                                                    @endif
 
-                                                    </tr>
-                                                @endif
-                                            @endforeach
+                                                </tr>
+                                            @endif
+                                        @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -83,6 +87,35 @@
             </div>
         </div>
     </div>
+    @if( auth()->user()->level > 0 )
+        <div class="container mt-5 mb-3 shadow-sm p-5 table-responsive">
+            <table class="table align-middle">
+                <thead>
+                <tr>
+                    <th scope="col">Utente</th>
+                    <th scope="col">Inizio</th>
+                    <th scope="col">Fine</th>
+                    <th scope="col">Azioni</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach( $users as $user )
+                    @foreach($user->holidayList->where('approved',false) as $holiday)
+                        <tr>
+                            <th scope="row">{{ $user->name }}</th>
+                            <td>{{ Carbon::parse($holiday->hour->start)->translatedFormat('D d M Y') }}</td>
+                            <td>{{ Carbon::parse($holiday->hour->end)->translatedFormat('D d M Y') }}</td>
+                            <td>
+                                <button class="btn btn-success"><i class="bi bi-check fs-4"></i></button>
+                                <button class="btn btn-danger"><i class="ms-1 bi bi-x fs-4"></i></button>
+                            </td>
+                        </tr>
+                    @endforeach
+                @endforeach
+                </tbody>
+            </table>
+        </div>
+    @endif
     <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="label" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -98,7 +131,8 @@
                             <div class="col-md-6 col-sm-12">
                                 <div class="input-group mb-3 col-md-4 col-sm-6">
                                     <span class="input-group-text"><i class="bi bi-calendar me-2"></i>Inizio</span>
-                                    <input type="date" class="form-control" aria-label="Inizio" name="start" id="start" value="{{ old('start') }}" required>
+                                    <input type="date" class="form-control" aria-label="Inizio" name="start" id="start"
+                                           value="{{ old('start') }}" required>
                                 </div>
                                 @error('start')
                                 <p class="text-danger fs-6">{{$message}}</p>
@@ -107,7 +141,8 @@
                             <div class="col-md-6 col-sm-12">
                                 <div class="input-group mb-3 col-md-4 col-sm-6">
                                     <span class="input-group-text"><i class="bi bi-calendar me-2"></i>Fine</span>
-                                    <input type="date" class="form-control" aria-label="Fine" name="end" id="end" value="{{ old('end') }}" required>
+                                    <input type="date" class="form-control" aria-label="Fine" name="end" id="end"
+                                           value="{{ old('end') }}" required>
                                 </div>
                                 @error('end')
                                 <p class="text-danger fs-6">{{$message}}</p>
@@ -135,10 +170,10 @@
                 trailWidth: 1,
                 easing: 'easeInOut',
                 duration: 1400,
-                from: { color: '#FF0000', width: 1 },
-                to: { color: '#00FF00', width: 4 },
+                from: {color: '#FF0000', width: 1},
+                to: {color: '#00FF00', width: 4},
                 // Set default step function for all animate calls
-                step: function(state, circle) {
+                step: function (state, circle) {
                     circle.path.setAttribute('stroke', state.color);
                     circle.path.setAttribute('stroke-width', state.width);
 
@@ -198,14 +233,14 @@
                     $('input[name="allDay"]').val(info.allDay)
                     let inputStart = $('input[name="start"]')
                     let inputEnd = $('input[name="end"]')
-                    if (info.allDay){
-                        inputStart.attr('type','date')
-                        inputEnd.attr('type','date')
+                    if (info.allDay) {
+                        inputStart.attr('type', 'date')
+                        inputEnd.attr('type', 'date')
                         inputStart.val(info.startStr)
                         inputEnd.val(info.endStr)
-                    }else {
-                        inputStart.attr('type','time')
-                        inputEnd.attr('type','time')
+                    } else {
+                        inputStart.attr('type', 'time')
+                        inputEnd.attr('type', 'time')
                         inputStart.val(moment(info.start).format('HH:mm'))
                         inputEnd.val(moment(info.end).format('HH:mm'))
                     }
@@ -220,11 +255,13 @@
                 }
             })
             calendar.render()
-            $("#header").click(function(){
+            $("#header").click(function () {
                 $('input:checkbox').prop('checked', true);
             });
         })
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/progressbar.js/1.1.0/progressbar.min.js" integrity="sha512-EZhmSl/hiKyEHklogkakFnSYa5mWsLmTC4ZfvVzhqYNLPbXKAXsjUYRf2O9OlzQN33H0xBVfGSEIUeqt9astHQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/progressbar.js/1.1.0/progressbar.min.js"
+            integrity="sha512-EZhmSl/hiKyEHklogkakFnSYa5mWsLmTC4ZfvVzhqYNLPbXKAXsjUYRf2O9OlzQN33H0xBVfGSEIUeqt9astHQ=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link href="https://fonts.googleapis.com/css?family=Raleway:400,300,600,800,900" rel="stylesheet" type="text/css">
 @endsection

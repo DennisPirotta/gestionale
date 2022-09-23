@@ -183,4 +183,11 @@ class HolidayController extends Controller
         }
         return back()->with('message', 'Ferie eliminate con successo');
     }
+
+    public function approve(Request $request,Holiday $holiday){
+        $holiday->update([
+            'approved' => true
+        ]);
+        return back()->with('message','Ferie modificate con successo');
+    }
 }

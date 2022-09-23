@@ -6,9 +6,15 @@
         </div>
         <a class="navbar-brand ms-2" href="{{ url('/') }}">
             {{ config('app.name')}}
-            {{-- <span class="border border-2 badge border-danger mx-2 text-black bg-danger bg-opacity-25 border-opacity-50">Alpha</span> --}}
-            {{-- <span class="border border-2 badge border-primary mx-2 text-black bg-primary bg-opacity-25 border-opacity-50">Beta</span> --}}
-             <span class="border border-2 badge border-success ms-2 text-black bg-success bg-opacity-25 border-opacity-50">Dev</span>
+            @if(env('APP_STATUS') === 'dev')
+                <span class="border border-2 badge border-success ms-2 text-black bg-success bg-opacity-25 border-opacity-50">Dev</span>
+            @endif
+            @if(env('APP_STATUS') === 'alpha')
+                <span class="border border-2 badge border-danger mx-2 text-black bg-danger bg-opacity-25 border-opacity-50">Alpha</span>
+            @endif
+            @if(env('APP_STATUS') === 'beta')
+                <span class="border border-2 badge border-primary mx-2 text-black bg-primary bg-opacity-25 border-opacity-50">Beta</span>
+            @endif
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">

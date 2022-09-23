@@ -24,10 +24,7 @@ class LocationController extends Controller
             $color = '#6C757DFF';
             if ($location->user->id === auth()->id()){
                 $color = '#0D6EFDFF';
-                Log::channel('dev')->info('Uguale, cambio colore');
             }
-            Log::channel('dev')->info('Colore -> ' . $color);
-            Log::channel('dev')->info('------------------------');
             $events[] = [
               'start' => Carbon::parse($location->date),
               'end' => Carbon::parse($location->date),

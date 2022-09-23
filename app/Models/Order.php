@@ -74,4 +74,9 @@ class Order extends Model
         return $this->hasMany(OrderDetails::class,'order_id');
     }
 
+    public function technical_reports(): HasMany
+    {
+        return $this->hasMany(TechnicalReport::class,'order_id');
+    }
+
 }

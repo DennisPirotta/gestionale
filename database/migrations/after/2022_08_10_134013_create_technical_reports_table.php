@@ -22,6 +22,11 @@ return new class extends Migration
                     ->cascadeOnUpdate()
                     ->cascadeOnDelete();
 
+            $table  ->foreignId('user_id')
+                    ->constrained()
+                    ->cascadeOnUpdate()
+                    ->cascadeOnDelete();
+
             $table  ->foreignId('secondary_customer_id')
                     ->nullable()
                     ->constrained('customers')

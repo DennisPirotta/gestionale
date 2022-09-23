@@ -8,6 +8,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\HourController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\TechnicalReportDetailsController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -109,6 +110,9 @@ Route::middleware(['auth'])->group(function () {
     // Modifica cliente
     Route::put('/ferie/{holiday}', [HolidayController::class, 'update'])->name('holidays.update');
 
+    // Approva ferie
+    Route::put('/ferie/approve/{holiday}', [HolidayController::class, 'approve'])->name('holidays.approve');
+
     // Elimina cliente
     Route::delete('/ferie/{holiday}', [HolidayController::class, 'destroy'])->name('holidays.destroy');
 
@@ -198,5 +202,8 @@ Route::middleware(['auth'])->group(function () {
 
     // Elimina chiave di accesso
     Route::delete('/access-keys/{key}', [AccessKeyController::class, 'destroy'])->name('access.destroy');
+
+
+    Route::get('/fi/{technical_report}',[TechnicalReportDetailsController::class,'show'])->name('technical_report_details.show');
 
 });

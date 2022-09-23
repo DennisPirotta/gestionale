@@ -14,7 +14,6 @@ use App\Models\TechnicalReport;
 use App\Models\TechnicalReportDetails;
 use Carbon\Carbon;
 use DateTime;
-use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -28,17 +27,12 @@ class HourController extends Controller
     {
 
         $holidays = Holiday::all();
-        $hours = Hour::with(['user'])->get();
+        $hours = Hour::with(['user','hour_type'])->get();
 
         $formatted = [];
         foreach ($hours as $hour){
-            $start = null;
-            $end = null;
-            try {
-                $start = new DateTime($hour->start);
-                $end = new DateTime($hour->end);
-            } catch (Exception) { }
-            $content = "Inizio: <b>" . $start->format('H:i')  . "</b><br> Fine: <b>" . $end->format('H:i') . "</b>";
+
+            $content = '<form method="POST" action="'.route('hours.destroy',$hour->id).'">'.csrf_field().method_field('DELETE').'<button class="btn btn-outline-danger" onclick="return confirm("Sicuro di voler Eliminare?")"><i class="bi bi-trash me-1 fs-4"></i></button></form>';
 
             $formatted[] = [
               'title' => $hour->user->name . " " . $hour->user->surname,
@@ -46,7 +40,9 @@ class HourController extends Controller
               'end' => $hour->end,
               'allDay' => $holidays->where('hour_id',$hour->id)->value('allDay'),
               'extendedProps' => [
-                  'content' => $content
+                  'content' => $content,
+                  'hour_type' => $hour->hour_type->description,
+                  'name' => $hour->user->name . " " . $hour->user->surname,
               ]
             ];
         }
@@ -150,6 +146,12 @@ class HourController extends Controller
                 break;
             }
             case '6': {   // Ferie
+                Holiday::create([
+                    'approved' => true,
+                    'allDay' => false,
+                    'user_id' => auth()->id(),
+                    'hour_id' => $hour->id
+                ]);
                 $message = 'Ore di ferie inserite con successo';
                 break;
             }
@@ -158,6 +160,12 @@ class HourController extends Controller
                 break;
             }
             case '8': {   // Ufficio
+                $data = $request->validate([
+                    'description' => 'required'
+                ]);
+                $hour->update([
+                    'description' => $data['description']
+                ]);
                 $message = 'Ore di ufficio inserite con successo';
                 break;
             }
@@ -166,6 +174,12 @@ class HourController extends Controller
                 break;
             }
             case '10': {  // Altro
+                $data = $request->validate([
+                    'description' => 'required'
+                ]);
+                $hour->update([
+                    'description' => $data['description']
+                ]);
                 $message = 'Ore inserite con successo';
                 break;
             }
@@ -177,6 +191,9 @@ class HourController extends Controller
     }
     public function update(): void
     {}
-    public function destroy(): void
-    {}
+    public function destroy(Hour $hour): RedirectResponse
+    {
+        $hour->delete();
+        return back()->with('message','Ora eliminata con successo');
+    }
 }

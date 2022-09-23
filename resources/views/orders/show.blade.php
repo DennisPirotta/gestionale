@@ -148,6 +148,34 @@
                     </div>
                 </a>
             </div>
+            @if(count($commessa->technical_reports)!==0)
+                <div class="col-12 table-responsive mt-5">
+                    <h2>Fogli intervento</h2>
+                    <hr>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Numero</th>
+                            <th scope="col">Operatore</th>
+                            <th scope="col">Cliente</th>
+                            <th scope="col">Cliente Secondario</th>
+                            <th scope="col">Dettagli</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($commessa->technical_reports->sortBy('number') as $report)
+                            <tr>
+                                <th scope="row">{{ $report->number }}</th>
+                                <td>{{ $report->user->name }} {{ $report->user->surname }}</td>
+                                <td>{{ $report->customer->name }}</td>
+                                <td>{{ $report->secondary_customer->name ?? 'Non presente' }}</td>
+                                <td><a href="{{ route('technical_report_details.show',$report->id) }}">Visualizza dettagli</a></td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
         </div>
     </div>
 @endsection

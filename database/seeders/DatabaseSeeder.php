@@ -324,11 +324,11 @@ class DatabaseSeeder extends Seeder
         Customer::factory(10)->create();
         User::factory(10)->create();
         Order::factory(50)->create();
-        TechnicalReport::factory(20)->create();
+        TechnicalReport::factory(200)->create();
         Hour::factory(20)->create();
         Holiday::factory(30)->create();
         OrderDetails::factory(10)->create();
-        TechnicalReportDetails::factory(10)->create();
+        TechnicalReportDetails::factory(100)->create();
 
         User::factory()->create([
             'name' => 'Dennis',

@@ -106,8 +106,11 @@
                             <td>{{ Carbon::parse($holiday->hour->start)->translatedFormat('D d M Y') }}</td>
                             <td>{{ Carbon::parse($holiday->hour->end)->translatedFormat('D d M Y') }}</td>
                             <td>
-                                <button class="btn btn-success"><i class="bi bi-check fs-4"></i></button>
-                                <button class="btn btn-danger"><i class="ms-1 bi bi-x fs-4"></i></button>
+                                <form method="POST" action="{{ route('holidays.approve',$holiday->id) }}">
+                                    @csrf
+                                    @method('PUT')
+                                    <button type="submit" class="btn btn-success" onclick="return confirm('Approvate le ferie?')"><i class="bi bi-check fs-4"></i></button>
+                                </form>
                             </td>
                         </tr>
                     @endforeach
@@ -169,6 +172,7 @@
                 strokeWidth: 4,
                 trailWidth: 1,
                 easing: 'easeInOut',
+                height: 'auto',
                 duration: 1400,
                 from: {color: '#FF0000', width: 1},
                 to: {color: '#00FF00', width: 4},

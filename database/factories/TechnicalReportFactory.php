@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Customer;
 use App\Models\Order;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -22,7 +23,8 @@ class TechnicalReportFactory extends Factory
             'customer_id' => Customer::all()->random()->id,
             'secondary_customer_id' => Customer::all()->random()->id,
             'order_id' => Order::all()->random()->id,
-            'number' => fake()->randomNumber(5)
+            'number' => fake()->unique()->randomNumber(5),
+            'user_id' => User::all()->random()->id
         ];
     }
 }

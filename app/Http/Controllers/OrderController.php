@@ -43,7 +43,7 @@ class OrderController extends Controller
     public function show(Order $order): Factory|View|Application
     {
         return view('orders.show', [
-            'commessa' => $order
+            'commessa' => $order->load(['technical_reports.customer','technical_reports.secondary_customer','technical_reports.user'])
         ]);
     }
 

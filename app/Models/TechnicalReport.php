@@ -12,7 +12,7 @@ class TechnicalReport extends Model
     use HasFactory;
 
     protected $fillable = [
-        'customer_id','secondary_customer_id','order_id','number'
+        'customer_id','secondary_customer_id','order_id','number','user_id'
     ];
 
     public function customer(): BelongsTo
@@ -28,5 +28,15 @@ class TechnicalReport extends Model
     public function technical_report_details(): HasMany
     {
         return $this->hasMany(TechnicalReportDetails::class,'technical_report_id');
+    }
+
+    public function order(): BelongsTo
+    {
+        return $this->belongsTo(User::class,'user_id');
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class,'user_id');
     }
 }

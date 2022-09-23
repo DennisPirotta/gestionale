@@ -1,5 +1,4 @@
 @extends('layouts.app')
-@php($require_navbar_tools = true)
 @section('content')
     {{-- Calendario --}}
     <div class="container my-3 p-5 shadow-sm">
@@ -56,7 +55,7 @@
                             <p class="text-danger fs-6">{{$message}}</p>
                             @enderror
                         </div>
-                        <div class="flex-column d-flex col-12 visually-hidden" id="contentDetails">
+                        <div class="flex-column d-flex col-12 d-none" id="contentDetails">
                             <hr class="mx-auto w-75 mb-3">
                             {{-- Commesse --}}
                             <div class="details" id="content_1">
@@ -102,7 +101,7 @@
                                         @enderror
                                     </div>
 
-                                    <div class="col-12 visually-hidden" id="job_description_box">
+                                    <div class="col-12 d-none" id="job_description_box">
                                         <div class="input-group mb-3">
                                             <label class="input-group-text" for="job_description"><i
                                                         class="bi bi-info-circle me-2"></i>Descrizione</label>
@@ -347,27 +346,27 @@
                 }
             })
 
-            $('#contentDetails').addClass("visually-hidden")
+            $('#contentDetails').addClass("d-none")
 
             $('#job_type').on('change', function () {
                 let el = $('#job_description_box');
                 let val = $('#job_type').find(':selected').val()
-                el.addClass("visually-hidden")
-                if (val == 5 || val == 7) el.removeClass("visually-hidden")
+                el.addClass("d-none")
+                if (val == 5 || val == 7) el.removeClass("d-none")
             });
 
             $('#hour_type_id').on('change', function () {
                 $('#new_fi_number').prop('required',false)
                 switch ($('#hour_type_id').find(':selected').val()) {
                     case '': {
-                        $('#contentDetails').addClass("visually-hidden")
+                        $('#contentDetails').addClass("d-none")
                         break
                     }
                     @foreach($hour_types as $hour_type)
                     case "{{$hour_type->id}}": {
-                        $('#contentDetails').removeClass("visually-hidden")
-                        $('.details').addClass('visually-hidden')
-                        $('#content_{{$hour_type->id}}').removeClass("visually-hidden")
+                        $('#contentDetails').removeClass("d-none")
+                        $('.details').addClass('d-none')
+                        $('#content_{{$hour_type->id}}').removeClass("d-none")
                         break
                     }
                     @endforeach
@@ -380,7 +379,7 @@
                 headerToolbar: {
                     left: 'prev next today',
                     center: 'title',
-                    right: 'dayGridMonth,timeGridDay,dayGridWeek'
+                    right: 'timeGridDay,dayGridWeek,timeGridWeek'
                 },
                 businessHours: {
                     daysOfWeek: [1, 2, 3, 4, 5]
@@ -408,11 +407,16 @@
                     $('#myModal').modal('toggle')
                 },
                 eventDidMount: function (info) {
-                    $(info.el).popover(
+                        let events = calendar.getEvents()
+                        if (info.view.type == 'dayGridWeek' || info.view.type == 'timeGridWeek')
+                            events.forEach(event => event.setProp('title',`${info.event.extendedProps.name} - ${info.event.extendedProps.hour_type}`))
+                        else
+                            events.forEach(event => event.setProp('title',`${info.event.extendedProps.name}`))
+                        $(info.el).popover(
                         {
                             title: 'Dettagli',
                             placement: 'top',
-                            trigger: 'hover',
+                            trigger: 'click',
                             content: info.event.extendedProps.content,
                             container: 'body',
                             html: true,

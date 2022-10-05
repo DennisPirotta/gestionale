@@ -354,18 +354,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'default'
         ]);
         foreach (User::all() as $user){
-            for($i = 0 ; $i < 5 ; $i++){
-                $date = Carbon::parse('5-1-1970')->addDays($i);
-                BusinessHour::factory()->create([
-                    'user_id' => $user->id,
-                    'week_day' => strtolower($date->format('l')),
-                    'morning_start' => Carbon::parse('8:00'),
-                    'morning_end' => Carbon::parse('12:30'),
-                    'afternoon_start' => Carbon::parse('13:30'),
-                    'afternoon_end' => Carbon::parse('17:00'),
-                    'total' => 8
-                ]);
-            }
+            BusinessHour::init($user);
         }
 
     }

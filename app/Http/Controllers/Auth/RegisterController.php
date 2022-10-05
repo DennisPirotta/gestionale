@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\BusinessHour;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use App\Rules\MatchAccessKey;
@@ -68,14 +69,16 @@ class RegisterController extends Controller
      * @param array $data
      * @return \App\Models\User
      */
-    protected function create(array $data)
+    protected function create(array $data): User
     {
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
             'surname' => $data['surname'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'company_id' => $data['company'],
         ]);
+        BusinessHour::init($user);
+        return $user;
     }
 }

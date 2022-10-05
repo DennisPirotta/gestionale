@@ -1,3 +1,4 @@
+@php use Carbon\Carbon; @endphp
 @extends('layouts.app')
 @php($require_navbar_tools = true)
 @section('content')
@@ -10,7 +11,7 @@
                     <label class="input-group-text" for="inputGroupSelect01"><i class="bi bi-building me-2"></i>Compagnia</label>
                     <select class="form-select" id="inputGroupSelect01" name="company">
                         @foreach($companies as $company)
-                            @if($company->id == $commessa->company->id)
+                            @if($company->id === $commessa->company->id)
                                 <option value="{{$company->id}}" selected>{{$company->name}}</option>
                             @else
                                 <option value="{{$company->id}}">{{$company->name}}</option>
@@ -27,7 +28,7 @@
                     <label class="input-group-text" for="inputGroupSelect01"><i class="bi bi-lightning-charge me-2"></i>Stato</label>
                     <select class="form-select" id="inputGroupSelect01" name="status">
                         @foreach($statuses as $status)
-                            @if($status->id == $commessa->status->id)
+                            @if($status->id === $commessa->status->id)
                                 <option value="{{$status->id}}" selected>{{$status->description}}</option>
                             @else
                                 <option value="{{$status->id}}">{{$status->description}}</option>
@@ -42,10 +43,10 @@
             <div class=" col-md-4 col-sm-6">
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <label class="input-group-text" for="inputGroupSelect01"><i
-                            class="bi bi-globe2 me-2"></i>Paese</label>
+                                class="bi bi-globe2 me-2"></i>Paese</label>
                     <select class="form-select" id="inputGroupSelect01" name="country">
                         @foreach($countries as $country)
-                            @if($country->id == $commessa->country->id)
+                            @if($country->id === $commessa->country->id)
                                 <option value="{{$country->id}}" selected>{{$country->name}}</option>
                             @else
                                 <option value="{{$country->id}}">{{$country->name}}</option>
@@ -111,7 +112,7 @@
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <span class="input-group-text"><i class="bi bi-arrow-clockwise me-2"></i>Progressi</span>
                     <input type="text" class="form-control" aria-label="Progressi" name="progress"
-                           value="{{$commessa->progress}}">
+                           value="{{$commessa->job_type->description}}">
                 </div>
                 @error('progress')
                 <p class="text-danger fs-6">{{$message}}</p>
@@ -121,7 +122,7 @@
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <span class="input-group-text"><i class="bi bi-calendar-check me-2"></i>Apertura</span>
                     <input type="date" class="form-control" aria-label="Apertura" name="opening"
-                           value="{{$commessa->opening}}">
+                           value="{{ Carbon::parse($commessa->opening)->format('Y-m-d') }}">
                 </div>
                 @error('opening')
                 <p class="text-danger fs-6">{{$message}}</p>
@@ -131,7 +132,7 @@
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <span class="input-group-text"><i class="bi bi-calendar-x me-2"></i>Chiusura</span>
                     <input type="date" class="form-control" aria-label="Chiusura" name="closing"
-                           value="{{$commessa->closing}}">
+                           value="{{ Carbon::parse($commessa->closing)->format('Y-m-d') }}">
                 </div>
                 @error('closing')
                 <p class="text-danger fs-6">{{$message}}</p>
@@ -140,10 +141,10 @@
             <div class=" col-md-4 col-sm-6">
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <label class="input-group-text" for="inputGroupSelect01"><i
-                            class="bi bi-person me-2"></i>Cliente</label>
+                                class="bi bi-person me-2"></i>Cliente</label>
                     <select class="form-select" id="inputGroupSelect01" name="customer">
                         @foreach($customers as $customer)
-                            @if($customer->id == $commessa->customer->id)
+                            @if($customer->id === $commessa->customer->id)
                                 <option value="{{$customer->id}}" selected>{{$customer->name}}</option>
                             @else
                                 <option value="{{$customer->id}}">{{$customer->name}}</option>

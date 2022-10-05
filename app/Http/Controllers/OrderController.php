@@ -59,7 +59,6 @@ class OrderController extends Controller
             'hourSW' => 'required',
             'job_type_id' => 'required',
             'opening' => 'required',
-            'closing' => 'required',
             'customer_id' => 'required',
         ]);
 

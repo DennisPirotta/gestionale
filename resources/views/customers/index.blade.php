@@ -49,11 +49,11 @@
             </div>
 
         <script>
-            function modify(cliente){
+            function modify(id,nome){
                 $('#toolModal').modal('toggle')
-                $('input[name="name"]').val(cliente.name)
+                $('input[name="name"]').val(nome)
                 $('input[name="_method"]').val("PUT")
-                $('#modifyForm').attr('action',`/clienti/${cliente.id}`)
+                $('#modifyForm').attr('action',`/clienti/${id}`)
             }
             function add(){
                 $('#toolModal').modal('toggle')

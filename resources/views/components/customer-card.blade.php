@@ -6,7 +6,7 @@
             <p class="card-text">{{$customer->name}}</p>
             <div class="d-flex justify-content-center">
                 <a >
-                    <button class="btn btn-outline-primary me-2" onclick="modify({{ $customer }})">
+                    <button class="btn btn-outline-primary me-2" onclick="modify({{ $customer->id }},'{{ $customer->name }}')">
                         <i class="bi bi-pencil-square me-1"></i>
                         Modifica
                     </button>

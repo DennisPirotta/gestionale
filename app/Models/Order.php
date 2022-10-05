@@ -95,7 +95,7 @@ class Order extends Model
         return $data;
     }
 
-    public function setHours(array $hours)
+    public function setHours(array $hours): void
     {
         $this->update([
 

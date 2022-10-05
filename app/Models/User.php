@@ -75,5 +75,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(TechnicalReport::class,'user_id');
     }
+    public function business_hours(): HasMany
+    {
+        return $this->hasMany(BusinessHour::class,'user_id');
+    }
 
 }

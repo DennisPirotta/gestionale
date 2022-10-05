@@ -40,12 +40,5 @@
                     </div>
                 </div>
             </div>
-        <script>
-            function modify(customerID,customerName){
-                $('#toolModal').modal('toggle');
-                $('input[name="name"]').val(customerName)
-                $('#modifyForm').attr('action',`/clienti/${customerID}`)
-            }
-        </script>
     </div>
 @endsection

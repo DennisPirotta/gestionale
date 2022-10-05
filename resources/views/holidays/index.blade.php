@@ -1,4 +1,4 @@
-@php use Carbon\Carbon; @endphp
+@php use App\Models\Holiday;use Carbon\Carbon; @endphp
 @extends('layouts.app')
 @section('content')
     <style>
@@ -87,39 +87,44 @@
             </div>
         </div>
     </div>
-    @if( auth()->user()->level > 0 )
-        <div class="container mt-5 mb-3 shadow-sm p-5 table-responsive">
-            <h2 class="text-center">Da Approvare</h2>
-            <hr>
-            <table class="table align-middle mt-3">
-                <thead>
-                <tr>
-                    <th scope="col">Utente</th>
-                    <th scope="col">Inizio</th>
-                    <th scope="col">Fine</th>
-                    <th scope="col">Azioni</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach( $users as $user )
-                    @foreach($user->holidayList->where('approved',false) as $holiday)
-                        <tr>
-                            <th scope="row">{{ $user->name }}</th>
-                            <td>{{ Carbon::parse($holiday->hour->start)->translatedFormat('D d M Y') }}</td>
-                            <td>{{ Carbon::parse($holiday->hour->end)->translatedFormat('D d M Y') }}</td>
-                            <td>
-                                <form method="POST" action="{{ route('holidays.approve',$holiday->id) }}">
-                                    @csrf
-                                    @method('PUT')
-                                    <button type="submit" class="btn btn-success" onclick="return confirm('Approvate le ferie?')"><i class="bi bi-check fs-4"></i></button>
-                                </form>
-                            </td>
-                        </tr>
+    @php($count = Holiday::where('approved',false)->get()->count())
+    @if( auth()->user()->level > 0)
+        @if($count > 0)
+            <div class="container mt-5 mb-3 shadow-sm p-5 table-responsive">
+                <h2 class="text-center">{{ $count }} Ferie da approvare</h2>
+                <hr>
+                <table class="table align-middle mt-3">
+                    <thead>
+                    <tr>
+                        <th scope="col">Utente</th>
+                        <th scope="col">Inizio</th>
+                        <th scope="col">Fine</th>
+                        <th scope="col">Azioni</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach( $users as $user )
+                        @foreach($user->holidayList->where('approved',false) as $holiday)
+                            <tr>
+                                <th scope="row">{{ $user->name }}</th>
+                                <td>{{ Carbon::parse($holiday->hour->start)->translatedFormat('D d M Y') }}</td>
+                                <td>{{ Carbon::parse($holiday->hour->end)->translatedFormat('D d M Y') }}</td>
+                                <td>
+                                    <form method="POST" action="{{ route('holidays.approve',$holiday->id) }}">
+                                        @csrf
+                                        @method('PUT')
+                                        <button type="submit" class="btn btn-success"
+                                                onclick="return confirm('Approvate le ferie?')"><i
+                                                    class="bi bi-check fs-4"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
                     @endforeach
-                @endforeach
-                </tbody>
-            </table>
-        </div>
+                    </tbody>
+                </table>
+            </div>
+        @endif
     @endif
     <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="label" aria-hidden="true">
         <div class="modal-dialog">
@@ -129,7 +134,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form method="post" action="/ferie">
-                    <label for="allDay"></label><input name="allDay" class="d-none">
+                    <label for="allDay"></label><input name="allDay" id="allDay" class="d-none">
                     @csrf
                     <div class="modal-body">
                         <div class="row">
@@ -194,7 +199,7 @@
             })
             progressBar.text.style.fontFamily = '"Raleway", Helvetica, sans-serif';
             progressBar.text.style.fontSize = '1.5rem';
-            progressBar.animate({{\App\Models\Holiday::getLeftHours() / auth()->user()->holidays}})
+            progressBar.animate({{Holiday::getLeftHours() / auth()->user()->holidays}})
             let events = @json($holidays, JSON_THROW_ON_ERROR);
             let calendarEl = document.getElementById('calendar')
             let calendar = new FullCalendar.Calendar(calendarEl, {

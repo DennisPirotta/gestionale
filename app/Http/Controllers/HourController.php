@@ -123,11 +123,13 @@ class HourController extends Controller
             case '2': {   // FI
                 $data = $request->validate(['number' => 'required']);
                 if ($request->fi_new === '0'){
-                    TechnicalReport::create(array_merge($data,[
+                    TechnicalReport::create([
+                        'user_id' => auth()->id(),
+                        'number' => $data['number'],
                         'secondary_customer_id' => $request['secondary_customer_id'] ?? null,
                         'order_id' => $request['fi_order_id'] ?? null,
                         'customer_id' => $request['customer_id']
-                    ]));
+                    ]);
                 }
                 TechnicalReportDetails::create([
                     'hour_id' => $hour->id,

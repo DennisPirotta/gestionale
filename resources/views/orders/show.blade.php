@@ -1,3 +1,4 @@
+@php use Carbon\Carbon; @endphp
 @extends('layouts.app')
 @section('content')
     <div class="container my-5 p-5 text-center shadow-sm">
@@ -70,7 +71,7 @@
                     <div class="card-body">
                         <i class="bi bi-calendar fs-3"></i>
                         <p class="card-title">Apertura</p>
-                        <b>{{$commessa->opening}}</b>
+                        <b>{{ Carbon::parse($commessa->opening)->translatedFormat('D d M Y') }}</b>
                     </div>
                 </div>
             </div>
@@ -79,7 +80,7 @@
                     <div class="card-body">
                         <i class="bi bi-calendar fs-3"></i>
                         <p class="card-title">Chiusura</p>
-                        <b>{{$commessa->closing}}</b>
+                        <b>{{ Carbon::parse($commessa->closing)->translatedFormat('D d M Y') }}</b>
                     </div>
                 </div>
             </div>

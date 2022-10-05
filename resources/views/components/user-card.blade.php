@@ -10,10 +10,10 @@
             @endif
             <p class="card-text">{{$user->surname}} {{$user->name}}</p>
             <div class="d-flex justify-content-center">
-                <a>
-                    <button class="btn btn-outline-primary me-2" onclick="modify({{$user->id}},'{{$user->name}}')">
-                        <i class="bi bi-pencil-square me-1"></i>
-                        Modifica
+                <a href="{{ route('users.show',$user->id) }}">
+                    <button class="btn btn-outline-primary me-2">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Dettagli
                     </button>
                 </a>
                 <form method="POST" action="{{ route('users.destroy',$user->id) }}">

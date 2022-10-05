@@ -1,3 +1,4 @@
+@php use Carbon\Carbon; @endphp
 @extends('layouts.app')
 @php($require_navbar_tools = true)
 @section('content')
@@ -33,10 +34,11 @@
             <div class=" col-md-4 col-sm-6">
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <label class="input-group-text" for="inputGroupSelect01"><i
-                            class="bi bi-globe2 me-2"></i>Paese</label>
+                                class="bi bi-globe2 me-2"></i>Paese</label>
                     <select class="form-select" id="inputGroupSelect01" name="country_id">
                         @foreach($countries as $country)
-                            <option value="{{$country->id}}">{{$country->name}}</option>
+                            <option value="{{$country->id}}"
+                                    @if($country->name === "Italy") selected @endif >{{ __($country->name) }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -47,7 +49,8 @@
             <div class=" col-md-4 col-sm-6">
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <span class="input-group-text"><i class="bi bi-clipboard-data me-2"></i>Descrizione</span>
-                    <input type="text" class="form-control" aria-label="Descrizione" name="description" value="{{ old('description') }}">
+                    <input type="text" class="form-control" aria-label="Descrizione" name="description"
+                           value="{{ old('description') }}">
                 </div>
                 @error('description')
                 <p class="text-danger fs-6">{{$message}}</p>
@@ -65,7 +68,8 @@
             <div class=" col-md-4 col-sm-6">
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <span class="input-group-text"><i class="bi bi-clock me-2"></i>Ore MS</span>
-                    <input type="number" class="form-control" aria-label="Descrizione" name="hourMS" value="{{ old('hourMS') }}">
+                    <input type="number" class="form-control" aria-label="Descrizione" name="hourMS"
+                           value="{{ old('hourMS') }}">
                 </div>
                 @error('hourMS')
                 <p class="text-danger fs-6">{{$message}}</p>
@@ -74,7 +78,8 @@
             <div class=" col-md-4 col-sm-6">
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <span class="input-group-text"><i class="bi bi-clock me-2"></i>Ore FAT</span>
-                    <input type="number" class="form-control" aria-label="Descrizione" name="hourFAT" value="{{ old('hourFAT') }}">
+                    <input type="number" class="form-control" aria-label="Descrizione" name="hourFAT"
+                           value="{{ old('hourFAT') }}">
                 </div>
                 @error('hourFAT')
                 <p class="text-danger fs-6">{{$message}}</p>
@@ -83,7 +88,8 @@
             <div class=" col-md-4 col-sm-6">
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <span class="input-group-text"><i class="bi bi-clock me-2"></i>Ore SAF</span>
-                    <input type="number" class="form-control" aria-label="Descrizione" name="hourSAF"  value="{{ old('hourSAF') }}">
+                    <input type="number" class="form-control" aria-label="Descrizione" name="hourSAF"
+                           value="{{ old('hourSAF') }}">
                 </div>
                 @error('hourSAF')
                 <p class="text-danger fs-6">{{$message}}</p>
@@ -108,7 +114,8 @@
             <div class=" col-md-4 col-sm-6">
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <span class="input-group-text"><i class="bi bi-calendar-check me-2"></i>Apertura</span>
-                    <input type="date" class="form-control" aria-label="Apertura" name="opening" value="{{ old('opening') }}">
+                    <input type="date" class="form-control" aria-label="Apertura" name="opening"
+                           value="{{ Carbon::now()->format('Y-m-d') }}">
                 </div>
                 @error('opening')
                 <p class="text-danger fs-6">{{$message}}</p>
@@ -117,7 +124,8 @@
             <div class=" col-md-4 col-sm-6">
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <span class="input-group-text"><i class="bi bi-calendar-x me-2"></i>Chiusura</span>
-                    <input type="date" class="form-control" aria-label="Chiusura" name="closing" value="{{ old('closing') }}">
+                    <input type="date" class="form-control" aria-label="Chiusura" name="closing"
+                           value="{{ old('closing') }}">
                 </div>
                 @error('closing')
                 <p class="text-danger fs-6">{{$message}}</p>
@@ -126,7 +134,7 @@
             <div class=" col-md-4 col-sm-6">
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <label class="input-group-text" for="inputGroupSelect01"><i
-                            class="bi bi-person me-2"></i>Cliente</label>
+                                class="bi bi-person me-2"></i>Cliente</label>
                     <select class="form-select" id="inputGroupSelect01" name="customer_id">
                         @unless(count($customers) === 0)
                             @foreach($customers as $customer)

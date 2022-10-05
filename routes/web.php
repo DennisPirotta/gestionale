@@ -182,7 +182,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dipendenti',[UserController::class,'index'])->name('users.index');
 
     // Aggiorna dati dipendente
-    Route::get('/dipendenti/{id}', [UserController::class, 'update'])->name('users.update');
+    Route::get('/dipendenti/{user}', [UserController::class, 'show'])->name('users.show');
+
 
     // Mostra pagina crea nuovo dipendente
     Route::get('/dipendenti/create', [UserController::class, 'create'])->name('users.create');

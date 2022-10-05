@@ -26,7 +26,7 @@ class UserController extends Controller
     public function show(User $user): Factory|View|\Illuminate\Contracts\Foundation\Application
     {
         return view('users.show', [
-            'user' => $user
+            'user' => $user->load(['company','business_hours'])
         ]);
     }
 
@@ -34,7 +34,7 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-      return $user;
+        //
     }
 
     // Modifica la commessa

@@ -24,7 +24,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.min.css">
     <link rel="icon" sizes="96x96" href="{{asset('images/favicon.png')}}">
     @vite(['resources/js/app.js'])
-
 </head>
 <body>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"

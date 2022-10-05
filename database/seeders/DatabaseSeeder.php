@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\AccessKey;
+use App\Models\BusinessHour;
 use App\Models\Customer;
 use App\Models\Holiday;
 use App\Models\Hour;
@@ -11,6 +12,9 @@ use App\Models\OrderDetails;
 use App\Models\TechnicalReport;
 use App\Models\TechnicalReportDetails;
 use App\Models\User;
+use Carbon\Carbon;
+use Cmixin\BusinessTime;
+use Database\Factories\BusinessHourFactory;
 use Database\Factories\OrderDetailsFactory;
 use DateTime;
 use Doctrine\DBAL\Exception;
@@ -327,7 +331,7 @@ class DatabaseSeeder extends Seeder
         TechnicalReport::factory(200)->create();
         Hour::factory(20)->create();
         Holiday::factory(30)->create();
-        OrderDetails::factory(10)->create();
+        OrderDetails::factory(100)->create();
         TechnicalReportDetails::factory(100)->create();
 
         User::factory()->create([
@@ -349,6 +353,20 @@ class DatabaseSeeder extends Seeder
             'key' => Crypt::encryptString('3DAutomation'),
             'name' => 'default'
         ]);
+        foreach (User::all() as $user){
+            for($i = 0 ; $i < 5 ; $i++){
+                $date = Carbon::parse('5-1-1970')->addDays($i);
+                BusinessHour::factory()->create([
+                    'user_id' => $user->id,
+                    'week_day' => strtolower($date->format('l')),
+                    'morning_start' => Carbon::parse('8:00'),
+                    'morning_end' => Carbon::parse('12:30'),
+                    'afternoon_start' => Carbon::parse('13:30'),
+                    'afternoon_end' => Carbon::parse('17:00'),
+                    'total' => 8
+                ]);
+            }
+        }
 
     }
 }

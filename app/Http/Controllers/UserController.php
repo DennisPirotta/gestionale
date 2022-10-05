@@ -2,13 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BusinessHour;
+use App\Models\Order;
 use App\Models\User;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Application;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
 
 class UserController extends Controller
 {
     // Visualizza tutti i dipendenti
-    public function index()
+    public function index(): Factory|View|\Illuminate\Contracts\Foundation\Application
     {
         return view('users.index',[
             'users' => User::with(['company'])->get()
@@ -16,7 +23,7 @@ class UserController extends Controller
     }
 
     // Filtra per commessa
-    public function show(User $user)
+    public function show(User $user): Factory|View|\Illuminate\Contracts\Foundation\Application
     {
         return view('users.show', [
             'user' => $user
@@ -25,9 +32,9 @@ class UserController extends Controller
 
     // Mostra pagina per modificare una commessa
 
-    public function edit(User $user): Factory|View|Application
+    public function edit(User $user)
     {
-        return view('users.edit');
+      return $user;
     }
 
     // Modifica la commessa
@@ -55,10 +62,18 @@ class UserController extends Controller
         return redirect('/commesse')->with('message', 'Commessa aggiornata con successo');
     }
 
-    // Elimina la commessa
-    public function destroy(Order $order): RedirectResponse
+    // Elimina l'utente
+    public function destroy(User $user): RedirectResponse
     {
-        $order->delete();
-        return back()->with('message', 'Commessa eliminata con successo');
+        $user->delete();
+        return back()->with('message', 'Utente eliminato con successo');
+    }
+
+    // Mostra ore settimanali utente
+    public function indexBusinessHour()
+    {
+        return view('users.business-hours.index',[
+            'hours' => BusinessHour::where('user_id',auth()->id())->get()
+        ]);
     }
 }

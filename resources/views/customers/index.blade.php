@@ -1,37 +1,15 @@
 @extends('layouts.app')
-@php($require_navbar_tools = true)
 @section('content')
-    <div class="container shadow-sm my-3 text-center justify-content-center p-3">
-        @unless(count($customers) == 0)
-            <div class="row">
+    <div class="container shadow-sm my-3 justify-content-center p-3">
+        <div class="d-md-flex align-content-center align-middle">
+            <h2 class="my-auto">Clienti</h2>
+            <button class="btn btn-primary ms-auto" onclick="add()">Aggiungi Cliente</button>
+        </div>
+        <hr>
+        @unless(count($customers) === 0)
+            <div class="row text-center mt-4">
                 @foreach($customers as $customer)
-                    <div class="col-sm-6 col-md-4 mb-3">
-                        <div class="card h-100"> <!--  bg-black bg-opacity-25 -->
-                            <div class="card-body">
-                                <i class="bi bi-person"></i>
-                                <span class="card-title">Cliente {{$customer['id']}}</span>
-                                <p class="card-text">{{$customer['name']}}</p>
-                                <div class="d-flex justify-content-center">
-                                    <a >
-                                        <button class="btn btn-outline-primary me-2" onclick="modify({{$customer}})">
-                                            <i class="bi bi-pencil-square me-1"></i>
-                                            Modifica
-                                        </button>
-                                    </a>
-
-                                    <form method="POST" action="/clienti/{{$customer['id']}}">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="btn btn-outline-danger"
-                                                onclick="return confirm('Sicuro di voler Eliminare?')">
-                                            <i class="bi bi-trash me-1"></i>
-                                            Elimina
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <x-customer-card :customer="$customer"></x-customer-card>
                 @endforeach
             </div>
         @else
@@ -49,7 +27,9 @@
                         </div>
                         <form method="post" id="modifyForm">
                             @csrf
-                            @method('PUT')
+                            <label class="d-none">
+                                <input type="text" value="PUT" name="_method">
+                            </label>
                             <div class="modal-body d-flex">
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="bi bi-clipboard-data me-2"></i>Nome Cliente</span>
@@ -67,11 +47,18 @@
                     </div>
                 </div>
             </div>
+
         <script>
             function modify(cliente){
-                $('#toolModal').modal('toggle');
+                $('#toolModal').modal('toggle')
                 $('input[name="name"]').val(cliente.name)
+                $('input[name="_method"]').val("PUT")
                 $('#modifyForm').attr('action',`/clienti/${cliente.id}`)
+            }
+            function add(){
+                $('#toolModal').modal('toggle')
+                $('input[name="_method"]').val("")
+                $('#modifyForm').attr('action',`/clienti`)
             }
         </script>
     </div>

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+use Cmixin\BusinessTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -77,6 +79,27 @@ class Order extends Model
     public function technical_reports(): HasMany
     {
         return $this->hasMany(TechnicalReport::class,'order_id');
+    }
+
+    public function getHours(): array
+    {
+        $data = [];
+        $details = $this->order_details;
+        foreach ($details as $detail){
+            $hour = Carbon::parse($detail->hour->start)->diffInBusinessHours(Carbon::parse($detail->hour->end));
+            if ($detail->job_type_id === 1) { $data['sw'] = $hour; }
+            else if ($detail->job_type_id === 2) { $data['ms'] = $hour; }
+            else if ($detail->job_type_id === 3) { $data['saf'] = $hour; }
+            else if ($detail->job_type_id === 4) { $data['fat'] = $hour; }
+        }
+        return $data;
+    }
+
+    public function setHours(array $hours)
+    {
+        $this->update([
+
+        ]);
     }
 
 }

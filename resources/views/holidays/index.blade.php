@@ -89,7 +89,9 @@
     </div>
     @if( auth()->user()->level > 0 )
         <div class="container mt-5 mb-3 shadow-sm p-5 table-responsive">
-            <table class="table align-middle">
+            <h2 class="text-center">Da Approvare</h2>
+            <hr>
+            <table class="table align-middle mt-3">
                 <thead>
                 <tr>
                     <th scope="col">Utente</th>

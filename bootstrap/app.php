@@ -54,15 +54,4 @@ $app->singleton(
 |
 */
 
-// Enable BusinessTime option for Carbon
-BusinessTime::enable('Illuminate\Support\Carbon', [
-    'monday' => ['08:00-12:30', '13:30-17:00'],
-    'tuesday' => ['08:00-12:30', '13:30-17:00'],
-    'wednesday' => ['08:00-12:30', '13:30-17:00'],
-    'thursday' => ['08:00-12:30', '13:30-17:00'],
-    'friday' => ['08:00-12:30', '13:30-17:00'],
-    'saturday' => [],
-    'sunday' => [],
-]);
-
 return $app;

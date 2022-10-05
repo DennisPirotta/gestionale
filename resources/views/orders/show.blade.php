@@ -1,5 +1,4 @@
 @extends('layouts.app')
-@php($require_navbar_tools = true)
 @section('content')
     <div class="container my-5 p-5 text-center shadow-sm">
         <div class="row gy-3">
@@ -62,7 +61,7 @@
                     <div class="card-body">
                         <i class="bi bi-battery-charging fs-3"></i>
                         <p class="card-title">Progressi</p>
-                        <b>{{$commessa->status->description}}</b>
+                        <b>{{$commessa->job_type->description}}</b>
                     </div>
                 </div>
             </div>
@@ -107,7 +106,7 @@
                     <div class="card-body">
                         <i class="bi bi-clock fs-3"></i>
                         <p class="card-title">Ore SW</p>
-                        <b>{{$commessa->hourSW}}</b>
+                        <b>{{ round($commessa->getHours()['sw'] ?? null) }}</b>
                     </div>
                 </div>
             </div>
@@ -116,7 +115,7 @@
                     <div class="card-body">
                         <i class="bi bi-clock fs-3"></i>
                         <p class="card-title">Ore MS</p>
-                        <b>{{$commessa->hourMS}}</b>
+                        <b>{{ round($commessa->getHours()['ms'] ?? null) }}</b>
                     </div>
                 </div>
             </div>
@@ -125,7 +124,7 @@
                     <div class="card-body">
                         <i class="bi bi-clock fs-3"></i>
                         <p class="card-title">Ore FAT</p>
-                        <b>{{$commessa->hourFAT}}</b>
+                        <b>{{ round($commessa->getHours()['fat'] ?? null) }}</b>
                     </div>
                 </div>
             </div>
@@ -134,7 +133,7 @@
                     <div class="card-body">
                         <i class="bi bi-clock fs-3"></i>
                         <p class="card-title">Ore SAF</p>
-                        <b>{{$commessa->hourSAF}}</b>
+                        <b>{{ round($commessa->getHours()['saf'] ?? null) }}</b>
                     </div>
                 </div>
             </div>
@@ -169,7 +168,8 @@
                                 <td>{{ $report->user->name }} {{ $report->user->surname }}</td>
                                 <td>{{ $report->customer->name }}</td>
                                 <td>{{ $report->secondary_customer->name ?? 'Non presente' }}</td>
-                                <td><a href="{{ route('technical_report_details.show',$report->id) }}">Visualizza dettagli</a></td>
+                                <td><a href="{{ route('technical_report_details.show',$report->id) }}">Visualizza
+                                        dettagli</a></td>
                             </tr>
                         @endforeach
                         </tbody>

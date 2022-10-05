@@ -48,82 +48,17 @@
             </div>
         @endif
         <div class="row g-3 justify-content-center text-center d-flex">
-            <div class="col-xl-3 col-md-4 col-sm-6 mb-3">
-                <a href="{{ route('orders.index') }}">
-                    <div class="card">
-                        <div class="card-body">
-                            <i class="bi bi-clipboard-plus fs-1"></i>
-                            <h5 class="card-title">Commesse</h5>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-xl-3 col-md-4 col-sm-6 mb-3">
-                <a href="{{ route('locations.index') }}">
-                    <div class="card">
-                        <div class="card-body">
-                            <i class="bi bi-globe2 fs-1"></i>
-                            <h5 class="card-title">Dove Sono</h5>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-xl-3 col-md-4 col-sm-6 mb-3">
-                <a href="{{ route('hours.index') }}">
-                    <div class="card">
-                        <div class="card-body">
-                            <i class="bi bi-clock-history fs-1"></i>
-                            <h5 class="card-title">Gestione ore</h5>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-xl-3 col-md-4 col-sm-6 mb-3">
-                <a href="{{ route('holidays.index') }}">
-                    <div class="card">
-                        <div class="card-body">
-                            <i class="bi bi-calendar4-week fs-1"></i>
-                            <h5 class="card-title">Ferie</h5>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            @if(auth()->user()->level > 0)
-                <div class="col-12">
-                    <hr class="my-3 w-75 mx-auto">
-                </div>
 
-            <div class="col-xl-3 col-md-4 col-sm-6 mb-3">
-                <a href="{{ route('customers.index') }}">
-                    <div class="card">
-                        <div class="card-body">
-                            <i class="bi bi-people fs-1"></i>
-                            <h5 class="card-title">Clienti</h5>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-xl-3 col-md-4 col-sm-6 mb-3">
-                <a href="{{ route('orders.report') }}">
-                    <div class="card">
-                        <div class="card-body">
-                            <i class="bi bi-journals fs-1"></i>
-                            <h5 class="card-title">Report Commesse</h5>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-xl-3 col-md-4 col-sm-6 mb-3">
-                <a href="{{ route('users.index') }}">
-                    <div class="card">
-                        <div class="card-body">
-                            <i class="bi bi-person-workspace fs-1"></i>
-                            <h5 class="card-title">Gestione Dipendenti</h5>
-                        </div>
-                    </div>
-                </a>
-            </div>
+            <x-home-card :redirect="route('orders.index')" :icon="'bi-clipboard-plus'" :title="'Commesse'"></x-home-card>
+            <x-home-card :redirect="route('locations.index')" :icon="'bi-globe2'" :title="'Dove Sono'"></x-home-card>
+            <x-home-card :redirect="route('hours.index')" :icon="'bi-clock-history'" :title="'Gestione Ore'"></x-home-card>
+            <x-home-card :redirect="route('holidays.index')" :icon="'bi-calendar4-week'" :title="'Ferie'"></x-home-card>
+            @if(auth()->user()->level > 0)
+            <x-home-card :redirect="route('customers.index')" :icon="'bi-people'" :title="'Clienti'"></x-home-card>
+            <x-home-card :redirect="route('orders.report')" :icon="'bi-journals'" :title="'Report Commesse'"></x-home-card>
+            <x-home-card :redirect="route('users.index')" :icon="'bi-person-workspace'" :title="'Gestione Dipendenti'"></x-home-card>
             @endif
+
             @if(env('APP_DEBUG'))
                 <div class="col-12 mb-3">
                     <form method="post" action="/debug/change_permissions">
@@ -156,6 +91,7 @@
         });
 
         /*
+        let btnAdd = document.getElementById('install')
         // Installation must be done by a user gesture! Here, the button click
         btnAdd.addEventListener('click', (e) => {
             // hide our user interface that shows our A2HS button
@@ -168,12 +104,11 @@
                     if (choiceResult.outcome === 'accepted') {
                         console.log('User accepted the A2HS prompt');
                     } else {
-                        console.log('User dismissed the A2HS prompt');
+                        btnAdd.style.display = 'block';
                     }
                     deferredPrompt = null;
                 });
         });
-
          */
 
     </script>

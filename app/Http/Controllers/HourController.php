@@ -114,6 +114,9 @@ class HourController extends Controller
                     'description' => $request->job_description ?? null,
                     'signed' => isset($request->signed) ? (bool)$request->signed : null
                 ]));
+                Order::find($data['order_id'])->update([
+                    'job_type_id' => $data['job_type_id']
+                ]);
                 $message = 'Ore commessa inserite con successo';
                 break;
             }
@@ -184,7 +187,7 @@ class HourController extends Controller
                 break;
             }
             default:{
-
+                break;
             }
         }
         return redirect('/ore')->with('message', $message);

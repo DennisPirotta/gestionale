@@ -10,6 +10,7 @@ use App\Http\Controllers\LocationController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\TechnicalReportDetailsController;
 use App\Http\Controllers\UserController;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
@@ -189,6 +190,8 @@ Route::middleware(['auth'])->group(function () {
     // Salva nuovo dipendente
     Route::post('/dipendenti', [UserController::class, 'store'])->name('users.store');
 
+    Route::delete('/dipendenti/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+
 
     /*
      * GESTIONE ROUTE CHIAVI DI ACCESSO
@@ -206,4 +209,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/fi/{technical_report}',[TechnicalReportDetailsController::class,'show'])->name('technical_report_details.show');
 
+
+    Route::get('/users/business-hours',[UserController::class,'indexBusinessHour'])->name('user.time');
+
 });
+

@@ -29,10 +29,17 @@ class HourFactory extends Factory
         $start = fake()->dateTimeThisYear;
         $end = fake()->dateTimeInInterval($start,"+2 days");
 
+        $type = HourType::all()->random()->id;
+
+        if ($type === 1){
+            $start = fake()->dateTime->setTime(8,0);
+            $end = fake()->dateTime->setTime(17,0);
+        }
+
         return [
             'start' => $start,
             'end' => $end,
-            'hour_type_id' => HourType::all()->random()['id'],
+            'hour_type_id' => $type,
             'user_id' => User::all()->random()->id,
         ];
     }

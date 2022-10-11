@@ -53,11 +53,12 @@
             <x-home-card :redirect="route('locations.index')" :icon="'bi-globe2'" :title="'Dove Sono'"></x-home-card>
             <x-home-card :redirect="route('hours.index')" :icon="'bi-clock-history'" :title="'Gestione Ore'"></x-home-card>
             <x-home-card :redirect="route('holidays.index')" :icon="'bi-calendar4-week'" :title="'Ferie'"></x-home-card>
-            @if(auth()->user()->level > 0)
+            @hasanyrole('boss|admin')
             <x-home-card :redirect="route('customers.index')" :icon="'bi-people'" :title="'Clienti'"></x-home-card>
             <x-home-card :redirect="route('orders.report')" :icon="'bi-journals'" :title="'Report Commesse'"></x-home-card>
             <x-home-card :redirect="route('users.index')" :icon="'bi-person-workspace'" :title="'Gestione Dipendenti'"></x-home-card>
-            @endif
+            <x-home-card :redirect="route('hours.report')" :icon="'bi-hourglass-split'" :title="'Report ore'"></x-home-card>
+            @endhasanyrole
 
             @if(env('APP_DEBUG'))
                 <div class="col-12 mb-3">
@@ -67,9 +68,11 @@
                             <div class="card-body">
                                 <i class="bi bi-bug fs-1"></i>
                                 <h5 class="card-title">Debug</h5>
-                                <label>
-                                    <input name="level" type="number" max="2" min="0" class="form-control"/>
-                                </label>
+                                <select name="role" class="form-select w-50 mx-auto">
+                                    <option value="user">User</option>
+                                    <option value="admin">Admin</option>
+                                    <option value="boss">Boss</option>
+                                </select>
                             </div>
                             <div class="card-footer">
                                 <button type="submit" class="btn btn-success">{{ __('Cambia') }}</button>

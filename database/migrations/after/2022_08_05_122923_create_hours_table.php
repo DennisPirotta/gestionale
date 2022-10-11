@@ -14,8 +14,8 @@ return new class extends Migration {
     {
         Schema::create('hours', static function (Blueprint $table) {
             $table->id();
-            $table->dateTime('start');
-            $table->dateTime('end');
+            $table->integer('count');
+            $table->date('date');
             $table->string('description')->nullable();
             $table->timestamps();
 

@@ -70,11 +70,11 @@
                             <a class="dropdown-item" href="{{ url('/change-password') }}" >
                                 <i class="bi bi-key me-2"></i>Cambia password
                             </a>
-                            @if(Auth::user()->level > 1)
+                            @hasanyrole('boss|admin')
                                 <a class="dropdown-item" href="{{ url('/access-keys') }}" >
                                     <i class="bi bi-door-open me-2"></i>Chiavi di accesso
                                 </a>
-                            @endif
+                            @endhasanyrole
 
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                 @csrf

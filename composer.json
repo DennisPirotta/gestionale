@@ -17,7 +17,8 @@
         "laravel/sanctum": "^2.14.1",
         "laravel/tinker": "^2.7",
         "laravel/ui": "^4.0",
-        "nesbot/carbon": "^2.61"
+        "nesbot/carbon": "^2.61",
+        "spatie/laravel-permission": "^5.5"
     },
     "require-dev": {
         "arcanedev/laravel-lang": "^10.0",

@@ -11,6 +11,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\TechnicalReportDetailsController;
 use App\Http\Controllers\UserController;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
@@ -26,8 +27,6 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-App::setLocale('it');
-Lang::setLocale('it');
 Auth::routes();
 Auth::routes(['verify' => true]);
 Route::middleware(['auth'])->group(function () {
@@ -128,6 +127,9 @@ Route::middleware(['auth'])->group(function () {
     // Mostra pannello ore
     Route::get('/ore', [HourController::class, 'index'])->name('hours.index');
 
+
+    Route::get('/ore/report', [HourController::class, 'report'])->name('hours.report');
+
     // Mostra pagina inserisci ore
     Route::get('/ore/create', [HourController::class, 'create'])->name('hours.create');
 
@@ -146,20 +148,6 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('change-password', [ChangePasswordController::class, 'index']);
     Route::post('change-password', [ChangePasswordController::class, 'store']);
-
-
-
-    Route::post('/debug/change_permissions', static function (){
-        try {
-            auth()->user()->update([
-                'level' => request('level')
-            ]);
-            return redirect('/')->with('message','livello di accesso cambiato');
-        }catch (Exception $e){
-            return redirect('/')->with('error',$e);
-        }
-
-    });
 
     /*
      *  GESTIONE ROUTE DOVE SONO
@@ -183,7 +171,6 @@ Route::middleware(['auth'])->group(function () {
 
     // Aggiorna dati dipendente
     Route::get('/dipendenti/{user}', [UserController::class, 'show'])->name('users.show');
-
 
     // Mostra pagina crea nuovo dipendente
     Route::get('/dipendenti/create', [UserController::class, 'create'])->name('users.create');
@@ -210,8 +197,22 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/fi/{technical_report}',[TechnicalReportDetailsController::class,'show'])->name('technical_report_details.show');
 
+    Route::group(['middleware' => ['role:admin|boss']], static function () {
+        Route::get('/users/business-hours',[UserController::class,'indexBusinessHour'])->name('user.time');
+    });
 
-    Route::get('/users/business-hours',[UserController::class,'indexBusinessHour'])->name('user.time');
+
 
 });
 
+
+Route::post('/debug/change_permissions', static function (){
+    try {
+        \auth()->user()->syncRoles();
+        auth()->user()->assignRole(request('role'));
+        return redirect('/')->with('message','livello di accesso cambiato');
+    }catch (Exception $e){
+        return redirect('/')->with('error',$e);
+    }
+
+});

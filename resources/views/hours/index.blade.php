@@ -15,23 +15,13 @@
                 <div class="modal-body">
                     <form method="post" action="/ore" class="row">
                         @csrf
-                        {{-- Inizio --}}
-                        <div class="col-sm-6 col-md-6">
+                        {{-- Quantita --}}
+                        <div class="col-4">
                             <div class="input-group mb-3 col-md-4 col-sm-6">
-                                <span class="input-group-text"><i class="bi bi-clipboard-data me-2"></i>Inizio</span>
-                                <input type="time" class="form-control" aria-label="Inizio" name="start" value="08:00">
+                                <span class="input-group-text"><i class="bi bi-clipboard-data me-2"></i>Ore</span>
+                                <input type="text" class="form-control"  name="count" value="8">
                             </div>
-                            @error('start')
-                            <p class="text-danger fs-6">{{$message}}</p>
-                            @enderror
-                        </div>
-                        {{-- Fine --}}
-                        <div class="col-sm-6 col-md-6">
-                            <div class="input-group mb-3 col-md-4 col-sm-6">
-                                <span class="input-group-text"><i class="bi bi-clipboard-data me-2"></i>Fine</span>
-                                <input type="time" class="form-control" aria-label="Fine" name="end" value="17:00">
-                            </div>
-                            @error('end')
+                            @error('count')
                             <p class="text-danger fs-6">{{$message}}</p>
                             @enderror
                         </div>
@@ -41,13 +31,13 @@
                             <input type="date" id="day_end" name="day_end" value="">
                         </label>
                         {{-- Box selezione tipo di ora --}}
-                        <div class="col-12">
+                        <div class="col-8">
                             <div class="input-group mb-3">
                                 <label class="input-group-text" for="hour_type_id"><i class="bi bi-building me-2"></i>Tipologia</label>
                                 <select class="form-select" id="hour_type_id" name="hour_type_id">
                                     <option value='' selected>Seleziona la tipologia</option>
                                     @foreach($hour_types as $hour_type)
-                                        <option value="{{$hour_type->id}}">{{$hour_type->description}}</option>
+                                        <option value="{{$hour_type->id}}">{{$hour_type->description !== "Ferie" ? $hour_type->description : "Permesso"}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -379,16 +369,13 @@
                 headerToolbar: {
                     left: 'prev next today',
                     center: 'title',
-                    right: 'timeGridDay,dayGridWeek,timeGridWeek'
+                    right: 'dayGridWeek,dayGridMonth'
                 },
                 businessHours: {
                     daysOfWeek: [1, 2, 3, 4, 5]
                 },
                 nowIndicator: true,
                 locale: 'it',
-                slotDuration: '1:00',
-                slotMinTime: '8:00',
-                slotMaxTime: '18:00',
                 selectAllow: function (selectionInfo) {
                     let startDate = selectionInfo.start;
                     let endDate = selectionInfo.end;

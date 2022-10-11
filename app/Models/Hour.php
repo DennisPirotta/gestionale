@@ -12,7 +12,7 @@ class Hour extends Model
     use HasFactory;
 
     protected $fillable = [
-      'hour_type_id', 'start', 'end', 'user_id'
+      'hour_type_id', 'user_id','count','date'
     ];
 
     public function holidays(): HasMany

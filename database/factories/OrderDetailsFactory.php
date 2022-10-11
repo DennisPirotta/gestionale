@@ -23,12 +23,9 @@ class OrderDetailsFactory extends Factory
      */
     public function definition()
     {
-        $start = fake()->dateTimeThisYear;
-        $end = fake()->dateTimeInInterval($start,"+2 days");
-
         $hour = Hour::create([
-            'start' => $start,
-            'end' => $end,
+            'count' => 8,
+            'date' => fake()->dateTimeThisYear,
             'hour_type_id' => 1,
             'user_id' => User::all()->random()->id,
         ]);

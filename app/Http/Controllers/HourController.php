@@ -12,7 +12,9 @@ use App\Models\OrderDetails;
 use App\Models\Status;
 use App\Models\TechnicalReport;
 use App\Models\TechnicalReportDetails;
+use App\Models\User;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use DateTime;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -33,12 +35,11 @@ class HourController extends Controller
         foreach ($hours as $hour){
 
             $content = '<form method="POST" action="'.route('hours.destroy',$hour->id).'">'.csrf_field().method_field('DELETE').'<button class="btn btn-outline-danger" onclick="return confirm("Sicuro di voler Eliminare?")"><i class="bi bi-trash me-1 fs-4"></i></button></form>';
-
             $formatted[] = [
               'title' => $hour->user->name . " " . $hour->user->surname,
-              'start' => $hour->start,
-              'end' => $hour->end,
-              'allDay' => $holidays->where('hour_id',$hour->id)->value('allDay'),
+              'start' => $hour->date,
+              'end' => $hour->date,
+              'allDay' => true,
               'extendedProps' => [
                   'content' => $content,
                   'hour_type' => $hour->hour_type->description,
@@ -71,127 +72,115 @@ class HourController extends Controller
     {}
     public function store(Request $request): Redirector|Application|RedirectResponse
     {
+
         $default = $request->validate([
-            'start' => 'required',
-            'end' => 'required',
+            'count' => 'required',
             'hour_type_id' => 'required'
         ]);
-
-        $default['start'] = DateTime::createFromFormat('Y-m-d H:i',$request['day_start'] . " " . $default['start']);
-        $default['end'] = DateTime::createFromFormat('Y-m-d H:i',$request['day_end'] . " " . $default['end'])->modify('-1 day');
-
-        if ($default['start']->format('Y-m-d') !== $default['end']->format('Y-m-d')) {
-            return back()->with('error', "L'inserimento multiplo non è ancora disponibile per questa sezione");
-        }
-
-        $default['user_id'] = auth()->id();
-
-
-        $used = 0;
-        $hours = Hour::where('user_id',auth()->id())->get();
-        foreach ($hours as $hour){
-            if (Carbon::parse($hour->start)->isSameDay(Carbon::parse($default['start']))) {
-                $used += Carbon::parse($hour->start)->diffInBusinessHours($hour->end);
-            }
-        }
-
-        if ($used >= 8 ) {
-            return back()->with('error', 'hai già inserito il numero massimo di ore per oggi');
-        }
-
-        $hour = Hour::create($default);
-
         $message = '';
-
-        switch ($request['hour_type_id']){
-            case '1': {   // Commessa
-                $data = $request->validate([
-                    'job_type_id' => 'required',
-                    'order_id' => 'required'
-                ]);
-                OrderDetails::create(array_merge($data,[
-                    'hour_id' => $hour->id,
-                    'description' => $request->job_description ?? null,
-                    'signed' => isset($request->signed) ? (bool)$request->signed : null
-                ]));
-                Order::find($data['order_id'])->update([
-                    'job_type_id' => $data['job_type_id']
-                ]);
-                $message = 'Ore commessa inserite con successo';
-                break;
+        $period = CarbonPeriod::create($request['day_start'],$request['day_end']);
+        $period->setEndDate($period->getEndDate()->modify('-1 day'));
+        foreach ($period as $day){
+            if (!Carbon::isOpenOn($day->format('Y-m-d'))) {
+                continue;
             }
-            case '2': {   // FI
-                $data = $request->validate(['number' => 'required']);
-                if ($request->fi_new === '0'){
-                    TechnicalReport::create([
-                        'user_id' => auth()->id(),
-                        'number' => $data['number'],
-                        'secondary_customer_id' => $request['secondary_customer_id'] ?? null,
-                        'order_id' => $request['fi_order_id'] ?? null,
-                        'customer_id' => $request['customer_id']
+            $hour = Hour::create([
+                'count' => $default['count'],
+                'date' => $day,
+                'user_id' => auth()->id(),
+                'hour_type_id' => $default['hour_type_id']
+            ]);
+            switch ($request['hour_type_id']){
+                case '1': {   // Commessa
+                    $data = $request->validate([
+                        'job_type_id' => 'required',
+                        'order_id' => 'required'
                     ]);
+                    OrderDetails::create(array_merge($data,[
+                        'hour_id' => $hour->id,
+                        'description' => $request->job_description ?? null,
+                        'signed' => isset($request->signed) ? (bool)$request->signed : null
+                    ]));
+                    Order::find($data['order_id'])->update([
+                        'job_type_id' => $data['job_type_id']
+                    ]);
+                    $message = 'Ore commessa inserite con successo';
+                    break;
                 }
-                TechnicalReportDetails::create([
-                    'hour_id' => $hour->id,
-                    'technical_report_id' => TechnicalReport::where('number',$data['number'])->get()[0]->id
-                ]);
-                $message = 'Ore foglio intervento inserite con successo';
-                break;
-            }
-            case '3': {   // Assistenza ??
-                $message = 'Ore di assistenza inserite con successo';
-                break;
-            }
-            case '4': {   // AVIS
-                $message = 'Ore di AVIS inserite con successo';
-                break;
-            }
-            case '5': {   // Corso
-                $message = 'Ore di corso inserite con successo';
-                break;
-            }
-            case '6': {   // Ferie
-                Holiday::create([
-                    'approved' => true,
-                    'allDay' => false,
-                    'user_id' => auth()->id(),
-                    'hour_id' => $hour->id
-                ]);
-                $message = 'Ore di ferie inserite con successo';
-                break;
-            }
-            case '7': {   // Malattia
-                $message = 'Ore di malattia inserite con successo';
-                break;
-            }
-            case '8': {   // Ufficio
-                $data = $request->validate([
-                    'description' => 'required'
-                ]);
-                $hour->update([
-                    'description' => $data['description']
-                ]);
-                $message = 'Ore di ufficio inserite con successo';
-                break;
-            }
-            case '9': {   // Visita Medica
-                $message = 'Ore visita medica inserite con successo';
-                break;
-            }
-            case '10': {  // Altro
-                $data = $request->validate([
-                    'description' => 'required'
-                ]);
-                $hour->update([
-                    'description' => $data['description']
-                ]);
-                $message = 'Ore inserite con successo';
-                break;
-            }
-            default:{
-                break;
+                case '2': {   // FI
+                    $data = $request->validate(['number' => 'required']);
+                    if ($request->fi_new === '0'){
+                        TechnicalReport::create([
+                            'user_id' => auth()->id(),
+                            'number' => $data['number'],
+                            'secondary_customer_id' => $request['secondary_customer_id'] ?? null,
+                            'order_id' => $request['fi_order_id'] ?? null,
+                            'customer_id' => $request['customer_id']
+                        ]);
+                    }
+                    TechnicalReportDetails::create([
+                        'hour_id' => $hour->id,
+                        'technical_report_id' => TechnicalReport::where('number',$data['number'])->get()[0]->id
+                    ]);
+                    $message = 'Ore foglio intervento inserite con successo';
+                    break;
+                }
+                case '3': {   // Assistenza ??
+                    $message = 'Ore di assistenza inserite con successo';
+                    break;
+                }
+                case '4': {   // AVIS
+                    $message = 'Ore di AVIS inserite con successo';
+                    break;
+                }
+                case '5': {   // Corso
+                    $message = 'Ore di corso inserite con successo';
+                    break;
+                }
+                case '6': {   // Ferie
+                    Holiday::create([
+                        'approved' => true,
+                        'start' => null,
+                        'end' => null,
+                        'user_id' => auth()->id()
+                    ]);
+                    $message = 'Ore di ferie inserite con successo';
+                    break;
+                }
+                case '7': {   // Malattia
+                    $message = 'Ore di malattia inserite con successo';
+                    break;
+                }
+                case '8': {   // Ufficio
+                    $data = $request->validate([
+                        'description' => 'required'
+                    ]);
+                    $hour->update([
+                        'description' => $data['description']
+                    ]);
+                    $message = 'Ore di ufficio inserite con successo';
+                    break;
+                }
+                case '9': {   // Visita Medica
+                    $message = 'Ore visita medica inserite con successo';
+                    break;
+                }
+                case '10': {  // Altro
+                    $data = $request->validate([
+                        'description' => 'required'
+                    ]);
+                    $hour->update([
+                        'description' => $data['description']
+                    ]);
+                    $message = 'Ore inserite con successo';
+                    break;
+                }
+                default:{
+                    break;
+                }
             }
         }
+
         return redirect('/ore')->with('message', $message);
     }
     public function update(): void
@@ -200,5 +189,13 @@ class HourController extends Controller
     {
         $hour->delete();
         return back()->with('message','Ora eliminata con successo');
+    }
+
+    public function report(): Factory|View|Application
+    {
+
+        return view('hours.report',[
+            'users' => User::with('hours')->get()
+        ]);
     }
 }

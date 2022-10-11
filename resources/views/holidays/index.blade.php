@@ -88,7 +88,7 @@
         </div>
     </div>
     @php($count = Holiday::where('approved',false)->get()->count())
-    @if( auth()->user()->level > 0)
+    @hasanyrole('admin|boss')
         @if($count > 0)
             <div class="container mt-5 mb-3 shadow-sm p-5 table-responsive">
                 <h2 class="text-center">{{ $count }} Ferie da approvare</h2>
@@ -125,7 +125,7 @@
                 </table>
             </div>
         @endif
-    @endif
+    @endhasanyrole
     <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="label" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">

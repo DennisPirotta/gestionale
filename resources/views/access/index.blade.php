@@ -22,7 +22,7 @@
                     <td class="keyBox">
                         <span><i class="bi bi-eye fs-5 me-3 align-middle toggle-visibility"></i></span>
                         <label for="key"></label>
-                        <span id="hide" class="hide"></span><input type="password" id="key" class="pe-2 key" value="{{ Crypt::decryptString($key->key) }}" readonly>
+                        <span id="hide" class="hide"></span><input type="password" id="key" class="pe-2 key bg-transparent" value="{{ Crypt::decryptString($key->key) }}" readonly>
                     </td>
                     <td>{{ $date->translatedFormat('D d M Y') }}</td>
                     <td class="d-flex">

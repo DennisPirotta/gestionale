@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Holiday;
 use App\Models\Hour;
 use App\Models\User;
+use Carbon\CarbonPeriod;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,22 +20,11 @@ class HolidayFactory extends Factory
      */
     public function definition()
     {
-        $start = fake()->dateTimeThisYear->setTime(0,0,0);
-        $end = fake()->dateTimeInInterval($start,'+10 days')->setTime(0,0,0);
-        $user = User::all()->random()->id;
-
-        $hour = Hour::create([
-            'start' => $start,
-            'end' => $end,
-            'user_id' => $user,
-            'hour_type_id' => 6
-        ]);
-
         return [
+            'start' => fake()->dateTimeThisYear->setTime(0,0,0),
+            'end' => fake()->dateTimeInInterval($start,'+10 days')->setTime(0,0,0),
             'approved' => fake()->boolean,
-            'user_id' => $user,
-            'allDay' => fake()->boolean,
-            'hour_id' => $hour->id
+            'user_id' => User::all()->random()->id
         ];
     }
 }

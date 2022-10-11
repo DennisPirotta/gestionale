@@ -4,14 +4,16 @@
 @extends('layouts.app')
 @section('content')
     <div class="container shadow-sm p-5 mt-5">
-        <h1>Dati personali</h1>
-        <hr>
         <h1>{{ $user->name }} {{ $user->surname }}</h1>
+        <hr>
         <h5>{{ $user->email }}</h5>
         <span class="badge @if($user->company->id === 1) text-bg-primary @else text-bg-success @endif fs-6">{{ $user->company->name }}</span>
     </div>
     <div class="container table-responsive mt-5 shadow-sm p-5">
         <h1>Orario di lavoro</h1>
+        @role('admin|boss')
+            <button class="btn btn-primary"><i class="bi bi-pen me-2"></i>Modifica</button>
+        @endrole
         <hr>
         <table class="table text-center table-striped">
             <thead>

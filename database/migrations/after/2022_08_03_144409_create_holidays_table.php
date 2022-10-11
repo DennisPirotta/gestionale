@@ -15,15 +15,11 @@ return new class extends Migration {
         Schema::create('holidays', function (Blueprint $table) {
             $table->id();
             $table->boolean('approved')->default(false);
-            $table->boolean('allDay')->default(true);
+            $table->date('start');
+            $table->date('end');
             $table->timestamps();
 
             $table->foreignId('user_id')
-                ->constrained()
-                ->cascadeOnDelete()
-                ->cascadeOnUpdate();
-
-            $table->foreignId('hour_id')
                 ->constrained()
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();

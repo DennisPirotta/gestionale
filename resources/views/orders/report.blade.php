@@ -1,31 +1,38 @@
+@php use Carbon\Carbon; @endphp
 @extends('layouts.app')
 @section('content')
     <div class="container-fluid w-75 shadow-sm my-3 text-center justify-content-center p-3 text-center">
         <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Tabella</button>
-                <button class="nav-link disabled" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Grafici</button>
+                <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home"
+                        type="button" role="tab" aria-controls="nav-home" aria-selected="true">Tabella
+                </button>
+                <button class="nav-link disabled" id="nav-profile-tab" data-bs-toggle="tab"
+                        data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile"
+                        aria-selected="false">Grafici
+                </button>
             </div>
         </nav>
         <div class="tab-content" id="nav-tabContent">
-            <div class="tab-pane fade show active p-3 mt-3" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0" style="overflow-y: scroll;height: 70vh">
-                <table class="table" >
+            <div class="tab-pane fade show active p-3 mt-3" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab"
+                 tabindex="0" style="overflow-y: scroll;height: 70vh">
+                <table class="table">
                     <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Commessa Interna</th>
-                            <th scope="col">Commessa Esterna</th>
-                            <th scope="col">Descrizione</th>
-                            <th scope="col">Ore SW</th>
-                            <th scope="col">Ore MS</th>
-                            <th scope="col">Ore FAT</th>
-                            <th scope="col">Ore SAF</th>
-                            <th scope="col">Apertura</th>
-                            <th scope="col">Chiusura</th>
-                            <th scope="col">Cliente</th>
-                            <th scope="col">Responsabile</th>
-                            <th scope="col">Progressi</th>
-                        </tr>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Commessa Interna</th>
+                        <th scope="col">Commessa Esterna</th>
+                        <th scope="col">Descrizione</th>
+                        <th scope="col">Ore SW</th>
+                        <th scope="col">Ore MS</th>
+                        <th scope="col">Ore FAT</th>
+                        <th scope="col">Ore SAF</th>
+                        <th scope="col">Apertura</th>
+                        <th scope="col">Chiusura</th>
+                        <th scope="col">Cliente</th>
+                        <th scope="col">Responsabile</th>
+                        <th scope="col">Progressi</th>
+                    </tr>
                     </thead>
                     <tbody>
                     @php($count = 1)
@@ -35,12 +42,12 @@
                             <td>{{$order->innerCode}}</td>
                             <td>{{$order->outerCode}}</td>
                             <td>{{$order->description}}</td>
-                            <td>{{$order->hourSW}}</td>
-                            <td>{{$order->hourMS}}</td>
-                            <td>{{$order->hourFAT}}</td>
-                            <td>{{$order->hourSAF}}</td>
-                            <td>{{$order->opening}}</td>
-                            <td>{{$order->closing}}</td>
+                            <td>{{ round($order->getHours()['sw'] ?? null) }}</td>
+                            <td>{{ round($order->getHours()['ms'] ?? null) }}</td>
+                            <td>{{ round($order->getHours()['fat'] ?? null) }}</td>
+                            <td>{{ round($order->getHours()['saf'] ?? null) }}</td>
+                            <td>{{Carbon::parse($order->opening)->format('d-m-Y')}}</td>
+                            <td>{{Carbon::parse($order->closing)->format('d-m-Y')}}</td>
                             <td>{{$order->customer->name}}</td>
                             <td>{{$order->user->name . " " . $order->user->surname}}</td>
                             <td>{{$order->status->description}}</td>
@@ -49,7 +56,8 @@
                     </tbody>
                 </table>
             </div>
-            <div class="tab-pane fade p-3" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
+            <div class="tab-pane fade p-3" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab"
+                 tabindex="0">
                 <div class="progress mx-auto" data-value='50'>
                     <span class="progress-left">
                         <span class="progress-bar border-primary"></span>

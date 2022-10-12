@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Location;
+use Carbon\Carbon;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\RedirectResponse;
 
@@ -24,8 +26,11 @@ class HomeController extends Controller
      */
     public function index(): Renderable
     {
-        if (!auth()->user()->position){
+        if (Location::where('user_id',auth()->id())->where('date',Carbon::now()->format('Y-m-d')) === null && !(auth()->user()->position)){
             session()->put('whereami',false);
+        }else
+        {
+            session()->remove('whereami');
         }
         return view('home')->with('message', 'Login effettuato con successo');
     }

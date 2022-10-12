@@ -20,7 +20,7 @@ class BusinessHour extends Model
     {
         for($i = 0 ; $i < 5 ; $i++){
             $date = Carbon::parse('5-1-1970')->addDays($i);
-            BusinessHour::create([
+            self::create([
                 'user_id' => $user->id,
                 'week_day' => strtolower($date->format('l')),
                 'morning_start' => Carbon::parse('8:00'),
@@ -30,5 +30,20 @@ class BusinessHour extends Model
                 'total' => 8
             ]);
         }
+    }
+
+    public static function getWorkingHours(User $user): array
+    {
+        $hours = self::where('user_id',$user->id)->get();
+        $data = [];
+        foreach ($hours as $hour){
+            $data[$hour->week_day] = [
+                Carbon::parse($hour->morning_start)->format('H:i') . "-" . Carbon::parse($hour->morning_end)->format('H:i') ,
+                Carbon::parse($hour->afternoon_start)->format('H:i') . "-" . Carbon::parse($hour->afternoon_end)->format('H:i')
+            ];
+        }
+        $data['saturday'] = [];
+        $data['sunday'] = [];
+        return $data;
     }
 }

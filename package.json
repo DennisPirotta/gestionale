@@ -4,7 +4,7 @@
         "dev": "vite --https --host",
         "local": "vite",
         "build": "vite build",
-        "watch": "watch npm run build"
+        "watch": "vite build --watch"
     },
     "devDependencies": {
         "@popperjs/core": "^2.10.2",

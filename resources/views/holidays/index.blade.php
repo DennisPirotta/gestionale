@@ -36,8 +36,8 @@
                                         @php($count = 1)
                                         @foreach($holidays as $event)
                                             @if($event['user'] === auth()->id())
-                                                @php($start = Carbon::createFromTimeString($event['start']))
-                                                @php($end = Carbon::createFromTimeString($event['end']))
+                                                @php($start = Carbon::parse($event['start']))
+                                                @php($end = Carbon::parse($event['end']))
                                                 <tr>
                                                     <th scope="row">
                                                         <div class="form-check">
@@ -107,8 +107,8 @@
                         @foreach($user->holidayList->where('approved',false) as $holiday)
                             <tr>
                                 <th scope="row">{{ $user->name }}</th>
-                                <td>{{ Carbon::parse($holiday->hour->start)->translatedFormat('D d M Y') }}</td>
-                                <td>{{ Carbon::parse($holiday->hour->end)->translatedFormat('D d M Y') }}</td>
+                                <td>{{ Carbon::parse($holiday->start)->translatedFormat('D d M Y') }}</td>
+                                <td>{{ Carbon::parse($holiday->end)->translatedFormat('D d M Y') }}</td>
                                 <td>
                                     <form method="POST" action="{{ route('holidays.approve',$holiday->id) }}">
                                         @csrf
@@ -199,7 +199,7 @@
             })
             progressBar.text.style.fontFamily = '"Raleway", Helvetica, sans-serif';
             progressBar.text.style.fontSize = '1.5rem';
-            progressBar.animate({{Holiday::getLeftHours() / auth()->user()->holidays}})
+            progressBar.animate({{auth()->user()->getLeftHolidays() / auth()->user()->holidays}})
             let events = @json($holidays, JSON_THROW_ON_ERROR);
             let calendarEl = document.getElementById('calendar')
             let calendar = new FullCalendar.Calendar(calendarEl, {

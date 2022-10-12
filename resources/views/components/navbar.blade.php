@@ -70,6 +70,9 @@
                             <a class="dropdown-item" href="{{ url('/change-password') }}" >
                                 <i class="bi bi-key me-2"></i>Cambia password
                             </a>
+                            <a class="dropdown-item" href="{{ url('/old/info.php') }}" >
+                                <i class="bi bi-archive me-2"></i>Archivio
+                            </a>
                             @hasanyrole('boss|admin')
                                 <a class="dropdown-item" href="{{ url('/access-keys') }}" >
                                     <i class="bi bi-door-open me-2"></i>Chiavi di accesso

@@ -27,16 +27,13 @@ class HourController extends Controller
 {
     public function index(): Factory|View|Application
     {
-
-        $holidays = Holiday::all();
         $hours = Hour::with(['user','hour_type'])->get();
 
         $formatted = [];
         foreach ($hours as $hour){
-
             $content = '<form method="POST" action="'.route('hours.destroy',$hour->id).'">'.csrf_field().method_field('DELETE').'<button class="btn btn-outline-danger" onclick="return confirm("Sicuro di voler Eliminare?")"><i class="bi bi-trash me-1 fs-4"></i></button></form>';
             $formatted[] = [
-              'title' => $hour->user->name . " " . $hour->user->surname,
+              'title' => $hour->user->name . " " . $hour->user->surname . " - " . $hour->hour_type->description,
               'start' => $hour->date,
               'end' => $hour->date,
               'allDay' => true,

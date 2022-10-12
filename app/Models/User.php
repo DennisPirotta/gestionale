@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -79,6 +80,17 @@ class User extends Authenticatable implements MustVerifyEmail
     public function business_hours(): HasMany
     {
         return $this->hasMany(BusinessHour::class,'user_id');
+    }
+
+    public function getLeftHolidays(): int
+    {
+        $holidays = Holiday::where('user_id',$this->id)->get();
+        $count = 0;
+        Carbon::setOpeningHours(BusinessHour::getWorkingHours($this));
+        foreach ($holidays as $holiday){
+            $count += Carbon::parse($holiday->start)->diffInBusinessHours($holiday->end);
+        }
+        return $this->holidays - $count;
     }
 
 }

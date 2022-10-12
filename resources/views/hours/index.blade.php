@@ -394,11 +394,6 @@
                     $('#myModal').modal('toggle')
                 },
                 eventDidMount: function (info) {
-                        let events = calendar.getEvents()
-                        if (info.view.type == 'dayGridWeek' || info.view.type == 'timeGridWeek')
-                            events.forEach(event => event.setProp('title',`${info.event.extendedProps.name} - ${info.event.extendedProps.hour_type}`))
-                        else
-                            events.forEach(event => event.setProp('title',`${info.event.extendedProps.name}`))
                         $(info.el).popover(
                         {
                             title: 'Dettagli',

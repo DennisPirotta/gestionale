@@ -50,6 +50,12 @@
             "purpose": "maskable"
         },
         {
+            "src": "images/pwa/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
             "src": "images/pwa/icon-48x48.webp",
             "sizes": "48x48",
             "type": "image/webp",
@@ -89,6 +95,12 @@
             "src": "images/pwa/icon-512x512.webp",
             "sizes": "512x512",
             "type": "image/webp",
+            "purpose": "any"
+        },
+        {
+            "src": "images/pwa/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
             "purpose": "any"
         }
 

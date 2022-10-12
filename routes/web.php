@@ -10,11 +10,7 @@ use App\Http\Controllers\LocationController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\TechnicalReportDetailsController;
 use App\Http\Controllers\UserController;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -56,9 +52,6 @@ Route::middleware(['auth'])->group(function () {
     // Salva modifiche commessa
     Route::put('/commesse/{order}', [OrderController::class, 'update'])->name('orders.update');
 
-    // Mostra report commesse
-    Route::get('/commesse/report', [OrderController::class, 'report'])->name('orders.report');
-
     /*
     *  GESTIONE ROUTES HOME
     */
@@ -67,29 +60,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home.index');
 
     // Rimuovi popup del primo login
-    Route::post('/', [HomeController::class,'store'])->name('home.store');
-
-    /*
-    *  GESTIONE ROUTES CLIENTI
-    */
-
-    // Mostra pagina clienti
-    Route::get('/clienti', [CustomerController::class, 'index'])->name('customers.index');
-
-    // Mostra pagina crea cliente
-    Route::get('/clienti/create', [CustomerController::class, 'create'])->name('customers.create');
-
-    // Mostra pagina clienti
-    Route::post('/clienti', [CustomerController::class, 'store'])->name('customers.store');
-
-    // Mostra pagina modifica
-    Route::get('/clienti/{customer}/edit', [CustomerController::class, 'edit'])->name('customers.edit');
-
-    // Modifica cliente
-    Route::put('/clienti/{customer}', [CustomerController::class, 'update'])->name('customers.update');
-
-    // Elimina cliente
-    Route::delete('/clienti/{customer}', [CustomerController::class, 'destroy'])->name('customers.destroy');
+    Route::post('/', [HomeController::class, 'store'])->name('home.store');
 
     /*
     *  GESTIONE ROUTES FERIE
@@ -107,16 +78,13 @@ Route::middleware(['auth'])->group(function () {
     // Mostra pagina modifica
     Route::get('/ferie/{holiday}/edit', [HolidayController::class, 'edit'])->name('holidays.edit');
 
-    // Modifica cliente
+    // Modifica ferie
     Route::put('/ferie/{holiday}', [HolidayController::class, 'update'])->name('holidays.update');
-
-    // Approva ferie
-    Route::put('/ferie/approve/{holiday}', [HolidayController::class, 'approve'])->name('holidays.approve');
 
     // Elimina cliente
     Route::delete('/ferie/{holiday}', [HolidayController::class, 'destroy'])->name('holidays.destroy');
 
-    // Elimina cliente multiplo
+    // Elimina ferie multiplo
     Route::post('/ferie/delete', [HolidayController::class, 'destroyMore'])->name('holidays.destroyMore');
 
 
@@ -126,9 +94,6 @@ Route::middleware(['auth'])->group(function () {
 
     // Mostra pannello ore
     Route::get('/ore', [HourController::class, 'index'])->name('hours.index');
-
-
-    Route::get('/ore/report', [HourController::class, 'report'])->name('hours.report');
 
     // Mostra pagina inserisci ore
     Route::get('/ore/create', [HourController::class, 'create'])->name('hours.create');
@@ -162,57 +127,83 @@ Route::middleware(['auth'])->group(function () {
     // aggiorna posizione
     Route::put('/dove-siamo/{location}', [LocationController::class, 'update'])->name('locations.update');
 
-    /*
-     *  GESTIONE ROUTE DIPENDENTI
-     */
-
-    // Mostra tutti i dipendenti
-    Route::get('/dipendenti',[UserController::class,'index'])->name('users.index');
-
-    // Aggiorna dati dipendente
-    Route::get('/dipendenti/{user}', [UserController::class, 'show'])->name('users.show');
-
-    // Mostra pagina crea nuovo dipendente
-    Route::get('/dipendenti/create', [UserController::class, 'create'])->name('users.create');
-
-    // Salva nuovo dipendente
-    Route::post('/dipendenti', [UserController::class, 'store'])->name('users.store');
-
-    Route::delete('/dipendenti/{user}', [UserController::class, 'destroy'])->name('users.destroy');
-
-
-    /*
-     * GESTIONE ROUTE CHIAVI DI ACCESSO
-     */
-
-    // Mostra pagina chiavi di accesso
-    Route::get('/access-keys', [AccessKeyController::class, 'index'])->name('access.index');
-
-    // Salva nuova chiave di accesso
-    Route::post('/access-keys', [AccessKeyController::class, 'store'])->name('access.store');
-
-    // Elimina chiave di accesso
-    Route::delete('/access-keys/{key}', [AccessKeyController::class, 'destroy'])->name('access.destroy');
-
-
-    Route::get('/fi/{technical_report}',[TechnicalReportDetailsController::class,'show'])->name('technical_report_details.show');
+    Route::get('/fi/{technical_report}', [TechnicalReportDetailsController::class, 'show'])->name('technical_report_details.show');
 
     Route::group(['middleware' => ['role:admin|boss']], static function () {
-        Route::get('/users/business-hours',[UserController::class,'indexBusinessHour'])->name('user.time');
+
+        /*
+        *  GESTIONE ROUTES CLIENTI
+        */
+
+        // Mostra pagina clienti
+        Route::get('/clienti', [CustomerController::class, 'index'])->name('customers.index');
+
+        // Mostra pagina crea cliente
+        Route::get('/clienti/create', [CustomerController::class, 'create'])->name('customers.create');
+
+        // Mostra pagina clienti
+        Route::post('/clienti', [CustomerController::class, 'store'])->name('customers.store');
+
+        // Mostra pagina modifica
+        Route::get('/clienti/{customer}/edit', [CustomerController::class, 'edit'])->name('customers.edit');
+
+        // Modifica cliente
+        Route::put('/clienti/{customer}', [CustomerController::class, 'update'])->name('customers.update');
+
+        // Elimina cliente
+        Route::delete('/clienti/{customer}', [CustomerController::class, 'destroy'])->name('customers.destroy');
+
+        // Approva ferie
+        Route::put('/ferie/approve/{holiday}', [HolidayController::class, 'approve'])->name('holidays.approve');
+
+        // Mostra report commesse
+        Route::get('/commesse/report', [OrderController::class, 'report'])->name('orders.report');
+
+        // Mostra report ore
+        Route::get('/ore/report', [HourController::class, 'report'])->name('hours.report');
+
+        /*
+        *  GESTIONE ROUTE DIPENDENTI
+        */
+
+        // Mostra tutti i dipendenti
+        Route::get('/dipendenti', [UserController::class, 'index'])->name('users.index');
+
+        // Aggiorna dati dipendente
+        Route::get('/dipendenti/{user}', [UserController::class, 'show'])->name('users.show');
+
+        // Mostra pagina crea nuovo dipendente
+        Route::get('/dipendenti/create', [UserController::class, 'create'])->name('users.create');
+
+        // Salva nuovo dipendente
+        Route::post('/dipendenti', [UserController::class, 'store'])->name('users.store');
+
+        Route::delete('/dipendenti/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+
+        /*
+         * GESTIONE ROUTE CHIAVI DI ACCESSO
+         */
+
+        // Mostra pagina chiavi di accesso
+        Route::get('/access-keys', [AccessKeyController::class, 'index'])->name('access.index');
+
+        // Salva nuova chiave di accesso
+        Route::post('/access-keys', [AccessKeyController::class, 'store'])->name('access.store');
+
+        // Elimina chiave di accesso
+        Route::delete('/access-keys/{key}', [AccessKeyController::class, 'destroy'])->name('access.destroy');
+
     });
-
-
-
 });
 
 
-Route::post('/debug/change_permissions', static function (){
+Route::post('/debug/change_permissions', static function () {
     try {
         \auth()->user()->syncRoles();
         auth()->user()->assignRole(request('role'));
-        return redirect('/')->with('message','livello di accesso cambiato');
-    }catch (Exception $e){
-        return redirect('/')->with('error',$e);
+        return redirect('/')->with('message', 'livello di accesso cambiato');
+    } catch (Exception $e) {
+        return redirect('/')->with('error', $e);
     }
 
 });

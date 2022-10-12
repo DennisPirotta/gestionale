@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\BusinessHour;
 use App\Providers\RouteServiceProvider;
 use Carbon\Carbon;
-use Cmixin\BusinessTime;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 
@@ -30,7 +29,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    protected string $redirectTo = RouteServiceProvider::HOME;
 
     /**
      * Create a new controller instance.
@@ -42,18 +41,8 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-    protected function authenticated(Request $request, $user)
+    protected function authenticated(Request $request, $user): void
     {
-        $hours = BusinessHour::where('user_id',$user->id)->get();
-        $data = [];
-        foreach ($hours as $hour){
-            $data[$hour->week_day] = [
-                Carbon::parse($hour->morning_start)->format('H:i') . "-" . Carbon::parse($hour->morning_end)->format('H:i') ,
-                Carbon::parse($hour->afternoon_start)->format('H:i') . "-" . Carbon::parse($hour->afternoon_end)->format('H:i')
-            ];
-        }
-        $data['saturday'] = [];
-        $data['sunday'] = [];
-        Carbon::setOpeningHours($data);
+        Carbon::setOpeningHours(BusinessHour::getWorkingHours($user));
     }
 }

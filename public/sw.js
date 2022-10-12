@@ -12,8 +12,18 @@ self.addEventListener("install", function (event) {
 const filesToCache = [
     '/',
     '/offline.html',
-    '/images',
-    '/images/pwa',
+    '/images/favicon.png',
+    '/images/logo_3d.svg',
+    '/images/logo_sph.svg',
+    '/images/no-orders.svg',
+    '/images/pwa/icon-48x48.webp',
+    '/images/pwa/icon-72x72.webp',
+    '/images/pwa/icon-96x96.webp',
+    '/images/pwa/icon-128x128.webp',
+    '/images/pwa/icon-192x192.webp',
+    '/images/pwa/icon-384x384.webp',
+    '/images/pwa/icon-512x512.webp',
+    '/images/pwa/icon-512x512.png'
 ];
 
 const checkResponse = function (request) {

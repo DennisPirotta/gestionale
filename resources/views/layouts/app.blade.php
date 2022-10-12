@@ -54,8 +54,8 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <link rel="preload" href="https://fonts.googleapis.com/css?family=Nunito" as="font" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" as="font" href="https://fonts.googleapis.com/css?family=Nunito"></noscript>
     <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css"></noscript>
     <link rel="preload" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">

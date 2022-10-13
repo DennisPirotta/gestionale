@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BusinessHour;
 use App\Models\Order;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
@@ -38,28 +39,9 @@ class UserController extends Controller
     }
 
     // Modifica la commessa
-    public function update(Request $request, Order $order): Redirector|Application|RedirectResponse
+    public function update(Request $request, User $user): void
     {
-        $formFields = $request->validate([
-            'company' => 'required',
-            'status' => 'required',
-            'country' => 'required',
-            'description' => 'required',
-            'hourSW' => 'required',
-            'progress' => 'required',
-            'opening' => 'required',
-            'closing' => 'required',
-            'customer' => 'required',
-        ]);
-
-        $formFields['innerCode'] = $order->innerCode;
-        $formFields['outerCode'] = $order->outerCode;
-
-        $formFields['manager'] = $order->manager;
-
-        $order->update($formFields);
-
-        return redirect('/commesse')->with('message', 'Commessa aggiornata con successo');
+        //
     }
 
     // Elimina l'utente
@@ -70,10 +52,25 @@ class UserController extends Controller
     }
 
     // Mostra ore settimanali utente
-    public function indexBusinessHour()
+    public function updateBusinessHour(Request $request, User $user): RedirectResponse
     {
-        return view('users.business-hours.index',[
-            'hours' => BusinessHour::where('user_id',auth()->id())->get()
-        ]);
+        //dd($request, $user->business_hours);
+        foreach ($user->business_hours as $business_hour){
+            $business_hour->update([
+                'morning_start' => $request['days'][$business_hour->week_day]['morning_start'],
+                'morning_end' => $request['days'][$business_hour->week_day]['morning_end'],
+                'afternoon_start' => $request['days'][$business_hour->week_day]['afternoon_start'],
+                'afternoon_end' => $request['days'][$business_hour->week_day]['afternoon_end']
+            ]);
+        }
+        Carbon::setOpeningHours(BusinessHour::getWorkingHours($user));
+        return back()->with('message','Orario di lavoro modificato correttamente');
+    }
+    // Mostra ore settimanali utente
+    public function updateHolidaysHour(Request $request, User $user): RedirectResponse
+    {
+        $user->holidays = $request['holidays'];
+        $user->save();
+        return back()->with('message','Ore di ferie modificate correttamente');
     }
 }

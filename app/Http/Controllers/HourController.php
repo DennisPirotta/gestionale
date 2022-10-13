@@ -77,6 +77,9 @@ class HourController extends Controller
         $message = '';
         $period = CarbonPeriod::create($request['day_start'],$request['day_end']);
         $period->setEndDate($period->getEndDate()->modify('-1 day'));
+
+        $multiple = false;
+
         foreach ($period as $day){
             if (!Carbon::isOpenOn($day->format('Y-m-d'))) {
                 continue;
@@ -106,20 +109,31 @@ class HourController extends Controller
                 }
                 case '2': {   // FI
                     $data = $request->validate(['number' => 'required']);
-                    if ($request->fi_new === '0'){
-                        TechnicalReport::create([
-                            'user_id' => auth()->id(),
-                            'number' => $data['number'],
-                            'secondary_customer_id' => $request['secondary_customer_id'] ?? null,
-                            'order_id' => $request['fi_order_id'] ?? null,
-                            'customer_id' => $request['customer_id']
-                        ]);
+                    if (!$multiple){
+                        if ($request->fi_new === '0'){
+                            TechnicalReport::create([
+                                'user_id' => auth()->id(),
+                                'number' => $data['number'],
+                                'secondary_customer_id' => $request['secondary_customer_id'] ?? null,
+                                'order_id' => $request['fi_order_id'] ?? null,
+                                'customer_id' => $request['customer_id']
+                            ]);
+                        }
+                        $message = 'Ore foglio intervento inserite con successo';
+                        $multiple = true;
                     }
-                    TechnicalReportDetails::create([
+                    if ($request['night'] === 'XUE'){
+                        $xue = true;
+                    }
+                    if ($request['night'] === 'UE'){
+                        $ue = true;
+                    }
+                    $fi = TechnicalReportDetails::create([
                         'hour_id' => $hour->id,
-                        'technical_report_id' => TechnicalReport::where('number',$data['number'])->get()[0]->id
+                        'technical_report_id' => TechnicalReport::where('number',$data['number'])->get()[0]->id,
+                        'nightEU' => $ue ?? false,
+                        'nightExtraEU' => $xue ?? false
                     ]);
-                    $message = 'Ore foglio intervento inserite con successo';
                     break;
                 }
                 case '3': {   // Assistenza ??

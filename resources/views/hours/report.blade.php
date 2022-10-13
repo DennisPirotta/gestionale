@@ -10,6 +10,17 @@
             font-size: 10px;
         }
 
+        .x-card-value{
+            font-size: 20px !important;
+            padding-left: 10px !important;
+            padding-right: 10px !important;
+        }
+        .x-card-title{
+            font-size: 10px !important;
+            padding-left: 10px !important;
+            padding-right: 10px !important;
+        }
+
         .container-fluid {
             padding-left: 5px !important;
             padding-right: 5px !important;
@@ -38,25 +49,26 @@
 </style> <!-- Stili per stampa -->
 @section('content')
     @php
-        use App\Models\HourType;use App\Models\OrderDetails;use App\Models\TechnicalReportDetails;use Carbon\Carbon;
+        use App\Models\HourType;use App\Models\Order;use App\Models\OrderDetails;use App\Models\TechnicalReport;use App\Models\TechnicalReportDetails;use Carbon\Carbon;
         use Carbon\CarbonPeriod;
         use App\Models\User;
         $period = CarbonPeriod::create(Carbon::now()->firstOfMonth(),Carbon::now()->lastOfMonth());
         $mese = Carbon::now();
+        $user = User::find(request('user'));
+        if ($user) $user->load('business_hours');
         if(request('mese')) {
             $mese = Carbon::parse(request('mese'));
             $period = CarbonPeriod::create(Carbon::parse(request('mese'))->firstOfMonth(),Carbon::parse(request('mese'))->lastOfMonth());
         }
     @endphp
-    <div class="container-fluid px-5 my-5 table-responsive">
+    <div class="container-fluid px-5 mt-5 table-responsive">
         <div class="d-flex align-items-center">
             <div class="h1 m-0">Report ore
-                @if(request('mese') === null && request('user') === null)
+                @if(request('mese') === null || request('user') === null)
                 @else
                     <b>{{ $mese->translatedFormat('F Y') }}
-                        - {{ User::find(request('user'))->name }} {{ User::find(request('user'))->surname }}</b>
+                        - {{ $user->name }} {{ $user->surname }}</b>
                 @endif
-
             </div>
             <button class="btn btn-primary me-2 ms-auto" onclick="window.print()"><i class="bi bi-printer me-2"></i>Stampa
             </button>
@@ -69,9 +81,9 @@
                     <div class="col ps-2">
                         <label for="user" class="d-none"></label><select name="user" class="form-select" id="user">
                             <option disabled selected>Utente</option>
-                            @foreach($users as $user)
-                                <option value="{{ $user->id }}"
-                                        @if(request('user') === (string)$user->id) selected @endif>{{ $user->name }} {{ $user->surname }}</option>
+                            @foreach($users as $select_user)
+                                <option value="{{ $select_user->id }}"
+                                        @if(request('user') === (string)$select_user->id) selected @endif>{{ $select_user->name }} {{ $select_user->surname }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -80,7 +92,7 @@
 
         </div>
         <hr class="hr">
-        @if(request('mese') === null && request('user') === null)
+        @if(request('mese') === null || request('user') === null)
             <div class="container justify-content-center text-center">
                 <img src="{{ asset('images/no-orders.svg') }}" alt="" style="width: 40rem">
                 <div class="fs-1">Seleziona un utente e un mese</div>
@@ -92,40 +104,72 @@
                     <th>Tipo</th>
                     @foreach($period as $day)
                         <th>
-                            <span class="dayName">
-                                {{ $day->translatedFormat('D') }}
-                            </span>
+                                <span class="dayName">
+                                    {{ $day->translatedFormat('D') }}
+                                </span>
                             <span>
-                                {{ $day->translatedFormat('j') }}
-                            </span>
+                                    {{ $day->translatedFormat('j') }}
+                                </span>
                         </th>
                     @endforeach
                 </tr>
                 </thead>
                 <tbody>
                 @php
-                    $user = User::find(request('user'));
-                    $data = $user->hours->where(static function ($el){
-                        return Carbon::parse($el->date)->format('Y-m') === request('mese');
-                    })->groupBy('hour_type_id');
+                    $orders = Order::withWhereHas('order_details',static function ($query) use ($user,$period){
+                            $query->withWhereHas('hour',static function ($query) use ($user,$period){
+                                $query->where('user_id',$user->id)->whereBetween('date',[$period->first(), $period->last()]);
+                            });
+                        });
+                    $technical_reports = TechnicalReport::withWhereHas('technical_report_details',static function ($query) use ($user,$period){
+                            $query->withWhereHas('hour',static function ($query) use ($user,$period){
+                                $query->where('user_id',$user->id)->whereBetween('date',[$period->first(), $period->last()]);
+                            });
+                        });
                 @endphp
-                @foreach($data as $type=>$hours)
+                @if($orders->get()->isNotEmpty())
                     <tr>
-                        <th scope="row" class="text-start border-end-0">{{ HourType::find($type)->description }}</th>
-                        <td colspan="{{ $period->count() }}" class="border-start-0"></td>
+                        <th scope="row" colspan="{{ $period->count() + 1 }}" class="border-end-0 text-start">Commesse
+                        </th>
                     </tr>
+                @endif
+                @foreach($orders->get() as $order)
                     <tr>
-                        <th scope="row"></th>
+                        <th scope="row">{{ $order->innerCode }}</th>
                         @foreach($period as $day)
-                            @php($flag = false)
-                            @foreach($hours as $hour)
-                                @if($hour->date === $day->format('Y-m-d'))
-                                    <td>{{ $hour->count }}</td>
-                                    @php($flag = true)
+                            @php($flag = true)
+                            @foreach($order->order_details as $details)
+                                @if($details->hour->date === $day->format('Y-m-d'))
+                                    <td @if($day->isWeekend()) class="bg-secondary" @endif >{{ $details->hour->count }}</td>
+                                    @php($flag = false)
                                 @endif
                             @endforeach
-                            @if(!$flag)
-                                <td></td>
+                            @if($flag)
+                                <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif ></td>
+                            @endif
+                        @endforeach
+                    </tr>
+                @endforeach
+                @if($technical_reports->get()->isNotEmpty())
+                    <tr>
+                        <th scope="row" colspan="{{ $period->count() + 1 }}" class="border-end-0 text-start">Fogli
+                            Intervento
+                        </th>
+                    </tr>
+                @endif
+                @foreach($technical_reports->get() as $technical_report)
+                    <tr>
+                        <th scope="row">{{ $technical_report->number }}</th>
+                        @foreach($period as $day)
+                            @php($flag = true)
+                            @foreach($technical_report->technical_report_details as $details)
+                                @if($details->hour->date === $day->format('Y-m-d'))
+                                    <td @if($day->isWeekend()) class="bg-secondary" @endif >{{ $details->hour->count }}</td>
+                                    @php($flag = false)
+                                @endif
+                            @endforeach
+                            @if($flag)
+                                <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif ></td>
                             @endif
                         @endforeach
                     </tr>
@@ -146,12 +190,12 @@
                         @endforeach
                         @php($current = $user->business_hours->where('week_day',strtolower($day->format('l')))->first())
                         @if($current === null)
-                            <td>{{ $count }}</td>
+                            <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif >{{ $count }}</td>
                         @else
                             @if($count - ( Carbon::parse($current->morning_start)->diffInBusinessHours($current->afternoon_end) ) < 0 )
-                                <td>0</td>
+                                <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif >0</td>
                             @else
-                                <td>{{ $count - ( Carbon::parse($current->morning_start)->diffInBusinessHours($current->afternoon_end) ) }}</td>
+                                <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif >{{ $count - ( Carbon::parse($current->morning_start)->diffInBusinessHours($current->afternoon_end) ) }}</td>
                             @endif
                         @endif
                     @endforeach
@@ -165,13 +209,20 @@
                                 @php($count += $hour->count)
                             @endif
                         @endforeach
-                        <td>{{ $count }}</td>
+                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif >{{ $count }}</td>
                     @endforeach
                 </tr>
                 </tfoot>
             </table>
-
-
+    </div>
+    <div class="container p-5">
+        <div class="row g-3 justify-content-center">
+            <x-report-card :title="'Totale ore'" :icon="'bi-bar-chart-fill'" :value="'XX'"></x-report-card>
+            <x-report-card :title="'Ferie'" :icon="'bi-cup-hot'" :value="'XX'"></x-report-card>
+            <x-report-card :title="'Notte UE'" :icon="'bi-currency-euro'" :value="'XX'"></x-report-card>
+            <x-report-card :title="'Notte Extra UE'" :icon="'bi-globe2'" :value="'XX'"></x-report-card>
+            <x-report-card :title="'Ore Festivi'" :icon="'bi-calendar4-week'" :value="'XX'"></x-report-card>
+        </div>
     </div>
 
     <div class="container px-5">
@@ -187,7 +238,6 @@
                 <td id="tot">XX.x</td>
                 <td id="tot_straordinari">XX.x</td>
             </tr>
-            <tr></tr>
             </tbody>
         </table>
     </div>

@@ -193,6 +193,11 @@ Route::middleware(['auth'])->group(function () {
         // Elimina chiave di accesso
         Route::delete('/access-keys/{key}', [AccessKeyController::class, 'destroy'])->name('access.destroy');
 
+        // Aggiorna orario di lavoro
+        Route::put('/dipendenti/{user}/update',[UserController::class,'updateBusinessHour'])->name('users.time.update');
+
+        // Aggiorna ore ferie
+        Route::put('/dipendenti/{user}/holidays/update',[UserController::class,'updateHolidaysHour'])->name('users.holidays.update');
     });
 });
 

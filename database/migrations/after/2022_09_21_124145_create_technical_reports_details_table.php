@@ -25,6 +25,9 @@ return new class extends Migration
                     ->cascadeOnUpdate()
                     ->cascadeOnDelete();
 
+            $table  ->boolean('nightEU')->default(false);
+            $table  ->boolean('nightExtraEU')->default(false);
+
             $table->timestamps();
         });
     }

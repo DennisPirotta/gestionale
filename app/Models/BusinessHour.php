@@ -11,6 +11,10 @@ class BusinessHour extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+      'morning_start','morning_end','afternoon_start','afternoon_end'
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class,'user_id');

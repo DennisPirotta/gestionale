@@ -11,7 +11,7 @@ class TechnicalReportDetails extends Model
     use HasFactory;
 
     protected $fillable = [
-        'hour_id','technical_report_id'
+        'hour_id','technical_report_id','nightEU','nightExtraEU'
     ];
 
     public function hour(): BelongsTo

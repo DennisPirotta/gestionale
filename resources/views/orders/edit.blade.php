@@ -3,13 +3,14 @@
 @php($require_navbar_tools = true)
 @section('content')
     <div class="container my-5 p-4 shadow-sm">
-        <form method="POST" action="/commesse/{{$commessa->id}}" class="row" enctype="multipart/form-data">
+        <form method="POST" action="{{ route('orders.update',$commessa->id) }}" class="row"
+              enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <div class="col-md-4 col-sm-6">
                 <div class="input-group mb-3">
                     <label class="input-group-text" for="inputGroupSelect01"><i class="bi bi-building me-2"></i>Compagnia</label>
-                    <select class="form-select" id="inputGroupSelect01" name="company">
+                    <select class="form-select" id="inputGroupSelect01" name="company_id">
                         @foreach($companies as $company)
                             @if($company->id === $commessa->company->id)
                                 <option value="{{$company->id}}" selected>{{$company->name}}</option>
@@ -19,14 +20,14 @@
                         @endforeach
                     </select>
                 </div>
-                @error('company')
+                @error('company_id')
                 <p class="text-danger fs-6">{{$message}}</p>
                 @enderror
             </div>
             <div class=" col-md-4 col-sm-6">
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <label class="input-group-text" for="inputGroupSelect01"><i class="bi bi-lightning-charge me-2"></i>Stato</label>
-                    <select class="form-select" id="inputGroupSelect01" name="status">
+                    <select class="form-select" id="inputGroupSelect01" name="status_id">
                         @foreach($statuses as $status)
                             @if($status->id === $commessa->status->id)
                                 <option value="{{$status->id}}" selected>{{$status->description}}</option>
@@ -35,7 +36,7 @@
                             @endif
                         @endforeach
                     </select>
-                    @error('status')
+                    @error('status_id')
                     <p class="text-danger fs-6">{{$message}}</p>
                     @enderror
                 </div>
@@ -44,7 +45,7 @@
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <label class="input-group-text" for="inputGroupSelect01"><i
                                 class="bi bi-globe2 me-2"></i>Paese</label>
-                    <select class="form-select" id="inputGroupSelect01" name="country">
+                    <select class="form-select" id="inputGroupSelect01" name="country_id">
                         @foreach($countries as $country)
                             @if($country->id === $commessa->country->id)
                                 <option value="{{$country->id}}" selected>{{$country->name}}</option>
@@ -54,7 +55,7 @@
                         @endforeach
                     </select>
                 </div>
-                @error('country')
+                @error('country_id')
                 <p class="text-danger fs-6">{{$message}}</p>
                 @enderror
             </div>
@@ -72,7 +73,7 @@
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <span class="input-group-text"><i class="bi bi-clock me-2"></i>Ore SW</span>
                     <input type="number" class="form-control" aria-label="Descrizione" name="hourSW"
-                           value="{{$commessa->hourSW}}">
+                           value="{{$commessa->getHours()['sw']}}">
                 </div>
                 @error('hourSW')
                 <p class="text-danger fs-6">{{$message}}</p>
@@ -82,7 +83,7 @@
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <span class="input-group-text"><i class="bi bi-clock me-2"></i>Ore MS</span>
                     <input type="number" class="form-control" aria-label="Descrizione" name="hourMS"
-                           value="{{$commessa->hourMS}}">
+                           value="{{$commessa->getHours()['ms']}}">
                 </div>
                 @error('hourMS')
                 <p class="text-danger fs-6">{{$message}}</p>
@@ -92,7 +93,7 @@
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <span class="input-group-text"><i class="bi bi-clock me-2"></i>Ore FAT</span>
                     <input type="number" class="form-control" aria-label="Descrizione" name="hourFAT"
-                           value="{{$commessa->hourFAT}}">
+                           value="{{$commessa->getHours()['fat']}}">
                 </div>
                 @error('hourFAT')
                 <p class="text-danger fs-6">{{$message}}</p>
@@ -102,7 +103,7 @@
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <span class="input-group-text"><i class="bi bi-clock me-2"></i>Ore SAF</span>
                     <input type="number" class="form-control" aria-label="Descrizione" name="hourSAF"
-                           value="{{$commessa->hourSAF}}">
+                           value="{{$commessa->getHours()['saf']}}">
                 </div>
                 @error('hourSAF')
                 <p class="text-danger fs-6">{{$message}}</p>
@@ -110,11 +111,19 @@
             </div>
             <div class=" col-md-4 col-sm-6">
                 <div class="input-group mb-3 col-md-4 col-sm-6">
-                    <span class="input-group-text"><i class="bi bi-arrow-clockwise me-2"></i>Progressi</span>
-                    <input type="text" class="form-control" aria-label="Progressi" name="progress"
-                           value="{{$commessa->job_type->description}}">
+                    <label class="input-group-text" for="inputGroupSelect01"><i
+                                class="bi bi-person me-2"></i>Progresso</label>
+                    <select class="form-select" id="inputGroupSelect01" name="job_type_id">
+                        @foreach($job_types as $job_type)
+                            <option value="{{$job_type->id}}"
+                                    @if($job_type->id === $commessa->job_type->id)
+                                        selected
+                                    @endif
+                            >{{$job_type->description}}</option>
+                        @endforeach
+                    </select>
                 </div>
-                @error('progress')
+                @error('job_type_id')
                 <p class="text-danger fs-6">{{$message}}</p>
                 @enderror
             </div>
@@ -132,7 +141,12 @@
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <span class="input-group-text"><i class="bi bi-calendar-x me-2"></i>Chiusura</span>
                     <input type="date" class="form-control" aria-label="Chiusura" name="closing"
-                           value="{{ Carbon::parse($commessa->closing)->format('Y-m-d') }}">
+                           @if($commessa->closing === null)
+                               value=""
+                           @else
+                               value="{{ Carbon::parse($commessa->closing)->format('Y-m-d') }}"
+                            @endif
+                    >
                 </div>
                 @error('closing')
                 <p class="text-danger fs-6">{{$message}}</p>
@@ -142,7 +156,7 @@
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <label class="input-group-text" for="inputGroupSelect01"><i
                                 class="bi bi-person me-2"></i>Cliente</label>
-                    <select class="form-select" id="inputGroupSelect01" name="customer">
+                    <select class="form-select" id="inputGroupSelect01" name="customer_id">
                         @foreach($customers as $customer)
                             @if($customer->id === $commessa->customer->id)
                                 <option value="{{$customer->id}}" selected>{{$customer->name}}</option>
@@ -152,7 +166,25 @@
                         @endforeach
                     </select>
                 </div>
-                @error('customer')
+                @error('customer_id')
+                <p class="text-danger fs-6">{{$message}}</p>
+                @enderror
+            </div>
+            <div class=" col-md-4 col-sm-6">
+                <div class="input-group mb-3 col-md-4 col-sm-6">
+                    <label class="input-group-text" for="inputGroupSelect01"><i
+                                class="bi bi-person me-2"></i>Responsabile</label>
+                    <select class="form-select" id="inputGroupSelect01" name="user_id">
+                        @foreach($users as $user)
+                            @if($user->id === $commessa->user->id)
+                                <option value="{{$user->id}}" selected>{{$user->name}}</option>
+                            @else
+                                <option value="{{$user->id}}">{{$user->name}}</option>
+                            @endif
+                        @endforeach
+                    </select>
+                </div>
+                @error('user_id')
                 <p class="text-danger fs-6">{{$message}}</p>
                 @enderror
             </div>

@@ -73,6 +73,9 @@
                             <a class="dropdown-item" href="{{ url('/old/info.php') }}" >
                                 <i class="bi bi-archive me-2"></i>Archivio
                             </a>
+                            <a class="dropdown-item" href="{{ route('bug.report.index') }}" >
+                                <i class="bi bi-bug me-2"></i>Bug report
+                            </a>
                             @hasanyrole('boss|admin')
                                 <a class="dropdown-item" href="{{ url('/access-keys') }}" >
                                     <i class="bi bi-door-open me-2"></i>Chiavi di accesso

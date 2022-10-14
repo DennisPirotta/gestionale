@@ -10,13 +10,13 @@ return new class extends Migration {
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('innerCode')->unique();
             $table->bigInteger('outerCode')->unique();
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->integer('hourSW')->default(0);
             $table->integer('hourMS')->default(0);
             $table->integer('hourFAT')->default(0);
@@ -32,6 +32,11 @@ return new class extends Migration {
 
             $table->foreignId('user_id')
                 ->constrained()
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
+
+            $table->foreignId('created_by')
+                ->constrained('users')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
 

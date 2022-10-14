@@ -80,7 +80,7 @@
                     <div class="card-body">
                         <i class="bi bi-calendar fs-3"></i>
                         <p class="card-title">Chiusura</p>
-                        <b>{{ Carbon::parse($commessa->closing)->translatedFormat('D d M Y') }}</b>
+                        <b>{{ $commessa->closing !== null ? Carbon::parse($commessa->closing)->translatedFormat('D d M Y') : '/'}}</b>
                     </div>
                 </div>
             </div>

@@ -30,14 +30,15 @@ class Order extends Model
 
         if ($filters['search'] ?? false) {
 
-
             $query  ->where  ('customer_id', Customer::where('name', 'like', '%' . request('search') . '%')->value('id'))
                     ->orWhere('user_id', User::where('name', 'like', '%' . request('search') . '%')->value('id'))
                     ->orWhere('company_id', Company::where('name', 'like', '%' . $filters['search'] . '%')->value('id'))
                     ->orWhere('country_id', Country::where('name', 'like', '%' . request('search') . '%')->value('id'))
                     ->orWhere('status_id', Status::where('description', 'like', '%' . request('search') . '%')->value('id'))
                     ->orWhere('description', 'like', '%' . request('search') . '%')
-                    ->orWhere('job_type_id', 'like', '%' . request('search') . '%');
+                    ->orWhere('job_type_id', 'like', '%' . request('search') . '%')
+                    ->orWhere('innerCode', request('search'))
+                    ->orWhere('outerCode', request('search'));
         }
     }
 
@@ -49,6 +50,11 @@ class Order extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class,'user_id');
+    }
+
+    public function creator(): BelongsTo
+    {
+        return $this->belongsTo(User::class,'created_by');
     }
 
     public function company(): BelongsTo
@@ -83,14 +89,17 @@ class Order extends Model
 
     public function getHours(): array
     {
-        $data = [];
-        $details = $this->order_details;
-        foreach ($details as $detail){
-            $hour = Carbon::parse($detail->hour->start)->diffInBusinessHours(Carbon::parse($detail->hour->end));
-            if ($detail->job_type_id === 1) { $data['sw'] = $hour; }
-            else if ($detail->job_type_id === 2) { $data['ms'] = $hour; }
-            else if ($detail->job_type_id === 3) { $data['saf'] = $hour; }
-            else if ($detail->job_type_id === 4) { $data['fat'] = $hour; }
+        $data = [
+            'sw' => 0,
+            'ms' => 0,
+            'fat' => 0,
+            'saf' => 0,
+        ];
+        foreach ($this->order_details as $detail){
+            if ($detail->job_type_id === 1) { $data['sw'] += $detail->hour->count; }
+            else if ($detail->job_type_id === 2) { $data['ms'] += $detail->hour->count; }
+            else if ($detail->job_type_id === 3) { $data['saf'] += $detail->hour->count; }
+            else if ($detail->job_type_id === 4) { $data['fat'] += $detail->hour->count; }
         }
         return $data;
     }

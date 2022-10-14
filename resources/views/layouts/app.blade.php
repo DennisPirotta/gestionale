@@ -59,7 +59,6 @@
     <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css"></noscript>
     <link rel="preload" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.min.css"></noscript>
-
     <link rel="icon" sizes="96x96" href="{{asset('images/favicon.png')}}">
     @vite(['resources/js/app.js'])
 </head>

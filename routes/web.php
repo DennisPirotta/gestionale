@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccessKeyController;
 use App\Http\Controllers\Auth\ChangePasswordController;
+use App\Http\Controllers\BugReportController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\HolidayController;
 use App\Http\Controllers\HomeController;
@@ -128,6 +129,15 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/dove-siamo/{location}', [LocationController::class, 'update'])->name('locations.update');
 
     Route::get('/fi/{technical_report}', [TechnicalReportDetailsController::class, 'show'])->name('technical_report_details.show');
+
+    // Mostra pagina per report bug
+    Route::get('/bug-report',[BugReportController::class,'index'])->name('bug.report.index');
+
+    // Invia mail bug report e salva bug nel DB
+    Route::post('/bug-report/send',[BugReportController::class,'send'])->name('bug.report.send');
+
+    // Contrassegna bug come risolto
+    Route::put('/bug-report/update/{bugReport}',[BugReportController::class, 'update'])->name('bug.report.update');
 
     Route::group(['middleware' => ['role:admin|boss']], static function () {
 

@@ -164,7 +164,14 @@
                             @php($flag = true)
                             @foreach($technical_report->technical_report_details as $details)
                                 @if($details->hour->date === $day->format('Y-m-d'))
-                                    <td @if($day->isWeekend()) class="bg-secondary" @endif >{{ $details->hour->count }}</td>
+                                    <td @if($day->isWeekend()) class="bg-secondary" @endif >
+                                        {{ $details->hour->count }}
+                                        @if($details->nightEU)
+                                            <span class="badge text-bg-primary">EU</span>
+                                        @elseif($details->nightExtraEU)
+                                            <span class="badge text-bg-success">XEU</span>
+                                        @endif
+                                    </td>
                                     @php($flag = false)
                                 @endif
                             @endforeach

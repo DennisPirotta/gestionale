@@ -2,23 +2,26 @@
 @section('content')
     @if(auth()->user()->first_login)
         <div class="modal modal-xl fade" id="first_login" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header justify-content-center">
-                        <h5 class="modal-title" id="whereami">Benvenuto</h5>
+                        <h5 class="modal-title fs-3" id="whereami">Benvenuto</h5>
                     </div>
                         <div class="modal-body fs-5">
-                            <div class="alert alert-success">
-                                <i class="bi bi-check2-circle fs-4 me-2"></i>
-                                Benvenuto nel nuovo sistema <b>gestionale</b>
-                            </div>
-                            <div class="alert alert-primary">
-                                <i class="bi bi-info-circle fs-4 me-2"></i>
-                                Per ottenere informazioni circa l'utilizzo consulta <a href="/manuale" class="text-decoration-underline">il manuale d'uso</a>
-                            </div>
-                            <div class="alert alert-warning">
-                                <i class="bi bi-exclamation-triangle fs-4 me-2"></i>
-                                In caso dovessi riscontare <b>bug</b> o <b>malfunzionamenti</b> segnalali nell'apposita sezione di <a href="/bug-report" class="text-decoration-underline">Bug Report</a>
+                            <div class="row align-items-center">
+                                <div class="col px-5">
+                                    <div class="alert alert-success">
+                                        <i class="bi bi-check2-circle fs-4 me-2"></i>
+                                        Benvenuto nel nuovo sistema <b>gestionale</b>
+                                    </div>
+                                    <div class="alert alert-warning">
+                                        <i class="bi bi-exclamation-triangle fs-4 me-2"></i>
+                                        In caso dovessi riscontare <b>bug</b> o <b>malfunzionamenti</b> segnalali nell'apposita sezione di <a href="/bug-report" class="text-decoration-underline">Bug Report</a>
+                                    </div>
+                                </div>
+                                <div class="col pe-5">
+                                    <lottie-player src="https://assets7.lottiefiles.com/datafiles/e5MJRz6ayDOFFTT/data.json"  background="transparent"  speed="1" loop autoplay></lottie-player>
+                                </div>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -72,6 +75,7 @@
                                     <option value="user">User</option>
                                     <option value="admin">Admin</option>
                                     <option value="boss">Boss</option>
+                                    <option value="developer">Developer</option>
                                 </select>
                             </div>
                             <div class="card-footer">
@@ -83,17 +87,16 @@
             @endif
         </div>
     </div>
-    <script>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+   <script>
         let deferredPrompt;
-
         window.addEventListener('beforeinstallprompt', function(event) {
-            // Prevent Chrome 67 and earlier from automatically showing the prompt
             event.preventDefault();
-            // Stash the event so it can be triggered later.
             deferredPrompt = event;
         });
 
-        /*
+        {{--
+
         let btnAdd = document.getElementById('install')
         // Installation must be done by a user gesture! Here, the button click
         btnAdd.addEventListener('click', (e) => {
@@ -112,7 +115,7 @@
                     deferredPrompt = null;
                 });
         });
-         */
 
+        --}}
     </script>
 @endsection

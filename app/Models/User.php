@@ -58,7 +58,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function orders(): HasMany
     {
-        return $this->hasMany(Order::class,'user_id');
+        return $this->hasMany(Order::class,['user_id','created_by']);
     }
 
     public function holidayList(): HasMany
@@ -80,6 +80,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function business_hours(): HasMany
     {
         return $this->hasMany(BusinessHour::class,'user_id');
+    }
+
+    public function bug_reports(): HasMany
+    {
+        return $this->hasMany(BugReport::class,'reported_by');
     }
 
     public function getLeftHolidays(): int

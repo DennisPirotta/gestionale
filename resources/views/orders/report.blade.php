@@ -47,7 +47,7 @@
                             <td>{{ round($order->getHours()['fat'] ?? null) }}</td>
                             <td>{{ round($order->getHours()['saf'] ?? null) }}</td>
                             <td>{{Carbon::parse($order->opening)->format('d-m-Y')}}</td>
-                            <td>{{Carbon::parse($order->closing)->format('d-m-Y')}}</td>
+                            <td>{{$order->closing !== null ? Carbon::parse($order->closing)->format('d-m-Y') : '/' }}</td>
                             <td>{{$order->customer->name}}</td>
                             <td>{{$order->user->name . " " . $order->user->surname}}</td>
                             <td>{{$order->status->description}}</td>

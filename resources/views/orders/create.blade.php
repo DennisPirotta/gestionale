@@ -2,8 +2,12 @@
 @extends('layouts.app')
 @php($require_navbar_tools = true)
 @section('content')
-    <div class="container my-5 p-4 shadow-sm">
-        <form method="post" action="/commesse" class="row">
+    <div class="container my-5 p-5 shadow-sm">
+        <div class="d-flex align-items-center">
+            <span class="m-0 h1">Inserisci una nuova commessa</span>
+        </div>
+        <hr>
+        <form method="post" action="/commesse" class="row mt-4">
             @csrf
             <div class="col-md-4 col-sm-6">
                 <div class="input-group mb-3">
@@ -38,7 +42,11 @@
                     <select class="form-select" id="inputGroupSelect01" name="country_id">
                         @foreach($countries as $country)
                             <option value="{{$country->id}}"
-                                    @if($country->name === "Italy") selected @endif >{{ __($country->name) }}</option>
+                                    @if($country->name === "Italy") selected @endif
+                                    data-thumbnail="{{ asset('images/flags/' . strtolower($country->code)) }}.svg"
+                                    >
+                                {{ __($country->name) }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
@@ -150,4 +158,5 @@
             <button class="btn btn-primary" type="submit">Salva</button>
         </form>
     </div>
+
 @endsection

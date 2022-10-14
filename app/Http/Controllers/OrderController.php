@@ -11,7 +11,6 @@ use App\Models\Order;
 use App\Models\OrderDetails;
 use App\Models\Status;
 use App\Models\User;
-use Cassandra\Custom;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -60,12 +59,13 @@ class OrderController extends Controller
             'job_type_id' => 'required',
             'opening' => 'required',
             'customer_id' => 'required',
+            'user_id' => 'required'
         ]);
 
         $formFields['innerCode'] = (Order::orderBy('innerCode','desc')->first()->innerCode) + 1;
         $formFields['outerCode'] = (Order::orderBy('outerCode','desc')->first()->innerCode) + 1;
 
-        $formFields['user_id'] = auth()->id();
+        $formFields['created_by'] = auth()->id();
 
         Order::create($formFields);
 
@@ -83,7 +83,8 @@ class OrderController extends Controller
             'statuses' => Status::all(),
             'hour_types' => HourType::all(),
             'job_types' => JobType::all(),
-            'orders' => Order::all()
+            'orders' => Order::all(),
+            'users' => User::all()
         ]);
     }
 
@@ -96,7 +97,9 @@ class OrderController extends Controller
             'companies' => Company::all(),
             'statuses' => Status::all(),
             'countries' => Country::all(),
-            'customers' => Customer::all()
+            'customers' => Customer::all(),
+            'users' => User::all(),
+            'job_types' => JobType::all()
         ]);
     }
 
@@ -104,21 +107,26 @@ class OrderController extends Controller
     public function update(Request $request, Order $order): Redirector|Application|RedirectResponse
     {
         $formFields = $request->validate([
-            'company' => 'required',
-            'status' => 'required',
-            'country' => 'required',
+            'company_id' => 'required',
+            'status_id' => 'required',
+            'country_id' => 'required',
             'description' => 'required',
             'hourSW' => 'required',
-            'progress' => 'required',
+            'hourMS' => 'required',
+            'hourFAT' => 'required',
+            'hourSAF' => 'required',
+            'job_type_id' => 'required',
             'opening' => 'required',
-            'closing' => 'required',
-            'customer' => 'required',
+            'customer_id' => 'required',
+            'user_id' => 'required'
         ]);
 
         $formFields['innerCode'] = $order->innerCode;
         $formFields['outerCode'] = $order->outerCode;
 
-        $formFields['manager'] = $order->manager;
+        $formFields['user_id'] = $order->user_id;
+
+        $formFields['closing'] = $request['closing'] ?? null;
 
         $order->update($formFields);
 
@@ -133,10 +141,10 @@ class OrderController extends Controller
     }
 
     // Report commesse
-    public function report()
+    public function report(): Factory|View|Application
     {
         return view('orders.report',[
-            'orders' => Order::with(['job_type','status','country','company','user','customer'])->orderBy('status_id')->get(),
+            'orders' => Order::with(['job_type','status','country','company','user','customer','order_details'])->orderBy('status_id')->get(),
             'order_details' => OrderDetails::with(['hour','order'])->get()
         ]);
     }

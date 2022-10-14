@@ -55,17 +55,14 @@ class DatabaseSeeder extends Seeder
             BusinessHour::init($user);
         }
 
-
-
-
         Customer::factory(10)->create();
         User::factory(2)->create();
         Order::factory(50)->create();
-        TechnicalReport::factory(200)->create();
-        Hour::factory(300)->create();
+        //TechnicalReport::factory(200)->create();
+        //Hour::factory(300)->create();
         //Holiday::factory(30)->create();
-        OrderDetails::factory(100)->create();
-        TechnicalReportDetails::factory(100)->create();
+        //OrderDetails::factory(100)->create();
+        //TechnicalReportDetails::factory(100)->create();
         //AccessKey::factory(4)->create();
 
     }

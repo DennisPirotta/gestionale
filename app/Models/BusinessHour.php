@@ -23,7 +23,6 @@ class BusinessHour extends Model
 
     public static function init(User $user): void
     {
-        Log::channel('dev')->info("Creating business hour for user " . $user->email);
         for($i = 0 ; $i < 5 ; $i++){
             $date = Carbon::parse('5-1-1970')->addDays($i);
             $hour = self::create([
@@ -34,7 +33,6 @@ class BusinessHour extends Model
                 'afternoon_start' => Carbon::parse('13:30'),
                 'afternoon_end' => Carbon::parse('17:00')
             ]);
-            Log::channel('dev')->info($hour);
         }
     }
 

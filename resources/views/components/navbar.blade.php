@@ -76,11 +76,11 @@
                             <a class="dropdown-item" href="{{ route('bug.report.index') }}" >
                                 <i class="bi bi-bug me-2"></i>Bug report
                             </a>
-                            @hasanyrole('boss|admin')
+                            @role('boss|admin')
                                 <a class="dropdown-item" href="{{ url('/access-keys') }}" >
                                     <i class="bi bi-door-open me-2"></i>Chiavi di accesso
                                 </a>
-                            @endhasanyrole
+                            @endrole
 
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                 @csrf

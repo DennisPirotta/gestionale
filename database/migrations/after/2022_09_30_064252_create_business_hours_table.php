@@ -23,7 +23,6 @@ return new class extends Migration
                     ->cascadeOnUpdate();
 
             $table->string('week_day');
-            $table->integer('total');
             $table->time('morning_start')->default(Carbon::parse('8:00'));
             $table->time('morning_end')->default(Carbon::parse('12:30'));
             $table->time('afternoon_start')->default(Carbon::parse('13:30'));

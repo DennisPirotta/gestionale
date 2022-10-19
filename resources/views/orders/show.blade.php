@@ -35,7 +35,7 @@
                     <div class="card-body">
                         <i class="bi bi-flag fs-3"></i>
                         <p class="card-title">Paese</p>
-                        <b>{{$commessa->country->name}}</b>
+                        <b><img class="me-2" src="https://flagcdn.com/24x18/{{ strtolower($commessa->country->code) }}.png" alt="flag">{{__($commessa->country->name)}}</b>
                     </div>
                 </div>
             </div>

@@ -14,7 +14,7 @@ class Order extends Model
     use HasFactory;
 
     protected $fillable = [
-      'user_id','customer_id','innerCode','outerCode','hourSW','hourMS','hourFAT','hourSAF','country_id','job_type_id','status_id','description','opening','closing','company_id'
+      'user_id','customer_id','innerCode','outerCode','hourSW','hourMS','hourFAT','hourSAF','country_id','job_type_id','status_id','description','opening','closing','company_id','created_by'
     ];
 
     public function scopeFilter($query, array $filters): void
@@ -95,7 +95,7 @@ class Order extends Model
             'fat' => 0,
             'saf' => 0,
         ];
-        foreach ($this->order_details as $detail){
+        foreach ($this->order_details->load('hour') as $detail){
             if ($detail->job_type_id === 1) { $data['sw'] += $detail->hour->count; }
             else if ($detail->job_type_id === 2) { $data['ms'] += $detail->hour->count; }
             else if ($detail->job_type_id === 3) { $data['saf'] += $detail->hour->count; }

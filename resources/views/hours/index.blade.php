@@ -369,7 +369,15 @@
                 headerToolbar: {
                     left: 'prev next today',
                     center: 'title',
-                    right: 'dayGridWeek,dayGridMonth'
+                    right: 'dayGridWeek dayGridMonth rimborsoMese'
+                },
+                customButtons: {
+                    rimborsoMese: {
+                        text: 'Rimborso del mese',
+                        click: function() {
+                            window.location.href = '{{ route('expense_report.index') }}'
+                        }
+                    }
                 },
                 businessHours: {
                     daysOfWeek: [1, 2, 3, 4, 5]

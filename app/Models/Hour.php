@@ -36,4 +36,5 @@ class Hour extends Model
     {
         return $this->belongsTo(HourType::class,'hour_type_id');
     }
+
 }

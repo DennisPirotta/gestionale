@@ -27,4 +27,8 @@ class Customer extends Model
     {
         return $this->hasMany(TechnicalReport::class,'secondary_customer_id');
     }
+    public function expense_reports(): HasMany
+    {
+        return $this->hasMany(ExpenseReport::class,'customer_id');
+    }
 }

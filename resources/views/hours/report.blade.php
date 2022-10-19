@@ -49,7 +49,7 @@
 </style> <!-- Stili per stampa -->
 @section('content')
     @php
-        use App\Models\HourType;use App\Models\Order;use App\Models\OrderDetails;use App\Models\TechnicalReport;use App\Models\TechnicalReportDetails;use Carbon\Carbon;
+        use App\Models\Order;use App\Models\TechnicalReport;use Carbon\Carbon;
         use Carbon\CarbonPeriod;
         use App\Models\User;
         $period = CarbonPeriod::create(Carbon::now()->firstOfMonth(),Carbon::now()->lastOfMonth());
@@ -181,6 +181,26 @@
                         @endforeach
                     </tr>
                 @endforeach
+                @if($user->hourDetails($period) > 0)
+                    <tr>
+                        <th scope="row" colspan="{{ $period->count() + 1 }}" class="border-end-0 text-start">Ferie</th>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        @foreach($period as $day)
+                            @php($flag = true)
+                            @foreach($user->hoursInPeriod($period)->filter(static function($item){ return $item->hour_type_id === 6; }) as $holiday_hour)
+                                @if($holiday_hour->date === $day->format('Y-m-d'))
+                                    @php($flag = false)
+                                    <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif  >{{ $holiday_hour->count }}</td>
+                                @endif
+                            @endforeach
+                            @if($flag)
+                                <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif  ></td>
+                            @endif
+                        @endforeach
+                    </tr>
+                @endif
                 </tbody>
                 <tfoot>
                 <tr>
@@ -224,29 +244,12 @@
     </div>
     <div class="container p-5">
         <div class="row g-3 justify-content-center">
-            <x-report-card :title="'Totale ore'" :icon="'bi-bar-chart-fill'" :value="'XX'"></x-report-card>
-            <x-report-card :title="'Ferie'" :icon="'bi-cup-hot'" :value="'XX'"></x-report-card>
-            <x-report-card :title="'Notte UE'" :icon="'bi-currency-euro'" :value="'XX'"></x-report-card>
-            <x-report-card :title="'Notte Extra UE'" :icon="'bi-globe2'" :value="'XX'"></x-report-card>
-            <x-report-card :title="'Ore Festivi'" :icon="'bi-calendar4-week'" :value="'XX'"></x-report-card>
+            <x-report-card :title="'Totale ore'" :icon="'bi-bar-chart-fill'" :value="$user->hourDetails($period)['total']"></x-report-card>
+            <x-report-card :title="'Ferie'" :icon="'bi-cup-hot'" :value="$user->hourDetails($period)['holidays']"></x-report-card>
+            <x-report-card :title="'Notte UE'" :icon="'bi-currency-euro'" :value="$user->hourDetails($period)['eu']"></x-report-card>
+            <x-report-card :title="'Notte Extra UE'" :icon="'bi-globe2'" :value="$user->hourDetails($period)['xeu']"></x-report-card>
+            <x-report-card :title="'Ore Festivi'" :icon="'bi-calendar4-week'" :value="$user->hourDetails($period)['festive']"></x-report-card>
         </div>
-    </div>
-
-    <div class="container px-5">
-        <table class="table text-center">
-            <thead>
-            <tr>
-                <th scope="col">Totale</th>
-                <th scope="col">Straordinari</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td id="tot">XX.x</td>
-                <td id="tot_straordinari">XX.x</td>
-            </tr>
-            </tbody>
-        </table>
     </div>
     @endif
 
@@ -258,16 +261,6 @@
             $('#user').on('change', () => {
                 $('#queryData').submit()
             })
-            let tot = 0
-            let tot_straordinari = 0
-            $('#totale td').each((i, e) => {
-                tot += parseInt($(e).text())
-            })
-            $('#straordinari td').each((i, e) => {
-                tot_straordinari += parseInt($(e).text())
-            })
-            $('#tot').text(tot)
-            $('#tot_straordinari').text(tot_straordinari)
         })
     </script>
 @endsection

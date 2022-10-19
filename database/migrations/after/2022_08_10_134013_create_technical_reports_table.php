@@ -39,7 +39,7 @@ return new class extends Migration
                     ->cascadeOnUpdate()
                     ->cascadeOnDelete();
 
-            $table->integer('number')->unique();
+            $table->string('number')->unique();
 
         });
     }

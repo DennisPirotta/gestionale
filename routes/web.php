@@ -4,6 +4,7 @@ use App\Http\Controllers\AccessKeyController;
 use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\BugReportController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\ExpenseReportController;
 use App\Http\Controllers\HolidayController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\HourController;
@@ -131,13 +132,17 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/fi/{technical_report}', [TechnicalReportDetailsController::class, 'show'])->name('technical_report_details.show');
 
     // Mostra pagina per report bug
-    Route::get('/bug-report',[BugReportController::class,'index'])->name('bug.report.index');
+    Route::get('/bug-report', [BugReportController::class, 'index'])->name('bug.report.index');
 
     // Invia mail bug report e salva bug nel DB
-    Route::post('/bug-report/send',[BugReportController::class,'send'])->name('bug.report.send');
+    Route::post('/bug-report/send', [BugReportController::class, 'send'])->name('bug.report.send');
 
     // Contrassegna bug come risolto
-    Route::put('/bug-report/update/{bugReport}',[BugReportController::class, 'update'])->name('bug.report.update');
+    Route::put('/bug-report/update/{bugReport}', [BugReportController::class, 'update'])->name('bug.report.update');
+
+    Route::get('/expense-report',[ExpenseReportController::class, 'index'])->name('expense_report.index');
+
+    Route::post('/expense-report',[ExpenseReportController::class, 'store'])->name('expense_report.store');
 
     Route::group(['middleware' => ['role:admin|boss']], static function () {
 
@@ -204,10 +209,10 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/access-keys/{key}', [AccessKeyController::class, 'destroy'])->name('access.destroy');
 
         // Aggiorna orario di lavoro
-        Route::put('/dipendenti/{user}/update',[UserController::class,'updateBusinessHour'])->name('users.time.update');
+        Route::put('/dipendenti/{user}/update', [UserController::class, 'updateBusinessHour'])->name('users.time.update');
 
         // Aggiorna ore ferie
-        Route::put('/dipendenti/{user}/holidays/update',[UserController::class,'updateHolidaysHour'])->name('users.holidays.update');
+        Route::put('/dipendenti/{user}/holidays/update', [UserController::class, 'updateHolidaysHour'])->name('users.holidays.update');
     });
 });
 

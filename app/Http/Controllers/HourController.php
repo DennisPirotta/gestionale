@@ -149,13 +149,17 @@ class HourController extends Controller
                     break;
                 }
                 case '6': {   // Ferie
-                    Holiday::create([
-                        'approved' => true,
-                        'start' => null,
-                        'end' => null,
-                        'user_id' => auth()->id()
-                    ]);
-                    $message = 'Ore di ferie inserite con successo';
+                    if(!$multiple){
+                        Holiday::create([
+                            'approved' => true,
+                            'start' => $request['day_start'],
+                            'end' => $request['day_end'],
+                            'user_id' => auth()->id()
+                        ]);
+                        $message = 'Ore di ferie inserite con successo';
+                        $multiple = true;
+                    }
+
                     break;
                 }
                 case '7': {   // Malattia

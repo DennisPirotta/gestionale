@@ -151,7 +151,23 @@
                         @endunless
                     </select>
                 </div>
-                @error('customer')
+                @error('customer_id')
+                <p class="text-danger fs-6">{{$message}}</p>
+                @enderror
+            </div>
+            <div class=" col-md-4 col-sm-6">
+                <div class="input-group mb-3 col-md-4 col-sm-6">
+                    <label class="input-group-text" for="inputGroupSelect01"><i
+                                class="bi bi-person me-2"></i>Responsabile</label>
+                    <select class="form-select" id="inputGroupSelect01" name="user_id">
+                        @unless(count($users) === 0)
+                            @foreach($users as $user)
+                                <option value="{{$user->id}}" @if($user->id === auth()->id()) selected @endif >{{$user->name}} {{$user->surname}}</option>
+                            @endforeach
+                        @endunless
+                    </select>
+                </div>
+                @error('user_id')
                 <p class="text-danger fs-6">{{$message}}</p>
                 @enderror
             </div>

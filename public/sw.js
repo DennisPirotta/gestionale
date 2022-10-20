@@ -59,6 +59,9 @@ const returnFromCache = function (request) {
 };
 
 self.addEventListener("fetch", function (event) {
+    if ( event.request.url.indexOf( '/www/' ) !== -1 ) {
+        return false;
+    }
     event.respondWith(checkResponse(event.request).catch(function () {
         return returnFromCache(event.request);
     }));

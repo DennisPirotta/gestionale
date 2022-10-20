@@ -26,7 +26,7 @@ class HomeController extends Controller
      */
     public function index(): Renderable
     {
-        if (Location::where('user_id',auth()->id())->where('date',Carbon::now()->format('Y-m-d')) === null && !(auth()->user()->position)){
+        if (Location::where('user_id',auth()->id())->where('date',Carbon::now()->format('Y-m-d'))->get()->isEmpty() && !(auth()->user()->position)){
             session()->put('whereami',false);
         }else
         {

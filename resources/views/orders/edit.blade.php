@@ -7,6 +7,26 @@
               enctype="multipart/form-data">
             @csrf
             @method('PUT')
+            <div class=" col-md-4 col-sm-6">
+                <div class="input-group mb-3 col-md-4 col-sm-6">
+                    <span class="input-group-text"><i class="bi bi-123 me-2"></i>Codice Interno</span>
+                    <input type="text" class="form-control" aria-label="Codice Interno" name="innerCode"
+                           value="{{ $commessa->innerCode }}">
+                </div>
+                @error('innerCode')
+                <p class="text-danger fs-6">{{$message}}</p>
+                @enderror
+            </div>
+            <div class=" col-md-4 col-sm-6">
+                <div class="input-group mb-3 col-md-4 col-sm-6">
+                    <span class="input-group-text"><i class="bi bi-123 me-2"></i>Codice Esterno</span>
+                    <input type="text" class="form-control" aria-label="Codice Esterno" name="outerCode"
+                           value="{{ $commessa->outerCode }}">
+                </div>
+                @error('outerCode')
+                <p class="text-danger fs-6">{{$message}}</p>
+                @enderror
+            </div>
             <div class="col-md-4 col-sm-6">
                 <div class="input-group mb-3">
                     <label class="input-group-text" for="inputGroupSelect01"><i class="bi bi-building me-2"></i>Compagnia</label>

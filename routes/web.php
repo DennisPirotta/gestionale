@@ -213,6 +213,8 @@ Route::middleware(['auth'])->group(function () {
 
         // Aggiorna ore ferie
         Route::put('/dipendenti/{user}/holidays/update', [UserController::class, 'updateHolidaysHour'])->name('users.holidays.update');
+
+        Route::post('/dipendenti/{user}/roles/update',[UserController::class,'updatePermissions'])->name('users.permissions.update');
     });
 });
 

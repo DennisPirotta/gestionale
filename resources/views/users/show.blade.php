@@ -6,8 +6,20 @@
     <div class="container shadow-sm p-5 mt-5">
         <div class="d-flex align-items-center">
             <span class="m-0 h1">{{ $user->name }} {{ $user->surname }}</span>
-            <button class="btn btn-primary ms-auto" disabled><i class="bi bi-pen me-2"></i>Modifica</button>
+            @role('admin|boss')
+                <button class="btn btn-primary ms-auto" data-bs-toggle="modal" data-bs-target="#permissions"><i class="bi bi-pen me-2"></i>Modifica</button>
+            @endrole
         </div>
+        <span class="badge text-bg-info rounded-pill mt-2 fs-6">Dipendente</span>
+        @role('admin')
+        <span class="badge text-bg-success rounded-pill ms-2 fs-6">Amministrazione</span>
+        @endrole
+        @role('developer')
+        <span class="badge text-bg-warning rounded-pill ms-2 fs-6">Sviluppatore</span>
+        @endrole
+        @role('boss')
+        <span class="badge text-bg-danger rounded-pill ms-2 fs-6">Direzione</span>
+        @endrole
         <hr>
         <h5>{{ $user->email }}</h5>
         <span class="badge @if($user->company->id === 1) text-bg-primary @else text-bg-success @endif fs-6">{{ $user->company->name }}</span>
@@ -159,4 +171,55 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="permissions" tabindex="-1" aria-labelledby="permissionsLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="permissionsLabel">Modifica Permessi</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="post" action="{{ route('users.permissions.update',$user->id) }}">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="text-center">
+                            <div>Permessi attuali</div>
+                            <div class="badge text-bg-info rounded-pill mt-2 fs-6">Dipendente</div>
+                            @role('admin')
+                                <label for="admin">
+                                    <input type="hidden" name="admin" id="admin"/>
+                                    <span class="badge text-bg-success rounded-pill ms-2 fs-6">Amministrazione<i class="bi bi-x-circle ms-2 role"></i></span>
+                                </label>
+                            @endrole
+                            @role('developer')
+                                <label for="developer">
+                                    <input type="hidden" name="developer" id="developer"/>
+                                    <span class="badge text-bg-warning rounded-pill ms-2 fs-6">Sviluppatore<i class="bi bi-x-circle ms-2 role"></i></span>
+                                </label>
+                                @endrole
+                            @role('boss')
+                                <label for="boss">
+                                    <input type="hidden" name="boss" id="boss"/>
+                                    <span class="badge text-bg-danger rounded-pill ms-2 fs-6">Direzione</span>
+                                </label>
+                            @endrole
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Close') }}</button>
+                        <button type="submit" class="btn btn-primary">{{ __('Save') }}</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <script>
+        $(()=>{
+            $('.role').on('click',(e) => {
+                $(e.target).parent().parent().remove()
+            })
+        })
+    </script>
 @endsection

@@ -1,6 +1,11 @@
-@php use Carbon\Carbon; @endphp
 @extends('layouts.app')
-@php($require_navbar_tools = true)
+@php
+    use Carbon\Carbon;
+    use App\Models\Order;
+    $require_navbar_tools = true;
+    $innerCode = $orders->sortByDesc('innerCode')->first()->innerCode + 1;
+    $outerCode = $orders->sortByDesc('outerCode')->first()->outerCode + 1;
+@endphp
 @section('content')
     <div class="container my-5 p-5 shadow-sm">
         <div class="d-flex align-items-center">
@@ -9,6 +14,26 @@
         <hr>
         <form method="post" action="/commesse" class="row mt-4">
             @csrf
+            <div class=" col-md-4 col-sm-6">
+                <div class="input-group mb-3 col-md-4 col-sm-6">
+                    <span class="input-group-text"><i class="bi bi-123 me-2"></i>Codice Interno</span>
+                    <input type="text" class="form-control" aria-label="Codice Interno" name="innerCode"
+                           value="{{ $innerCode }}">
+                </div>
+                @error('innerCode')
+                <p class="text-danger fs-6">{{$message}}</p>
+                @enderror
+            </div>
+            <div class=" col-md-4 col-sm-6">
+                <div class="input-group mb-3 col-md-4 col-sm-6">
+                    <span class="input-group-text"><i class="bi bi-123 me-2"></i>Codice Esterno</span>
+                    <input type="text" class="form-control" aria-label="Codice Esterno" name="outerCode"
+                           value="{{ $outerCode }}">
+                </div>
+                @error('outerCode')
+                <p class="text-danger fs-6">{{$message}}</p>
+                @enderror
+            </div>
             <div class="col-md-4 col-sm-6">
                 <div class="input-group mb-3">
                     <label class="input-group-text" for="inputGroupSelect01"><i class="bi bi-building me-2"></i>Compagnia</label>

@@ -26,7 +26,7 @@
                     <div class="card-body">
                         <i class="bi bi-key fs-3"></i>
                         <p class="card-title">Codice Esterno</p>
-                        <b>{{$commessa->outerCode}}</b>
+                        <b>{{$commessa->outerCode ?? '/'}}</b>
                     </div>
                 </div>
             </div>

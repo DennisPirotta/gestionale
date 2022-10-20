@@ -73,4 +73,27 @@ class UserController extends Controller
         $user->save();
         return back()->with('message','Ore di ferie modificate correttamente');
     }
+
+    public function updatePermissions(Request $request,User $user)
+    {
+        $roles = [
+            'user'
+        ];
+
+        if (isset($request['admin'])){
+            $roles[] = 'admin';
+        }
+        if (isset($request['developer'])){
+            $roles[] = 'developer';
+        }
+        if (isset($request['boss'])){
+            $roles[] = 'boss';
+        }
+
+        $user->syncRoles();
+        foreach ($roles as $role) {
+            $user->assignRole($role);
+        }
+        return back()->with('message','Permessi cambiati con successo');
+    }
 }

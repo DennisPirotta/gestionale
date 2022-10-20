@@ -59,11 +59,11 @@ class OrderController extends Controller
             'job_type_id' => 'required',
             'opening' => 'required',
             'customer_id' => 'required',
-            'user_id' => 'required'
+            'user_id' => 'required',
+            'innerCode' => 'required'
         ]);
 
-        $formFields['innerCode'] = (Order::orderBy('innerCode','desc')->first()->innerCode) + 1;
-        $formFields['outerCode'] = (Order::orderBy('outerCode','desc')->first()->innerCode) + 1;
+        $formFields['outerCode'] = $request['outerCode'];
 
         $formFields['created_by'] = auth()->id();
 
@@ -118,15 +118,12 @@ class OrderController extends Controller
             'job_type_id' => 'required',
             'opening' => 'required',
             'customer_id' => 'required',
-            'user_id' => 'required'
+            'user_id' => 'required',
+            'innerCode' => 'required'
         ]);
 
-        $formFields['innerCode'] = $order->innerCode;
-        $formFields['outerCode'] = $order->outerCode;
-
-        $formFields['user_id'] = $order->user_id;
-
-        $formFields['closing'] = $request['closing'] ?? null;
+        $formFields['outerCode'] = $request['outerCode'];
+        $formFields['closing'] = $request['closing'];
 
         $order->update($formFields);
 

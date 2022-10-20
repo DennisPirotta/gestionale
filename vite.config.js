@@ -19,7 +19,9 @@ export default defineConfig({
     plugins: [
         mkcert(),
         laravel({
-            input: 'resources/js/app.js',
+            input: [
+                'resources/js/app.js'
+            ],
             refresh: true,
         }),
     ],

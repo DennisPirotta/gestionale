@@ -63,3 +63,15 @@ table {
 .key:focus{
     outline: none;
 }
+
+.home-card {
+    transition-duration: 0.5s;
+}
+
+.home-card:hover {
+    transform: scale(105%);
+}
+
+i:hover{
+    cursor: pointer;
+}

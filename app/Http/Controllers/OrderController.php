@@ -60,10 +60,9 @@ class OrderController extends Controller
             'opening' => 'required',
             'customer_id' => 'required',
             'user_id' => 'required',
-            'innerCode' => 'required'
+            'innerCode' => 'required',
+            'outerCode' => 'nullable'
         ]);
-
-        $formFields['outerCode'] = $request['outerCode'];
 
         $formFields['created_by'] = auth()->id();
 
@@ -119,11 +118,10 @@ class OrderController extends Controller
             'opening' => 'required',
             'customer_id' => 'required',
             'user_id' => 'required',
-            'innerCode' => 'required'
+            'innerCode' => 'required',
+            'outerCode' => 'nullable',
+            'closing' => 'nullable'
         ]);
-
-        $formFields['outerCode'] = $request['outerCode'];
-        $formFields['closing'] = $request['closing'];
 
         $order->update($formFields);
 

@@ -76,9 +76,11 @@ class UserController extends Controller
 
     public function updatePermissions(Request $request,User $user)
     {
-        $roles = [
-            'user'
-        ];
+        $roles = [];
+
+        if (isset($request['user'])){
+            $roles[] = 'user';
+        }
 
         if (isset($request['admin'])){
             $roles[] = 'admin';

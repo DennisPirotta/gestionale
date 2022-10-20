@@ -19,7 +19,7 @@ class DailyWhereAmI extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Reset Whereami flag';
 
 
     public function handle(): void

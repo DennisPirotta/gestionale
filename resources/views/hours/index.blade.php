@@ -17,7 +17,7 @@
                         @csrf
                         {{-- Quantita --}}
                         <div class="col-4">
-                            <div class="input-group mb-3 col-md-4 col-sm-6">
+                            <div class="input-group col-md-4 col-sm-6">
                                 <span class="input-group-text"><i class="bi bi-clipboard-data me-2"></i>Ore</span>
                                 <input type="text" class="form-control"  name="count" value="8">
                             </div>
@@ -32,7 +32,7 @@
                         </label>
                         {{-- Box selezione tipo di ora --}}
                         <div class="col-8">
-                            <div class="input-group mb-3">
+                            <div class="input-group">
                                 <label class="input-group-text" for="hour_type_id"><i class="bi bi-building me-2"></i>Tipologia</label>
                                 <select class="form-select" id="hour_type_id" name="hour_type_id">
                                     <option value='' selected>Seleziona la tipologia</option>
@@ -47,6 +47,19 @@
                         </div>
                         <div class="flex-column d-flex col-12 d-none" id="contentDetails">
                             <hr class="mx-auto w-75 mb-3">
+                            @role('admin|boss')
+                            <small class="text-warning mx-auto"><i class="bi bi-exclamation-triangle"></i>Sezione dedicata all'inserimento dei dati</small>
+                            <div class="input-group">
+                                <label class="input-group-text" for="user_id"><i class="bi bi-person-badge me-2"></i>Utente</label>
+                                <select class="form-select" id="user_id" name="user_id">
+                                    <option value='' selected>Seleziona un dipendente</option>
+                                    @foreach($users as $user)
+                                        <option value="{{$user->id}}">{{ $user->name }} {{ $user->surname }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <hr class="mx-auto w-75 mb-3">
+                            @endrole
                             {{-- Commesse --}}
                             <div class="details" id="content_1">
                                 <div class="row">

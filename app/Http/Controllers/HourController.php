@@ -51,7 +51,8 @@ class HourController extends Controller
             'job_types' => JobType::all(),
             'orders' => Order::with(['status','customer'])->orderBy('status_id')->get(),
             'customers' => Customer::all(),
-            'technical_reports' => TechnicalReport::with(['customer','secondary_customer'])->orderBy('customer_id')->get()
+            'technical_reports' => TechnicalReport::with(['customer','secondary_customer'])->orderBy('customer_id')->get(),
+            'users' => User::all()
         ]);
     }
 
@@ -74,6 +75,10 @@ class HourController extends Controller
             'count' => 'required',
             'hour_type_id' => 'required'
         ]);
+        $user = auth()->id();
+        if (isset($request['user_id'])){
+            $user = (int)$request['user_id'];
+        }
         $message = '';
         $period = CarbonPeriod::create($request['day_start'],$request['day_end']);
         $period->setEndDate($period->getEndDate()->modify('-1 day'));
@@ -87,7 +92,7 @@ class HourController extends Controller
             $hour = Hour::create([
                 'count' => $default['count'],
                 'date' => $day,
-                'user_id' => auth()->id(),
+                'user_id' => $user,
                 'hour_type_id' => $default['hour_type_id']
             ]);
             switch ($request['hour_type_id']){

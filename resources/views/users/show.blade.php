@@ -207,8 +207,13 @@
                         </div>
                         <div class="text-center">
                             <div>Assegna Permesso</div>
-                            @role()
-
+                            @role('admin')
+                            @else
+                                <span class="badge text-bg-success rounded-pill ms-2 fs-6">Amministrazione<i class="bi bi-x-circle ms-2 role"></i></span>
+                            @endrole
+                            @role('boss')
+                            @else
+                                <span class="badge text-bg-danger rounded-pill ms-2 fs-6 addRole">Direzione</span>
                             @endrole
                         </div>
                     </div>
@@ -224,6 +229,9 @@
     <script>
         $(()=>{
             $('.role').on('click',(e) => {
+                $(e.target).parent().parent().remove()
+            })
+            $('.addRole').on('click',(e) => {
                 $(e.target).parent().parent().remove()
             })
         })

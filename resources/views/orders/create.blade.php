@@ -28,7 +28,7 @@
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <span class="input-group-text"><i class="bi bi-123 me-2"></i>Codice Esterno</span>
                     <input type="text" class="form-control" aria-label="Codice Esterno" name="outerCode"
-                           value="{{ $outerCode === null ? '' : $outerCode + 1 }}">
+                           value="{{ $outerCode ?? '' }}">
                 </div>
                 @error('outerCode')
                 <p class="text-danger fs-6">{{$message}}</p>

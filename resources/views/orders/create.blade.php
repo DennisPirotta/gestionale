@@ -2,8 +2,9 @@
 @php
     use Carbon\Carbon;
     $require_navbar_tools = true;
-    $innerCode = $orders->sortByDesc('innerCode')->first()->innerCode + 1 ?? Carbon::now()->format('Y') . "0001";
-    $outerCode = $orders->sortByDesc('outerCode')->first()->outerCode + 1 ?? null;
+    $first = $orders->sortByDesc('innerCode')->first();
+    $innerCode = $first->innerCode ?? Carbon::now()->format('Y') . "0001";
+    $outerCode = $first->outerCode ?? null;
 @endphp
 @section('content')
     <div class="container my-5 p-5 shadow-sm">
@@ -17,7 +18,7 @@
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <span class="input-group-text"><i class="bi bi-123 me-2"></i>Codice Interno</span>
                     <input type="text" class="form-control" aria-label="Codice Interno" name="innerCode"
-                           value="{{ $innerCode }}">
+                           value="{{ $innerCode + 1 }}">
                 </div>
                 @error('innerCode')
                 <p class="text-danger fs-6">{{$message}}</p>
@@ -27,7 +28,7 @@
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <span class="input-group-text"><i class="bi bi-123 me-2"></i>Codice Esterno</span>
                     <input type="text" class="form-control" aria-label="Codice Esterno" name="outerCode"
-                           value="{{ $outerCode }}">
+                           value="{{ $outerCode + 1 }}">
                 </div>
                 @error('outerCode')
                 <p class="text-danger fs-6">{{$message}}</p>

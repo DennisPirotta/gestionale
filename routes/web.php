@@ -222,8 +222,5 @@ Route::post('/debug/change_permissions', static function () {
         \auth()->user()->syncRoles();
         auth()->user()->assignRole(request('role'));
         return redirect('/')->with('message', 'livello di accesso cambiato');
-    } catch (Exception $e) {
-        return redirect('/')->with('error', $e);
-    }
-
+    } catch (Exception) { return back(); }
 });

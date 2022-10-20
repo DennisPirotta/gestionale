@@ -17,7 +17,7 @@
             <div class=" col-md-4 col-sm-6">
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <span class="input-group-text"><i class="bi bi-123 me-2"></i>Codice Interno</span>
-                    <input type="text" class="form-control" aria-label="Codice Interno" name="innerCode"
+                    <input type="number" class="form-control" aria-label="Codice Interno" name="innerCode"
                            value="{{ $innerCode + 1 }}">
                 </div>
                 @error('innerCode')

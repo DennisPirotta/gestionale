@@ -205,6 +205,12 @@
                                 </label>
                             @endrole
                         </div>
+                        <div class="text-center">
+                            <div>Assegna Permesso</div>
+                            @role()
+
+                            @endrole
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Close') }}</button>

@@ -15,7 +15,7 @@ return new class extends Migration {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('innerCode')->unique();
-            $table->bigInteger('outerCode')->nullable()->unique();
+            $table->string('outerCode')->nullable()->unique();
             $table->string('description')->nullable();
             $table->integer('hourSW')->default(0);
             $table->integer('hourMS')->default(0);

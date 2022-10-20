@@ -1,10 +1,9 @@
 @extends('layouts.app')
 @php
     use Carbon\Carbon;
-    use App\Models\Order;
     $require_navbar_tools = true;
-    $innerCode = $orders->sortByDesc('innerCode')->first()->innerCode + 1;
-    $outerCode = $orders->sortByDesc('outerCode')->first()->outerCode + 1;
+    $innerCode = $orders->sortByDesc('innerCode')->first()->innerCode + 1 ?? Carbon::now()->format('Y') . "0001";
+    $outerCode = $orders->sortByDesc('outerCode')->first()->outerCode + 1 ?? null;
 @endphp
 @section('content')
     <div class="container my-5 p-5 shadow-sm">

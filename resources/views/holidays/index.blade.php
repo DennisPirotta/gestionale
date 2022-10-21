@@ -138,6 +138,11 @@
                     @csrf
                     <div class="modal-body">
                         <div class="row">
+                            <div class="col-12">
+                                <div class="alert alert-primary" role="alert">
+                                    <i class="bi bi-info-circle me-2"></i>Le date indicate fanno riferimento al giorno d'inizio <b>( compreso )</b> delle ferie e il giorno di fine <b>(escluso)</b>
+                                </div>
+                            </div>
                             <div class="col-md-6 col-sm-12">
                                 <div class="input-group mb-3 col-md-4 col-sm-6">
                                     <span class="input-group-text"><i class="bi bi-calendar me-2"></i>Inizio</span>

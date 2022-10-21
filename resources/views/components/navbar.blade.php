@@ -84,7 +84,7 @@
 
                             @role('developer')
                                 <a class="dropdown-item" href="{{ url('/maileclipse') }}" >
-                                    <i class="bi bi-door-open me-2"></i>Gestione mail
+                                    <i class="bi bi-envelope-check me-2"></i>Gestione mail
                                 </a>
                             @endrole
 

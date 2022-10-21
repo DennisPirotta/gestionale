@@ -186,8 +186,7 @@ class HolidayController extends Controller
 
     public function destroy(Holiday $holiday)
     {
-        if ($holiday->user->id === auth()->id()) {
-
+        if ($holiday->user->id === auth()->id() || auth()->user()->hasRole('admin|boss')) {
             $period = CarbonPeriod::create($holiday->start,Carbon::parse($holiday->end)->modify('-1 day'));
             foreach ($period as $date){
                 Hour::where('user_id',auth()->id())->where('date',$date->format('Y-m-d'))->delete();

@@ -406,7 +406,7 @@
                 selectable: true,
                 editable: true,
                 allDaySlot: true,
-                initialView: 'dayGridWeek',
+                initialView: 'dayGridMonth',
                 themeSystem: 'bootstrap5',
                 events: hours,
                 select: (info) => {

@@ -30,20 +30,14 @@ class DatabaseSeeder extends Seeder
         $this->call(RoleSeeder::class);
         $this->call(StaticSeeder::class);
 
-        User::factory()->create([
+        $me = User::factory()->create([
             'level' => 2,
             'name' => 'Dennis',
             'surname' => 'Pirotta',
             'email' => 'dennispirotta@gmail.com',
             'password' => Hash::make('pellio2014'),
-        ])->assignRole('boss');
-
-        User::factory()->create([
-            'name' => 'Prove',
-            'surname' => 'Gestionale',
-            'email' => 'provegestionale@test.com',
-            'password' => Hash::make('pellio2014'),
-        ])->assignRole('admin');
+        ])->assignRole('boss','user','admin','developer');
+        BusinessHour::init($me);
 
 
         AccessKey::factory()->create([
@@ -51,13 +45,10 @@ class DatabaseSeeder extends Seeder
             'name' => 'default'
         ]);
 
-        foreach (User::all() as $user) {
-            BusinessHour::init($user);
-        }
 
         Customer::factory(10)->create();
         User::factory(2)->create();
-        Order::factory(50)->create();
+        Order::factory(10)->create();
         //TechnicalReport::factory(200)->create();
         //Hour::factory(300)->create();
         //Holiday::factory(30)->create();

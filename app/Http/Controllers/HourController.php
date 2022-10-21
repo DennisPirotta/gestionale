@@ -22,6 +22,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Log;
 
 class HourController extends Controller
 {
@@ -70,7 +71,7 @@ class HourController extends Controller
     {}
     public function store(Request $request): Redirector|Application|RedirectResponse
     {
-
+        Log::channel('dev')->info($request);
         $default = $request->validate([
             'count' => 'required',
             'hour_type_id' => 'required'
@@ -86,6 +87,7 @@ class HourController extends Controller
         $multiple = false;
 
         foreach ($period as $day){
+            Log::channel('dev')->info('Inserimento per giorno ' . $day->format('d D M Y'));
             if (!Carbon::isOpenOn($day->format('Y-m-d'))) {
                 continue;
             }
@@ -113,16 +115,17 @@ class HourController extends Controller
                     break;
                 }
                 case '2': {   // FI
-                    $data = $request->validate(['number' => 'required']);
+                    $data = $request->validate([
+                        'number' => 'nullable',
+                        'fi_number' => 'nullable',
+                        'secondary_customer_id' => 'nullable',
+                        'customer_id' => 'nullable',
+                        'order_id' => 'nullable',
+                        'user_id' => 'nullable'
+                    ]);
                     if (!$multiple){
                         if ($request->fi_new === '0'){
-                            TechnicalReport::create([
-                                'user_id' => auth()->id(),
-                                'number' => $data['number'],
-                                'secondary_customer_id' => $request['secondary_customer_id'] ?? null,
-                                'order_id' => $request['fi_order_id'] ?? null,
-                                'customer_id' => $request['customer_id']
-                            ]);
+                            TechnicalReport::create($data);
                         }
                         $message = 'Ore foglio intervento inserite con successo';
                         $multiple = true;
@@ -133,9 +136,15 @@ class HourController extends Controller
                     if ($request['night'] === 'UE'){
                         $ue = true;
                     }
-                    $fi = TechnicalReportDetails::create([
+
+                    if ($data['number'] === null ) {
+                        $fi = TechnicalReport::find($data['fi_number']);
+                    }else{
+                        $fi = TechnicalReport::where('number',$data['number'])->first();
+                    }
+                    TechnicalReportDetails::create([
                         'hour_id' => $hour->id,
-                        'technical_report_id' => TechnicalReport::where('number',$data['number'])->get()[0]->id,
+                        'technical_report_id' => $fi->id,
                         'nightEU' => $ue ?? false,
                         'nightExtraEU' => $xue ?? false
                     ]);

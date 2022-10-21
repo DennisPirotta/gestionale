@@ -113,9 +113,6 @@ class User extends Authenticatable implements MustVerifyEmail
             'xeu' => 0,
             'festive' => 0,
         ];
-        $test = Carbon::now();
-
-
 
         foreach ($this->hoursInPeriod($period) as $hour){
             $data['total'] += $hour->count;

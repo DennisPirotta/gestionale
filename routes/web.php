@@ -144,6 +144,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/expense-report',[ExpenseReportController::class, 'store'])->name('expense_report.store');
 
+    // Mostra report ore
+    Route::get('/ore/report', [HourController::class, 'report'])->name('hours.report');
+
     Route::group(['middleware' => ['role:admin|boss']], static function () {
 
         /*
@@ -173,9 +176,6 @@ Route::middleware(['auth'])->group(function () {
 
         // Mostra report commesse
         Route::get('/commesse/report', [OrderController::class, 'report'])->name('orders.report');
-
-        // Mostra report ore
-        Route::get('/ore/report', [HourController::class, 'report'])->name('hours.report');
 
         /*
         *  GESTIONE ROUTE DIPENDENTI

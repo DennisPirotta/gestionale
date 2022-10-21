@@ -388,7 +388,7 @@
             }
             let calendar = new FullCalendar.Calendar(calendarEl, {
                 headerToolbar: {
-                    left: 'prev next today',
+                    left: 'prev next today showReport',
                     center: 'title',
                     right: rightContent
 
@@ -410,6 +410,12 @@
                         icon: 'bi-eraser',
                         click: function () {
                             window.location.href = '{{ route('hours.index') }}'
+                        }
+                    },
+                    showReport: {
+                        text: 'Report',
+                        click: function (){
+                            window.location.href = '{{ route('hours.report') }}?mese={{ \Carbon\Carbon::now()->format('Y-m') }}&user={{ auth()->id() }}'
                         }
                     }
                 },

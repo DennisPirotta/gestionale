@@ -10,12 +10,13 @@
             font-size: 10px;
         }
 
-        .x-card-value{
+        .x-card-value {
             font-size: 20px !important;
             padding-left: 10px !important;
             padding-right: 10px !important;
         }
-        .x-card-title{
+
+        .x-card-title {
             font-size: 10px !important;
             padding-left: 10px !important;
             padding-right: 10px !important;
@@ -52,10 +53,17 @@
         use App\Models\Order;use App\Models\TechnicalReport;use Carbon\Carbon;
         use Carbon\CarbonPeriod;
         use App\Models\User;
+        use Illuminate\Support\Facades\Session;
         $period = CarbonPeriod::create(Carbon::now()->firstOfMonth(),Carbon::now()->lastOfMonth());
         $mese = Carbon::now();
         $user = User::find(request('user'));
-        if ($user) $user->load('business_hours');
+        if ($user){
+            $user->load('business_hours');
+            if (($user->id !== auth()->id()) && !$user->hasRole('admin','boss')){
+                    Session::flash('error', 'Puoi vedere solo i tuoi report');
+                    header('Location: /ore');
+            }
+        }
         if(request('mese')) {
             $mese = Carbon::parse(request('mese'));
             $period = CarbonPeriod::create(Carbon::parse(request('mese'))->firstOfMonth(),Carbon::parse(request('mese'))->lastOfMonth());
@@ -192,11 +200,11 @@
                             @foreach($user->hoursInPeriod($period)->filter(static function($item){ return $item->hour_type_id === 6; }) as $holiday_hour)
                                 @if($holiday_hour->date === $day->format('Y-m-d'))
                                     @php($flag = false)
-                                    <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif  >{{ $holiday_hour->count }}</td>
+                                    <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif >{{ $holiday_hour->count }}</td>
                                 @endif
                             @endforeach
                             @if($flag)
-                                <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif  ></td>
+                                <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif ></td>
                             @endif
                         @endforeach
                     </tr>
@@ -244,11 +252,16 @@
     </div>
     <div class="container p-5">
         <div class="row g-3 justify-content-center">
-            <x-report-card :title="'Totale ore'" :icon="'bi-bar-chart-fill'" :value="$user->hourDetails($period)['total']"></x-report-card>
-            <x-report-card :title="'Ferie'" :icon="'bi-cup-hot'" :value="$user->hourDetails($period)['holidays']"></x-report-card>
-            <x-report-card :title="'Notte UE'" :icon="'bi-currency-euro'" :value="$user->hourDetails($period)['eu']"></x-report-card>
-            <x-report-card :title="'Notte Extra UE'" :icon="'bi-globe2'" :value="$user->hourDetails($period)['xeu']"></x-report-card>
-            <x-report-card :title="'Ore Festivi'" :icon="'bi-calendar4-week'" :value="$user->hourDetails($period)['festive']"></x-report-card>
+            <x-report-card :title="'Totale ore'" :icon="'bi-bar-chart-fill'"
+                           :value="$user->hourDetails($period)['total']"></x-report-card>
+            <x-report-card :title="'Ferie'" :icon="'bi-cup-hot'"
+                           :value="$user->hourDetails($period)['holidays']"></x-report-card>
+            <x-report-card :title="'Notte UE'" :icon="'bi-currency-euro'"
+                           :value="$user->hourDetails($period)['eu']"></x-report-card>
+            <x-report-card :title="'Notte Extra UE'" :icon="'bi-globe2'"
+                           :value="$user->hourDetails($period)['xeu']"></x-report-card>
+            <x-report-card :title="'Ore Festivi'" :icon="'bi-calendar4-week'"
+                           :value="$user->hourDetails($period)['festive']"></x-report-card>
         </div>
     </div>
     @endif

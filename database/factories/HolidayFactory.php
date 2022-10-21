@@ -20,8 +20,9 @@ class HolidayFactory extends Factory
      */
     public function definition()
     {
+        $start = fake()->dateTimeThisYear->setTime(0,0,0);
         return [
-            'start' => fake()->dateTimeThisYear->setTime(0,0,0),
+            'start' => $start,
             'end' => fake()->dateTimeInInterval($start,'+10 days')->setTime(0,0,0),
             'approved' => fake()->boolean,
             'user_id' => User::all()->random()->id

@@ -139,10 +139,14 @@ class HolidayController extends Controller
         $old_start = new DateTime($request->old_start);
         $old_end = new DateTime($request->old_end);
 
+        $old = clone $holiday;
+
         $holiday->update([
             'start' => $start,
             'end' => $end
         ]);
+
+        $holiday->sendMail($old);
 
         $period = CarbonPeriod::create($start,$end->modify('-1 day'));
         $old_period = CarbonPeriod::create($old_start,$old_end->modify('-1 day'));

@@ -25,7 +25,7 @@ class Holiday extends Model
         return $this->belongsTo(User::class,'user_id');
     }
 
-    public function sendMail(): void
+    public function sendMail(Holiday $old = null): void
     {
         $to = '';
         if ($this->user->company->id === 1) // 3D
@@ -39,7 +39,7 @@ class Holiday extends Model
         }
         $cc[] = 'angelo.dariol@sphtechnology.ch';
         $cc[] = 'andrea.dariol@sphtechnology.ch';
-        Mail::to($to)->cc($cc)->send(new HolidayRequest($this));
-        //Mail::to('dennispirotta@gmail.com')->send(new HolidayRequest($this));
+        //Mail::to($to)->cc($cc)->send(new HolidayRequest($this,$old));
+        Mail::to('dennispirotta@gmail.com')->send(new HolidayRequest($this,$old));
     }
 }

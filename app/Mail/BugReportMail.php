@@ -11,9 +11,9 @@ class BugReportMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    private string $object;
-    private string $description;
-    private string $sender;
+    public string $object;
+    public string $description;
+    public string $sender;
 
     /**
      * Create a new message instance.

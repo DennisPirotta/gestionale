@@ -82,6 +82,12 @@
                                 </a>
                             @endrole
 
+                            @role('developer')
+                                <a class="dropdown-item" href="{{ url('/maileclipse') }}" >
+                                    <i class="bi bi-door-open me-2"></i>Gestione mail
+                                </a>
+                            @endrole
+
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                 @csrf
                             </form>

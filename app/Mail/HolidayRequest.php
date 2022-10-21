@@ -12,10 +12,12 @@ class HolidayRequest extends Mailable
 {
     use Queueable, SerializesModels;
 
-    private string $start;
-    private string $end;
-    private string $user;
-    private bool $approved;
+    public string $start;
+    public string $end;
+    public string $user;
+    public bool $approved;
+    public string $old_start = '';
+    public string $old_end = '';
 
 
     /**
@@ -23,12 +25,16 @@ class HolidayRequest extends Mailable
      *
      * @return void
      */
-    public function __construct(Holiday $holiday)
+    public function __construct(Holiday $holiday,Holiday $old)
     {
-        $this->start = $holiday->start;
-        $this->end = $holiday->end;
+        $this->start = Carbon::parse($holiday->start)->translatedFormat('l j F Y');
+        $this->end = Carbon::parse($holiday->end)->translatedFormat('l j F Y');
         $this->user = $holiday->user->name . ' ' . $holiday->user->surname;
         $this->approved = $holiday->approved;
+        if ($old !== null){
+            $this->old_start = Carbon::parse($old->start)->translatedFormat('l j F Y');
+            $this->old_end = Carbon::parse($old->end)->translatedFormat('l j F Y');
+        }
     }
 
     /**
@@ -40,10 +46,12 @@ class HolidayRequest extends Mailable
     {
         return $this->subject('Richiesta Ferie')
                     ->markdown('holidays.email',[
-                        'start' => Carbon::parse($this->start)->translatedFormat('l j F Y'),
-                        'end' => Carbon::parse($this->end)->modify('-1 day')->translatedFormat('l j F Y'),
+                        'start' => $this->start,
+                        'end' => $this->end,
                         'user' => $this->user,
-                        'approved' => $this->approved
+                        'approved' => $this->approved,
+                        'old_start' => $this->old_start,
+                        'old_end' => $this->old_end
                     ]);
     }
 }

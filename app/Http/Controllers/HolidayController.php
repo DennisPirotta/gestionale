@@ -205,7 +205,7 @@ class HolidayController extends Controller
     public function destroyMore(Request $request){
 
 
-        $holidays = Holiday::with(['hour','user'])->get();
+        $holidays = Holiday::with('user')->get();
         foreach ($request->ferie as $event){
             $holiday = $holidays->find($event);
             $this->destroy($holiday);

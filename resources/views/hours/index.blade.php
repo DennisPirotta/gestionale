@@ -378,17 +378,38 @@
 
             let hours = @json($hours, JSON_THROW_ON_ERROR);
             let calendarEl = document.getElementById('calendar')
+            let rightContent = 'dayGridWeek dayGridMonth rimborsoMese'
+            if(window.location.search === ''){
+                @role('admin|boss')
+                    rightContent += ' visualizzaTutto'
+                @endrole
+            }else{
+                rightContent += ' clearURL'
+            }
             let calendar = new FullCalendar.Calendar(calendarEl, {
                 headerToolbar: {
                     left: 'prev next today',
                     center: 'title',
-                    right: 'dayGridWeek dayGridMonth rimborsoMese'
+                    right: rightContent
+
                 },
                 customButtons: {
                     rimborsoMese: {
                         text: 'Rimborso del mese',
                         click: function() {
                             window.location.href = '{{ route('expense_report.index') }}'
+                        }
+                    },
+                    visualizzaTutto: {
+                        text: 'Visualizza tutte le ore',
+                        click: function () {
+                            window.location.search = 'all=true'
+                        }
+                    },
+                    clearURL: {
+                        icon: 'bi-eraser',
+                        click: function () {
+                            window.location.href = '{{ route('hours.index') }}'
                         }
                     }
                 },

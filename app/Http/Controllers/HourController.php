@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\BugReportMail;
-use App\Mail\HolidayRequest;
 use App\Models\Customer;
 use App\Models\Holiday;
 use App\Models\Hour;
@@ -17,7 +15,6 @@ use App\Models\TechnicalReportDetails;
 use App\Models\User;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
-use DateTime;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -25,53 +22,48 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 
 class HourController extends Controller
 {
     public function index(): Factory|View|Application
     {
-        $hours = Hour::with(['user','hour_type'])->get();
+        if (request('all') && auth()->user()->hasRole('admin|boss')){
+            $hours = Hour::with(['user', 'hour_type'])->get();
+        }else{
+            $hours = auth()->user()->hours->load(['user', 'hour_type']);
+        }
 
         $formatted = [];
-        foreach ($hours as $hour){
-            $content = '<form method="POST" action="'.route('hours.destroy',$hour->id).'">'.csrf_field().method_field('DELETE').'<button class="btn btn-outline-danger" onclick="return confirm("Sicuro di voler Eliminare?")"><i class="bi bi-trash me-1 fs-4"></i></button></form>';
+        foreach ($hours as $hour) {
+            $content = '<form method="POST" action="' . route('hours.destroy', $hour->id) . '">' . csrf_field() . method_field('DELETE') . '<button class="btn btn-outline-danger" onclick="return confirm("Sicuro di voler Eliminare?")"><i class="bi bi-trash me-1 fs-4"></i></button></form>';
             $formatted[] = [
-              'title' => $hour->user->name . " " . $hour->user->surname . " - " . $hour->hour_type->description,
-              'start' => $hour->date,
-              'end' => $hour->date,
-              'allDay' => true,
-              'extendedProps' => [
-                  'content' => $content,
-                  'hour_type' => $hour->hour_type->description,
-                  'name' => $hour->user->name . " " . $hour->user->surname,
-              ]
+                'title' => $hour->user->name . " " . $hour->user->surname . " - " . $hour->hour_type->description,
+                'start' => $hour->date,
+                'end' => $hour->date,
+                'allDay' => true,
+                'extendedProps' => [
+                    'content' => $content,
+                    'hour_type' => $hour->hour_type->description,
+                    'name' => $hour->user->name . " " . $hour->user->surname,
+                ]
             ];
         }
 
-        return view('hours.index',[
+        return view('hours.index', [
             'hours' => $formatted,
             'hour_types' => HourType::all(),
             'job_types' => JobType::all(),
-            'orders' => Order::with(['status','customer'])->orderBy('status_id')->get(),
+            'orders' => Order::with(['status', 'customer'])->orderBy('status_id')->get(),
             'customers' => Customer::all(),
-            'technical_reports' => TechnicalReport::with(['customer','secondary_customer'])->orderBy('customer_id')->get(),
+            'technical_reports' => TechnicalReport::with(['customer', 'secondary_customer'])->orderBy('customer_id')->get(),
             'users' => User::all()
         ]);
     }
 
-    public function create(): Application|View|Factory
-    {
-        return view('hours.create',[
-            'hour_types' => HourType::all(),
-            'job_types' => JobType::all(),
-            'customers' => Customer::all(),
-            'orders' => Order::all()->sortBy('status'),
-            'statuses' => Status::all()
-        ]);
-    }
     public function edit(): void
-    {}
+    {
+    }
+
     public function store(Request $request): Redirector|Application|RedirectResponse
     {
         Log::channel('dev')->info($request);
@@ -80,16 +72,16 @@ class HourController extends Controller
             'hour_type_id' => 'required'
         ]);
         $user = auth()->id();
-        if (isset($request['user_id'])){
+        if (isset($request['user_id'])) {
             $user = (int)$request['user_id'];
         }
         $message = '';
-        $period = CarbonPeriod::create($request['day_start'],$request['day_end']);
+        $period = CarbonPeriod::create($request['day_start'], $request['day_end']);
         $period->setEndDate($period->getEndDate()->modify('-1 day'));
 
         $multiple = false;
 
-        foreach ($period as $day){
+        foreach ($period as $day) {
             Log::channel('dev')->info('Inserimento per giorno ' . $day->format('d D M Y'));
             if (!Carbon::isOpenOn($day->format('Y-m-d'))) {
                 continue;
@@ -100,13 +92,14 @@ class HourController extends Controller
                 'user_id' => $user,
                 'hour_type_id' => $default['hour_type_id']
             ]);
-            switch ($request['hour_type_id']){
-                case '1': {   // Commessa
+            switch ($request['hour_type_id']) {
+                case '1':
+                {   // Commessa
                     $data = $request->validate([
                         'job_type_id' => 'required',
                         'order_id' => 'required'
                     ]);
-                    OrderDetails::create(array_merge($data,[
+                    OrderDetails::create(array_merge($data, [
                         'hour_id' => $hour->id,
                         'description' => $request->job_description ?? null,
                         'signed' => isset($request->signed) ? (bool)$request->signed : null
@@ -117,7 +110,8 @@ class HourController extends Controller
                     $message = 'Ore commessa inserite con successo';
                     break;
                 }
-                case '2': {   // FI
+                case '2':
+                {   // FI
                     $data = $request->validate([
                         'number' => 'nullable',
                         'fi_number' => 'nullable',
@@ -126,24 +120,24 @@ class HourController extends Controller
                         'order_id' => 'nullable',
                         'user_id' => 'nullable'
                     ]);
-                    if (!$multiple){
-                        if ($request->fi_new === '0'){
+                    if (!$multiple) {
+                        if ($request->fi_new === '0') {
                             TechnicalReport::create($data);
                         }
                         $message = 'Ore foglio intervento inserite con successo';
                         $multiple = true;
                     }
-                    if ($request['night'] === 'XUE'){
+                    if ($request['night'] === 'XUE') {
                         $xue = true;
                     }
-                    if ($request['night'] === 'UE'){
+                    if ($request['night'] === 'UE') {
                         $ue = true;
                     }
 
-                    if ($data['number'] === null ) {
+                    if ($data['number'] === null) {
                         $fi = TechnicalReport::find($data['fi_number']);
-                    }else{
-                        $fi = TechnicalReport::where('number',$data['number'])->first();
+                    } else {
+                        $fi = TechnicalReport::where('number', $data['number'])->first();
                     }
                     TechnicalReportDetails::create([
                         'hour_id' => $hour->id,
@@ -153,20 +147,24 @@ class HourController extends Controller
                     ]);
                     break;
                 }
-                case '3': {   // Assistenza ??
+                case '3':
+                {   // Assistenza ??
                     $message = 'Ore di assistenza inserite con successo';
                     break;
                 }
-                case '4': {   // AVIS
+                case '4':
+                {   // AVIS
                     $message = 'Ore di AVIS inserite con successo';
                     break;
                 }
-                case '5': {   // Corso
+                case '5':
+                {   // Corso
                     $message = 'Ore di corso inserite con successo';
                     break;
                 }
-                case '6': {   // Ferie
-                    if(!$multiple){
+                case '6':
+                {   // Ferie
+                    if (!$multiple) {
                         $holiday = Holiday::create([
                             'approved' => true,
                             'start' => $request['day_start'],
@@ -180,11 +178,13 @@ class HourController extends Controller
 
                     break;
                 }
-                case '7': {   // Malattia
+                case '7':
+                {   // Malattia
                     $message = 'Ore di malattia inserite con successo';
                     break;
                 }
-                case '8': {   // Ufficio
+                case '8':
+                {   // Ufficio
                     $data = $request->validate([
                         'description' => 'required'
                     ]);
@@ -194,11 +194,13 @@ class HourController extends Controller
                     $message = 'Ore di ufficio inserite con successo';
                     break;
                 }
-                case '9': {   // Visita Medica
+                case '9':
+                {   // Visita Medica
                     $message = 'Ore visita medica inserite con successo';
                     break;
                 }
-                case '10': {  // Altro
+                case '10':
+                {  // Altro
                     $data = $request->validate([
                         'description' => 'required'
                     ]);
@@ -208,7 +210,8 @@ class HourController extends Controller
                     $message = 'Ore inserite con successo';
                     break;
                 }
-                default:{
+                default:
+                {
                     break;
                 }
             }
@@ -216,18 +219,32 @@ class HourController extends Controller
 
         return redirect('/ore')->with('message', $message);
     }
+
+    public function create(): Application|View|Factory
+    {
+        return view('hours.create', [
+            'hour_types' => HourType::all(),
+            'job_types' => JobType::all(),
+            'customers' => Customer::all(),
+            'orders' => Order::all()->sortBy('status'),
+            'statuses' => Status::all()
+        ]);
+    }
+
     public function update(): void
-    {}
+    {
+    }
+
     public function destroy(Hour $hour): RedirectResponse
     {
         $hour->delete();
-        return back()->with('message','Ora eliminata con successo');
+        return back()->with('message', 'Ora eliminata con successo');
     }
 
     public function report(): Factory|View|Application
     {
 
-        return view('hours.report',[
+        return view('hours.report', [
             'users' => User::with('hours')->get()
         ]);
     }

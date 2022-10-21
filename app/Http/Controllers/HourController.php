@@ -66,7 +66,6 @@ class HourController extends Controller
 
     public function store(Request $request): Redirector|Application|RedirectResponse
     {
-        Log::channel('dev')->info($request);
         $default = $request->validate([
             'count' => 'required',
             'hour_type_id' => 'required'
@@ -82,12 +81,11 @@ class HourController extends Controller
         $multiple = false;
 
         foreach ($period as $day) {
-            Log::channel('dev')->info('Inserimento per giorno ' . $day->format('d D M Y'));
             if (!Carbon::isOpenOn($day->format('Y-m-d'))) {
                 continue;
             }
             $hour = Hour::create([
-                'count' => $default['count'],
+                'count' => str_replace(',', '.', $default['count']),
                 'date' => $day,
                 'user_id' => $user,
                 'hour_type_id' => $default['hour_type_id']
@@ -171,7 +169,7 @@ class HourController extends Controller
                             'end' => $request['day_end'],
                             'user_id' => auth()->id()
                         ]);
-                        $holiday->sendMail($holiday);
+                        $holiday->sendMail();
                         $message = 'Ore di ferie inserite con successo';
                         $multiple = true;
                     }

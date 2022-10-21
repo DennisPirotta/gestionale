@@ -200,6 +200,7 @@ class HolidayController extends Controller
                     }
                 };
             }
+            $holiday->sendMail(null,false,true);
             $holiday->delete();
             return back()->with('message', 'Ferie eliminate con successo');
         }
@@ -207,8 +208,6 @@ class HolidayController extends Controller
     }
 
     public function destroyMore(Request $request){
-
-
         $holidays = Holiday::with('user')->get();
         foreach ($request->ferie as $event){
             $holiday = $holidays->find($event);
@@ -221,6 +220,7 @@ class HolidayController extends Controller
         $holiday->update([
             'approved' => true
         ]);
+        $holiday->sendMail(null,true);
         return back()->with('message','Ferie modificate con successo');
     }
 }

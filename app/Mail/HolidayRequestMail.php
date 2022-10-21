@@ -8,7 +8,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Carbon\Carbon;
 
-class HolidayRequest extends Mailable
+class HolidayRequestMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -25,7 +25,7 @@ class HolidayRequest extends Mailable
      *
      * @return void
      */
-    public function __construct(Holiday $holiday,Holiday $old)
+    public function __construct(Holiday $holiday,Holiday $old = null)
     {
         $this->start = Carbon::parse($holiday->start)->translatedFormat('l j F Y');
         $this->end = Carbon::parse($holiday->end)->translatedFormat('l j F Y');
@@ -45,7 +45,7 @@ class HolidayRequest extends Mailable
     public function build()
     {
         return $this->subject('Richiesta Ferie')
-                    ->markdown('holidays.email',[
+                    ->markdown('mails.holidays.request',[
                         'start' => $this->start,
                         'end' => $this->end,
                         'user' => $this->user,

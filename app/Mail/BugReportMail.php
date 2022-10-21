@@ -35,7 +35,7 @@ class BugReportMail extends Mailable
     public function build()
     {
         return $this->subject('Bug Report')
-                    ->markdown('debug.email',[
+                    ->markdown('mails.bug-report',[
                         'sender' => $this->sender,
                         'object' => $this->object,
                         'description' => $this->description

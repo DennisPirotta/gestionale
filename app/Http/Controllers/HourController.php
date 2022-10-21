@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\BugReportMail;
+use App\Mail\HolidayRequest;
 use App\Models\Customer;
 use App\Models\Holiday;
 use App\Models\Hour;
@@ -23,6 +25,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class HourController extends Controller
 {
@@ -164,12 +167,13 @@ class HourController extends Controller
                 }
                 case '6': {   // Ferie
                     if(!$multiple){
-                        Holiday::create([
+                        $holiday = Holiday::create([
                             'approved' => true,
                             'start' => $request['day_start'],
                             'end' => $request['day_end'],
                             'user_id' => auth()->id()
                         ]);
+                        $holiday->sendMail($holiday);
                         $message = 'Ore di ferie inserite con successo';
                         $multiple = true;
                     }

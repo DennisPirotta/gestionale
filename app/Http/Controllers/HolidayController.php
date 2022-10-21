@@ -84,12 +84,13 @@ class HolidayController extends Controller
             $approved = true;
         }
 
-        Holiday::create([
+        $holiday = Holiday::create([
             'start' => $start,
             'end' => $end,
             'user_id' => auth()->id(),
             'approved' => $approved
         ]);
+        $holiday->sendMail();
 
         $period = CarbonPeriod::create($start,$end->modify('-1 day'));
 

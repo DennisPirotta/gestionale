@@ -1,5 +1,5 @@
 @component('mail::message')
-# Bug Report
+# Richiesta Ferie
 
 {{ $object }}
 @component('mail::panel')

@@ -1,12 +1,12 @@
 @component('mail::message')
-# Introduction
+# Richiesta di ferie
 
-The body of your message.
+{{ $user }} ha fatto richiesta di @if($approved) un permesso @else ferie @endif @if($start!==$end) da <b>{{ $start }}</b> a <b>{{ $end }}</b> ( incluso ) @else per <b>{{ $start }}</b> @endif
 
-@component('mail::button', ['url' => ''])
-Button Text
+@component('mail::button', ['url' => route('holidays.index') . '#approvare'])
+Vai alla pagina di conferma
 @endcomponent
 
-Thanks,<br>
+Grazie,<br>
 {{ config('app.name') }}
 @endcomponent

@@ -63,7 +63,7 @@
             <x-home-card :redirect="route('hours.report')" :icon="'bi-hourglass-split'" :title="'Report ore'"></x-home-card>
             @endhasanyrole
 
-            @if(env('APP_DEBUG'))
+            @if(env('APP_DEBUG') && auth()->user()->hasRole('developer'))
                 <div class="col-12 mb-3">
                     <form method="post" action="/debug/change_permissions">
                         @csrf

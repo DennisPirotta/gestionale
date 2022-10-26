@@ -120,6 +120,9 @@ class HourController extends Controller
                     ]);
                     if (!$multiple) {
                         if ($request->fi_new === '0') {
+                            if ($data['user_id'] === null){
+                                $data['user_id'] = auth()->id();
+                            }
                             TechnicalReport::create($data);
                         }
                         $message = 'Ore foglio intervento inserite con successo';

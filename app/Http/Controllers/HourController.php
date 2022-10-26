@@ -118,11 +118,11 @@ class HourController extends Controller
                         'order_id' => 'nullable',
                         'user_id' => 'nullable'
                     ]);
+                    if (!isset($data['user_id'])){
+                        $data['user_id'] = $user;
+                    }
                     if (!$multiple) {
                         if ($request->fi_new === '0') {
-                            if ($data['user_id'] === null){
-                                $data['user_id'] = auth()->id();
-                            }
                             TechnicalReport::create($data);
                         }
                         $message = 'Ore foglio intervento inserite con successo';

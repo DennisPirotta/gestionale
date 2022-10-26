@@ -59,7 +59,7 @@
         $user = User::find(request('user'));
         if ($user){
             $user->load('business_hours');
-            if (($user->id !== auth()->id()) && !$user->hasRole('admin','boss')){
+            if (($user->id !== auth()->id()) && !auth()->user()->hasRole('admin|boss')){
                     Session::flash('error', 'Puoi vedere solo i tuoi report');
                     header('Location: /ore');
             }

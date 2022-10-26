@@ -244,7 +244,6 @@ class HourController extends Controller
 
     public function report(): Factory|View|Application
     {
-
         return view('hours.report', [
             'users' => User::with('hours')->get()
         ]);

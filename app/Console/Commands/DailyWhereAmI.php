@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\User;
 use Illuminate\Console\Command;
+use Symfony\Component\Console\Command\Command as CommandAlias;
 
 class DailyWhereAmI extends Command
 {
@@ -22,12 +23,13 @@ class DailyWhereAmI extends Command
     protected $description = 'Reset Whereami flag';
 
 
-    public function handle(): void
+    public function handle(): int
     {
         foreach (User::all() as $user){
             $user->update([
                 'position' => false,
             ]);
         }
+        return CommandAlias::SUCCESS;
     }
 }

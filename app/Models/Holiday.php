@@ -25,7 +25,6 @@ class Holiday extends Model
 
     public function sendMail(Holiday $old = null, $approved = false, $deleted = false): void
     {
-        $to = '';
         if ($this->user->company->id === 1) // 3D
         {
             $to = 'amministrazione@3dautomation.it';
@@ -38,13 +37,13 @@ class Holiday extends Model
         $cc[] = 'angelo.dariol@sphtechnology.ch';
         $cc[] = 'andrea.dariol@sphtechnology.ch';
         if ($deleted) {
-            Mail::to($to)->cc($cc)->send(new HolidayDeletedMail($this));
-            //Mail::to('dennispirotta@gmail.com')->send(new HolidayDeletedMail($this));
+//            Mail::to($to)->cc($cc)->send(new HolidayDeletedMail($this));
+            Mail::to('dennispirotta@gmail.com')->send(new HolidayDeletedMail($this));
         } else if ($approved) {
             Mail::to($this->user->email)->send(new HolidayApprovedMail($this));
         } else {
-            Mail::to($to)->cc($cc)->send(new HolidayRequestMail($this,$old));
-            //Mail::to('dennispirotta@gmail.com')->send(new HolidayRequestMail($this, $old));
+//            Mail::to($to)->cc($cc)->send(new HolidayRequestMail($this,$old));
+            Mail::to('dennispirotta@gmail.com')->send(new HolidayRequestMail($this, $old));
         }
     }
 }

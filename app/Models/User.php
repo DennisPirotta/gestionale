@@ -96,10 +96,12 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getLeftHolidays(): int
     {
-        $holidays = Holiday::where('user_id',$this->id)->get();
+        $holidays =  Holiday::where('user_id',$this->id)
+                            ->whereBetween('start',[Carbon::now()->firstOfYear(),Carbon::now()->lastOfYear()])
+                            ->whereBetween('end',[Carbon::now()->firstOfYear(),Carbon::now()->lastOfYear()]);
         $count = 0;
         Carbon::setOpeningHours(BusinessHour::getWorkingHours($this));
-        foreach ($holidays as $holiday){
+        foreach ($holidays->get() as $holiday){
             $count += Carbon::parse($holiday->start)->diffInBusinessHours($holiday->end);
         }
         return $this->holidays - $count;

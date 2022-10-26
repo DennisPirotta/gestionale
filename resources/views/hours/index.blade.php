@@ -92,7 +92,7 @@
                                                 @foreach($orders as $order)
                                                     <option value="{{$order->id}}"
                                                             class="bg-{{$order->status->color}} bg-opacity-50">
-                                                        ({{$order->innerCode}})
+                                                        ({{$order->innerCode}}) @if($order->outerCode !== null) ({{ $order->outerCode }}) @endif
                                                         - {{$order->customer->name}}
                                                         [{{$order->status->description}}]
                                                     </option>

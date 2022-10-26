@@ -75,6 +75,7 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'company_id' => $data['company'],
+            'holidays' => $data['company'] === '2' ? 160 : 240
         ])->assignRole('user');
         BusinessHour::init($user);
         return $user;

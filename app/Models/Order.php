@@ -87,6 +87,10 @@ class Order extends Model
         return $this->hasMany(TechnicalReport::class,'order_id');
     }
 
+    public function engagements(){
+        return $this->hasMany(Engagement::class,'order_id');
+    }
+
     public function getHours(): array
     {
         $data = [

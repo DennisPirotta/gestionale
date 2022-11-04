@@ -12,4 +12,5 @@ php artisan migrate --path=database/migrations/after/2022_09_21_124145_create_te
 php artisan migrate --path=database/migrations/after/2022_09_30_064252_create_business_hours_table.php
 php artisan migrate --path=database/migrations/after/2022_10_14_102643_create_bug_reports_table.php
 php artisan migrate --path=database/migrations/after/2022_10_17_083400_create_expense_reports_table.php
+php artisan migrate --path=database/migrations/after/2022_11_04_104717_create_engagements_table.php.php
 php artisan db:seed

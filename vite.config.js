@@ -11,7 +11,7 @@ export default defineConfig({
         }
     },
     server: {
-        https: true,
+        https: false, // mettere a true in produzione
         hmr: {
             host: 'localhost',
         },

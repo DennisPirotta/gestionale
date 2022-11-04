@@ -94,6 +94,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(ExpenseReport::class,'customer_id');
     }
 
+    public function engagements(): HasMany
+    {
+        return $this->hasMany(Engagement::class,'user_id');
+    }
+
     public function getLeftHolidays(): int
     {
         $holidays =  Holiday::where('user_id',$this->id)

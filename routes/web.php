@@ -4,6 +4,7 @@ use App\Http\Controllers\AccessKeyController;
 use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\BugReportController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\EngagementController;
 use App\Http\Controllers\ExpenseReportController;
 use App\Http\Controllers\HolidayController;
 use App\Http\Controllers\HomeController;
@@ -216,6 +217,13 @@ Route::middleware(['auth'])->group(function () {
 
         Route::post('/dipendenti/{user}/roles/update',[UserController::class,'updatePermissions'])->name('users.permissions.update');
     });
+
+    Route::group(['middleware' => ['role:boss']], static function () {
+
+        Route::get('/impegni',[EngagementController::class,'index'])->name('engagement.index');
+
+    });
+
 });
 
 

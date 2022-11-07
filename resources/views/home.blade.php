@@ -62,9 +62,10 @@
             <x-home-card :redirect="route('users.index')" :icon="'bi-person-workspace'" :title="'Gestione Dipendenti'"></x-home-card>
             <x-home-card :redirect="route('hours.report')" :icon="'bi-hourglass-split'" :title="'Report ore'"></x-home-card>
             @endhasanyrole
-{{--            @role('boss')--}}
+
+            @role('boss')
                 <x-home-card :redirect="route('engagement.index')" :icon="'bi-calendar2-check'" :title="'Impegni'"></x-home-card>
-{{--            @endrole--}}
+            @endrole
 
             @if(env('APP_DEBUG') && auth()->user()->hasRole('developer'))
                 <div class="col-12 mb-3">

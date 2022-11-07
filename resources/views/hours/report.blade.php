@@ -78,7 +78,7 @@
                         - {{ $user->name }} {{ $user->surname }}</b>
                 @endif
             </div>
-            <button class="btn btn-primary me-2" onclick="window.print()"><i class="bi bi-printer me-2"></i>Stampa
+            <button class="btn btn-primary me-2 ms-auto" onclick="window.print()"><i class="bi bi-printer me-2"></i>Stampa
             </button>
             <form class="m-0" id="queryData">
                 <div class="row">

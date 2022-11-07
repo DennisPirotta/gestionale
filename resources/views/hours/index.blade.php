@@ -19,6 +19,7 @@
             $mese = Carbon::parse(request('mese'));
             $period = CarbonPeriod::create(Carbon::parse(request('mese'))->firstOfMonth(),Carbon::parse(request('mese'))->lastOfMonth());
         }
+        $other = $user->hours->whereNotIn('hour_type_id',[1,2,6]);
     @endphp
     <div class="container-fluid px-5 mt-5 table-responsive">
         <div class="d-flex align-items-center">
@@ -29,7 +30,8 @@
                         - {{ $user->name }} {{ $user->surname }}</b>
                 @endif
             </div>
-            <button class="btn btn-primary me-2 ms-auto" data-bs-target="#myModal" data-bs-toggle="modal"><i class="bi bi-plus-circle me-2"></i>Aggiungi ore
+            <button class="btn btn-primary me-2 ms-auto" data-bs-target="#myModal" data-bs-toggle="modal"><i
+                        class="bi bi-plus-circle me-2"></i>Aggiungi ore
             </button>
             <form class="m-0" id="queryData">
                 <div class="row">
@@ -151,6 +153,183 @@
                         @endforeach
                     </tr>
                 @endif
+                @unless($other->count() < 0)
+                    @if($other->where('hour_type_id',8)->count() > 0)
+                        <tr>
+                            <th scope="row" colspan="{{ $period->count() + 1 }}" class="border-end-0 text-start">
+                                Ufficio
+                            </th>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            @foreach($period as $day)
+                                @php($flag = false)
+
+                                @foreach($other->where('hour_type_id',8) as $office)
+                                    @if($office->date === $day->format('Y-m-d'))
+                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif >{{ $office->count }}</td>
+                                        @php($flag = true)
+                                    @endif
+                                @endforeach
+
+                                @if(!$flag)
+                                    <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif ></td>
+                                @endif
+                            @endforeach
+                        </tr>
+                    @endif
+
+                    @if($other->where('hour_type_id',3)->count() > 0)
+                        <tr>
+                            <th scope="row" colspan="{{ $period->count() + 1 }}" class="border-end-0 text-start">
+                                Assistenza
+                            </th>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            @foreach($period as $day)
+                                @php($flag = false)
+
+                                @foreach($other->where('hour_type_id',3) as $office)
+                                    @if($office->date === $day->format('Y-m-d'))
+                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif >{{ $office->count }}</td>
+                                        @php($flag = true)
+                                    @endif
+                                @endforeach
+
+                                @if(!$flag)
+                                    <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif ></td>
+                                @endif
+                            @endforeach
+                        </tr>
+                    @endif
+
+                    @if($other->where('hour_type_id',4)->count() > 0)
+                        <tr>
+                            <th scope="row" colspan="{{ $period->count() + 1 }}" class="border-end-0 text-start">
+                                AVIS
+                            </th>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            @foreach($period as $day)
+                                @php($flag = false)
+
+                                @foreach($other->where('hour_type_id',4) as $office)
+                                    @if($office->date === $day->format('Y-m-d'))
+                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif >{{ $office->count }}</td>
+                                        @php($flag = true)
+                                    @endif
+                                @endforeach
+
+                                @if(!$flag)
+                                    <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif ></td>
+                                @endif
+                            @endforeach
+                        </tr>
+                    @endif
+
+                    @if($other->where('hour_type_id',5)->count() > 0)
+                        <tr>
+                            <th scope="row" colspan="{{ $period->count() + 1 }}" class="border-end-0 text-start">
+                                Corso
+                            </th>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            @foreach($period as $day)
+                                @php($flag = false)
+
+                                @foreach($other->where('hour_type_id',5) as $office)
+                                    @if($office->date === $day->format('Y-m-d'))
+                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif >{{ $office->count }}</td>
+                                        @php($flag = true)
+                                    @endif
+                                @endforeach
+
+                                @if(!$flag)
+                                    <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif ></td>
+                                @endif
+                            @endforeach
+                        </tr>
+                    @endif
+
+                    @if($other->where('hour_type_id',7)->count() > 0)
+                        <tr>
+                            <th scope="row" colspan="{{ $period->count() + 1 }}" class="border-end-0 text-start">
+                                Malattia
+                            </th>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            @foreach($period as $day)
+                                @php($flag = false)
+
+                                @foreach($other->where('hour_type_id',7) as $office)
+                                    @if($office->date === $day->format('Y-m-d'))
+                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif >{{ $office->count }}</td>
+                                        @php($flag = true)
+                                    @endif
+                                @endforeach
+
+                                @if(!$flag)
+                                    <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif ></td>
+                                @endif
+                            @endforeach
+                        </tr>
+                    @endif
+
+                    @if($other->where('hour_type_id',9)->count() > 0)
+                        <tr>
+                            <th scope="row" colspan="{{ $period->count() + 1 }}" class="border-end-0 text-start">
+                                Visita medica
+                            </th>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            @foreach($period as $day)
+                                @php($flag = false)
+
+                                @foreach($other->where('hour_type_id',9) as $office)
+                                    @if($office->date === $day->format('Y-m-d'))
+                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif >{{ $office->count }}</td>
+                                        @php($flag = true)
+                                    @endif
+                                @endforeach
+
+                                @if(!$flag)
+                                    <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif ></td>
+                                @endif
+                            @endforeach
+                        </tr>
+                    @endif
+
+                    @if($other->where('hour_type_id',10)->count() > 0)
+                        <tr>
+                            <th scope="row" colspan="{{ $period->count() + 1 }}" class="border-end-0 text-start">
+                                Altro
+                            </th>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            @foreach($period as $day)
+                                @php($flag = false)
+
+                                @foreach($other->where('hour_type_id',10) as $office)
+                                    @if($office->date === $day->format('Y-m-d'))
+                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif >{{ $office->count }}</td>
+                                        @php($flag = true)
+                                    @endif
+                                @endforeach
+
+                                @if(!$flag)
+                                    <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif ></td>
+                                @endif
+                            @endforeach
+                        </tr>
+                    @endif
+
+                @endunless
                 </tbody>
                 <tfoot>
                 <tr>
@@ -228,8 +407,9 @@
 
                         <div class="col-12 mb-3" id="day_start_col">
                             <div class="input-group col-md-4 col-sm-6">
-                                <span class="input-group-text" id="time_pattern"><i class="bi bi-clipboard-data me-2"></i>Data</span>
-                                <input type="date" class="form-control"  name="day_start" id="day_start">
+                                <span class="input-group-text" id="time_pattern"><i
+                                            class="bi bi-clipboard-data me-2"></i>Data</span>
+                                <input type="date" class="form-control" name="day_start" id="day_start">
                             </div>
                             @error('day_start')
                             <p class="text-danger fs-6">{{$message}}</p>
@@ -238,7 +418,7 @@
                         <div class="col-6 mb-3 d-none" id="day_end_col">
                             <div class="input-group col-md-4 col-sm-6">
                                 <span class="input-group-text"><i class="bi bi-clipboard-data me-2"></i>Fine</span>
-                                <input type="date" class="form-control"  name="day_end" id="day_end">
+                                <input type="date" class="form-control" name="day_end" id="day_end">
                             </div>
                             @error('day_end')
                             <p class="text-danger fs-6">{{$message}}</p>
@@ -248,7 +428,7 @@
                         <div class="col-4">
                             <div class="input-group col-md-4 col-sm-6">
                                 <span class="input-group-text"><i class="bi bi-clipboard-data me-2"></i>Ore</span>
-                                <input type="text" class="form-control"  name="count" value="8">
+                                <input type="text" class="form-control" name="count" value="8">
                             </div>
                             @error('count')
                             <p class="text-danger fs-6">{{$message}}</p>
@@ -272,7 +452,8 @@
                         <div class="flex-column d-flex col-12 d-none" id="contentDetails">
                             <hr class="mx-auto w-75 mb-3">
                             @role('admin|boss')
-                            <small class="text-warning mx-auto"><i class="bi bi-exclamation-triangle"></i>Sezione dedicata all'inserimento dei dati</small>
+                            <small class="text-warning mx-auto"><i class="bi bi-exclamation-triangle"></i>Sezione
+                                dedicata all'inserimento dei dati</small>
                             <div class="input-group">
                                 <label class="input-group-text" for="user_id"><i class="bi bi-person-badge me-2"></i>Utente</label>
                                 <select class="form-select" id="user_id" name="user_id">
@@ -316,7 +497,9 @@
                                                 @foreach($original_orders as $order)
                                                     <option value="{{$order->id}}"
                                                             class="bg-{{$order->status->color}} bg-opacity-50">
-                                                        ({{$order->innerCode}}) @if($order->outerCode !== null) ({{ $order->outerCode }}) @endif
+                                                        ({{$order->innerCode}}) @if($order->outerCode !== null)
+                                                            ({{ $order->outerCode }})
+                                                        @endif
                                                         - {{$order->customer->name}}
                                                         [{{$order->status->description}}]
                                                     </option>
@@ -404,7 +587,8 @@
                                         <div class="col-12">
                                             <div class="input-group mb-3">
                                                 <span class="input-group-text"><i class="bi bi-list-ol me-2"></i>Numero</span>
-                                                <input type="text" class="form-control" aria-label="Numero" name="number" id="new_fi_number">
+                                                <input type="text" class="form-control" aria-label="Numero"
+                                                       name="number" id="new_fi_number">
                                             </div>
                                         </div>
                                         @error('number')
@@ -435,7 +619,8 @@
                                             <div class="input-group mb-3">
                                                 <label class="input-group-text" for="first_customer"><i
                                                             class="bi bi-person me-2"></i>Cliente</label>
-                                                <select class="form-select" id="first_customer" name="customer_id" required>
+                                                <select class="form-select" id="first_customer" name="customer_id"
+                                                        required>
                                                     @foreach($customers as $customer)
                                                         <option value="{{$customer->id}}">
                                                             {{$customer->name}}
@@ -452,7 +637,8 @@
                                                 <label class="input-group-text" for="second_customer"><i
                                                             class="bi bi-people me-2"></i>Cliente
                                                     Secondario</label>
-                                                <select class="form-select" id="second_customer" name="secondary_customer_id">
+                                                <select class="form-select" id="second_customer"
+                                                        name="secondary_customer_id">
                                                     <option value="">Non presente</option>
                                                     @foreach($customers as $customer)
                                                         <option value="{{$customer->id}}">
@@ -503,7 +689,8 @@
                                         <div class="input-group mb-3">
                                             <label class="input-group-text" for="help_customer"><i
                                                         class="bi bi-person me-2"></i>Cliente</label>
-                                            <select class="form-select" id="help_customer" name="help_customer" required>
+                                            <select class="form-select" id="help_customer" name="help_customer"
+                                                    required>
                                                 @foreach($customers as $customer)
                                                     <option value="{{$customer->id}}">
                                                         {{$customer->name}}
@@ -559,12 +746,12 @@
         $(() => {
             $('#fi').on('change', (event) => {
                 let selected = $(event.target).val()
-                $(`#new_fi_number`).prop('required',false)
+                $(`#new_fi_number`).prop('required', false)
                 if (selected === '0') {
-                    $('#new_fi_number').prop('required',true)
+                    $('#new_fi_number').prop('required', true)
                     $('#new_fi').removeClass('hide')
                     $('#old_fi').addClass('hide')
-                } else if (selected === '1'){
+                } else if (selected === '1') {
                     $('#new_fi').addClass('hide')
                     $('#old_fi').removeClass('hide')
                 } else {
@@ -583,7 +770,7 @@
             });
 
             $('#hour_type_id').on('change', function () {
-                $('#new_fi_number').prop('required',false)
+                $('#new_fi_number').prop('required', false)
                 switch ($('#hour_type_id').find(':selected').val()) {
                     case '': {
                         $('#contentDetails').addClass("d-none")
@@ -600,10 +787,10 @@
                 }
             });
 
-            $('#multiple_toggle').on('change',e => {
+            $('#multiple_toggle').on('change', e => {
                 $('#day_end_col').toggleClass('d-none')
                 $('#day_start_col').toggleClass('col-6 col-12')
-                if($(e.target).is(':checked')) $('#time_pattern').text('Inizio')
+                if ($(e.target).is(':checked')) $('#time_pattern').text('Inizio')
                 else $('#time_pattern').text('Data')
             })
 

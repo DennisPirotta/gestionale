@@ -1,213 +1,10 @@
 @extends('layouts.app')
 @section('content')
-    @php
-        use App\Models\Order;use App\Models\TechnicalReport;use Carbon\Carbon;
-        use Carbon\CarbonPeriod;
-        use App\Models\User;
-        use Illuminate\Support\Facades\Session;
-        $period = CarbonPeriod::create(Carbon::now()->firstOfMonth(),Carbon::now()->lastOfMonth());
-        $mese = Carbon::now();
-        $user = User::find(request('user'));
-        if ($user){
-            $user->load('business_hours');
-            if (($user->id !== auth()->id()) && !auth()->user()->hasRole('admin|boss')){
-                    Session::flash('error', 'Puoi vedere solo i tuoi report');
-                    header('Location: /ore');
-            }
-        }
-        if(request('mese')) {
-            $mese = Carbon::parse(request('mese'));
-            $period = CarbonPeriod::create(Carbon::parse(request('mese'))->firstOfMonth(),Carbon::parse(request('mese'))->lastOfMonth());
-        }
-    @endphp
-    <div class="container-fluid px-5 mt-5 table-responsive">
-        <div class="d-flex align-items-center">
-            <div class="h1 m-0">Ore
-                @if(request('mese') === null || request('user') === null)
-                @else
-                    <b>{{ $mese->translatedFormat('F Y') }}
-                        - {{ $user->name }} {{ $user->surname }}</b>
-                @endif
-            </div>
-            <button class="btn btn-primary me-2 ms-auto" data-bs-target="#myModal" data-bs-toggle="modal"><i class="bi bi-plus-circle me-2"></i>Aggiungi ore
-            </button>
-            <form class="m-0" id="queryData">
-                <div class="row">
-                    <div class="col pe-0">
-                        <label for="date" class="d-none"></label><input type="month" class="form-control" name="mese"
-                                                                        id="date" value="{{ $mese->format('Y-m') }}">
-                    </div>
-                </div>
-            </form>
-
-        </div>
-        <hr class="hr">
-        @if(request('mese') === null || request('user') === null)
-            <div class="container justify-content-center text-center">
-                <img src="{{ asset('images/no-orders.svg') }}" alt="" style="width: 40rem">
-                <div class="fs-1">Seleziona un utente e un mese</div>
-            </div>
-        @else
-            <table class="table table-bordered text-center">
-                <thead>
-                <tr>
-                    <th>Tipo</th>
-                    @foreach($period as $day)
-                        <th>
-                                <span class="dayName">
-                                    {{ $day->translatedFormat('D') }}
-                                </span>
-                            <span>
-                                    {{ $day->translatedFormat('j') }}
-                                </span>
-                        </th>
-                    @endforeach
-                </tr>
-                </thead>
-                <tbody>
-                @php
-                    $orders = Order::withWhereHas('order_details',static function ($query) use ($user,$period){
-                            $query->withWhereHas('hour',static function ($query) use ($user,$period){
-                                $query->where('user_id',$user->id)->whereBetween('date',[$period->first(), $period->last()]);
-                            });
-                        });
-                    $technical_reports = TechnicalReport::withWhereHas('technical_report_details',static function ($query) use ($user,$period){
-                            $query->withWhereHas('hour',static function ($query) use ($user,$period){
-                                $query->where('user_id',$user->id)->whereBetween('date',[$period->first(), $period->last()]);
-                            });
-                        });
-                @endphp
-                @if($orders->get()->isNotEmpty())
-                    <tr>
-                        <th scope="row" colspan="{{ $period->count() + 1 }}" class="border-end-0 text-start">Commesse
-                        </th>
-                    </tr>
-                @endif
-                @foreach($orders->get() as $order)
-                    <tr>
-                        <th scope="row">{{ $order->innerCode }}</th>
-                        @foreach($period as $day)
-                            @php($flag = true)
-                            @foreach($order->order_details as $details)
-                                @if($details->hour->date === $day->format('Y-m-d'))
-                                    <td @if($day->isWeekend()) class="bg-secondary" @endif >{{ $details->hour->count }}</td>
-                                    @php($flag = false)
-                                @endif
-                            @endforeach
-                            @if($flag)
-                                <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif ></td>
-                            @endif
-                        @endforeach
-                    </tr>
-                @endforeach
-                @if($technical_reports->get()->isNotEmpty())
-                    <tr>
-                        <th scope="row" colspan="{{ $period->count() + 1 }}" class="border-end-0 text-start">Fogli
-                            Intervento
-                        </th>
-                    </tr>
-                @endif
-                @foreach($technical_reports->get() as $technical_report)
-                    <tr>
-                        <th scope="row">{{ $technical_report->number }}</th>
-                        @foreach($period as $day)
-                            @php($flag = true)
-                            @foreach($technical_report->technical_report_details as $details)
-                                @if($details->hour->date === $day->format('Y-m-d'))
-                                    <td @if($day->isWeekend()) class="bg-secondary" @endif >
-                                        {{ $details->hour->count }}
-                                        @if($details->nightEU)
-                                            <span class="badge text-bg-primary">EU</span>
-                                        @elseif($details->nightExtraEU)
-                                            <span class="badge text-bg-success">XEU</span>
-                                        @endif
-                                    </td>
-                                    @php($flag = false)
-                                @endif
-                            @endforeach
-                            @if($flag)
-                                <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif ></td>
-                            @endif
-                        @endforeach
-                    </tr>
-                @endforeach
-                @if($user->hourDetails($period)['total'] > 0)
-                    <tr>
-                        <th scope="row" colspan="{{ $period->count() + 1 }}" class="border-end-0 text-start">Ferie</th>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        @foreach($period as $day)
-                            @php($flag = true)
-                            @foreach($user->hoursInPeriod($period)->filter(static function($item){ return $item->hour_type_id === 6; }) as $holiday_hour)
-                                @if($holiday_hour->date === $day->format('Y-m-d'))
-                                    @php($flag = false)
-                                    <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif >{{ $holiday_hour->count }}</td>
-                                @endif
-                            @endforeach
-                            @if($flag)
-                                <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif ></td>
-                            @endif
-                        @endforeach
-                    </tr>
-                @endif
-                </tbody>
-                <tfoot>
-                <tr>
-                    <td colspan="{{ $period->count() + 1}}" class="p-3"></td>
-                </tr>
-                <tr id="straordinari">
-                    <th scope="row">Straordinari</th>
-                    @foreach($period as $day)
-                        @php($count = 0)
-                        @foreach($user->hours as $hour)
-                            @if($hour->date === $day->format('Y-m-d'))
-                                @php($count += $hour->count)
-                            @endif
-                        @endforeach
-                        @php($current = $user->business_hours->where('week_day',strtolower($day->format('l')))->first())
-                        @if($current === null)
-                            <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif >{{ $count }}</td>
-                        @else
-                            @if($count - ( Carbon::parse($current->morning_start)->diffInBusinessHours($current->afternoon_end) ) < 0 )
-                                <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif >0</td>
-                            @else
-                                <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif >{{ $count - ( Carbon::parse($current->morning_start)->diffInBusinessHours($current->afternoon_end) ) }}</td>
-                            @endif
-                        @endif
-                    @endforeach
-                </tr>
-                <tr id="totale">
-                    <th scope="row">Totale</th>
-                    @foreach($period as $day)
-                        @php($count = 0)
-                        @foreach($user->hours as $hour)
-                            @if($hour->date === $day->format('Y-m-d'))
-                                @php($count += $hour->count)
-                            @endif
-                        @endforeach
-                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif >{{ $count }}</td>
-                    @endforeach
-                </tr>
-                </tfoot>
-            </table>
+    {{-- Calendario --}}
+    <div class="container my-3 p-5 shadow-sm">
+        <div id="calendar"></div>
     </div>
-    <div class="container p-5">
-        <div class="row g-3 justify-content-center">
-            <x-report-card :title="'Totale ore'" :icon="'bi-bar-chart-fill'"
-                           :value="$user->hourDetails($period)['total']"></x-report-card>
-            <x-report-card :title="'Ferie'" :icon="'bi-cup-hot'"
-                           :value="$user->hourDetails($period)['holidays']"></x-report-card>
-            <x-report-card :title="'Notte UE'" :icon="'bi-currency-euro'"
-                           :value="$user->hourDetails($period)['eu']"></x-report-card>
-            <x-report-card :title="'Notte Extra UE'" :icon="'bi-globe2'"
-                           :value="$user->hourDetails($period)['xeu']"></x-report-card>
-            <x-report-card :title="'Ore Festivi'" :icon="'bi-calendar4-week'"
-                           :value="$user->hourDetails($period)['festive']"></x-report-card>
-        </div>
-    </div>
-    @endif
-
+    {{-- Modal aggiunta ore --}}
     <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="label" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -219,32 +16,6 @@
                     <form method="post" action="/ore" class="row">
                         @csrf
                         {{-- Quantita --}}
-                        <div class="col-12 d-flex justify-content-center mb-3">
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" role="switch" id="multiple_toggle">
-                                <label class="form-check-label" for="multiple_toggle">Inserimento multiplo</label>
-                            </div>
-                        </div>
-
-                        <div class="col-12 mb-3" id="day_start_col">
-                            <div class="input-group col-md-4 col-sm-6">
-                                <span class="input-group-text" id="time_pattern"><i class="bi bi-clipboard-data me-2"></i>Data</span>
-                                <input type="date" class="form-control"  name="day_start" id="day_start">
-                            </div>
-                            @error('day_start')
-                            <p class="text-danger fs-6">{{$message}}</p>
-                            @enderror
-                        </div>
-                        <div class="col-6 mb-3 d-none" id="day_end_col">
-                            <div class="input-group col-md-4 col-sm-6">
-                                <span class="input-group-text"><i class="bi bi-clipboard-data me-2"></i>Fine</span>
-                                <input type="date" class="form-control"  name="day_end" id="day_end">
-                            </div>
-                            @error('day_end')
-                            <p class="text-danger fs-6">{{$message}}</p>
-                            @enderror
-                        </div>
-
                         <div class="col-4">
                             <div class="input-group col-md-4 col-sm-6">
                                 <span class="input-group-text"><i class="bi bi-clipboard-data me-2"></i>Ore</span>
@@ -254,6 +25,11 @@
                             <p class="text-danger fs-6">{{$message}}</p>
                             @enderror
                         </div>
+                        {{-- Input vuoti per passaggio del giorno --}}
+                        <label class="d-none">
+                            <input type="date" id="day_start" name="day_start" value="">
+                            <input type="date" id="day_end" name="day_end" value="">
+                        </label>
                         {{-- Box selezione tipo di ora --}}
                         <div class="col-8">
                             <div class="input-group">
@@ -313,7 +89,7 @@
                                                         class="bi bi-building me-2"></i>Commessa</label>
                                             <select class="form-select" id="order_id" name="order_id">
                                                 <option value="" selected>Seleziona una commessa</option>
-                                                @foreach($original_orders as $order)
+                                                @foreach($orders as $order)
                                                     <option value="{{$order->id}}"
                                                             class="bg-{{$order->status->color}} bg-opacity-50">
                                                         ({{$order->innerCode}}) @if($order->outerCode !== null) ({{ $order->outerCode }}) @endif
@@ -402,10 +178,10 @@
                                     </div>
                                     <div id="new_fi" class="hide">
                                         <div class="col-12">
-                                            <div class="input-group mb-3">
-                                                <span class="input-group-text"><i class="bi bi-list-ol me-2"></i>Numero</span>
-                                                <input type="text" class="form-control" aria-label="Numero" name="number" id="new_fi_number">
-                                            </div>
+                                                <div class="input-group mb-3">
+                                                    <span class="input-group-text"><i class="bi bi-list-ol me-2"></i>Numero</span>
+                                                    <input type="text" class="form-control" aria-label="Numero" name="number" id="new_fi_number">
+                                                </div>
                                         </div>
                                         @error('number')
                                         <p class="text-danger fs-6">{{$message}}</p>
@@ -596,26 +372,91 @@
                         $('#content_{{$hour_type->id}}').removeClass("d-none")
                         break
                     }
-                        @endforeach
+                    @endforeach
                 }
             });
 
-            $('#multiple_toggle').on('change',e => {
-                $('#day_end_col').toggleClass('d-none')
-                $('#day_start_col').toggleClass('col-6 col-12')
-                if($(e.target).is(':checked')) $('#time_pattern').text('Inizio')
-                else $('#time_pattern').text('Data')
-            })
+            let hours = @json($hours, JSON_THROW_ON_ERROR);
+            let calendarEl = document.getElementById('calendar')
+            let rightContent = 'dayGridWeek dayGridMonth rimborsoMese'
+            if(window.location.search === ''){
+                @role('admin|boss')
+                    rightContent += ' visualizzaTutto'
+                @endrole
+            }else{
+                rightContent += ' clearURL'
+            }
+            let calendar = new FullCalendar.Calendar(calendarEl, {
+                headerToolbar: {
+                    left: 'prev next today showReport',
+                    center: 'title',
+                    right: rightContent
 
-        })
-    </script>
-
-    <script>
-        $(() => {
-            $('#date').on('change', (e) => {
-                console.log($(e.target).val())
-                $('#queryData').submit()
+                },
+                customButtons: {
+                    rimborsoMese: {
+                        text: 'Rimborso del mese',
+                        click: function() {
+                            window.location.href = '{{ route('expense_report.index') }}'
+                        }
+                    },
+                    visualizzaTutto: {
+                        text: 'Visualizza tutte le ore',
+                        click: function () {
+                            window.location.search = 'all=true'
+                        }
+                    },
+                    clearURL: {
+                        icon: 'bi-eraser',
+                        click: function () {
+                            window.location.href = '{{ route('hours.index') }}'
+                        }
+                    },
+                    showReport: {
+                        text: 'Report',
+                        click: function (){
+                            window.location.href = '{{ route('hours.report') }}?mese={{ \Carbon\Carbon::now()->format('Y-m') }}&user={{ auth()->id() }}'
+                        }
+                    }
+                },
+                businessHours: {
+                    daysOfWeek: [1, 2, 3, 4, 5]
+                },
+                nowIndicator: true,
+                locale: 'it',
+                selectAllow: function (selectionInfo) {
+                    let startDate = selectionInfo.start;
+                    let endDate = selectionInfo.end;
+                    endDate.setSeconds(endDate.getSeconds() - 1);
+                    return !((startDate.getDay() == 0 || startDate.getDay() == 6) && (endDate.getDay() == 0 || endDate.getDay() == 6))
+                },
+                selectable: true,
+                editable: true,
+                allDaySlot: true,
+                initialView: 'dayGridMonth',
+                themeSystem: 'bootstrap5',
+                events: hours,
+                select: (info) => {
+                    $('#day_start').val(new moment(info.start).format('YYYY-MM-DD'))
+                    $('#day_end').val(new moment(info.end).format('YYYY-MM-DD'))
+                    $('#myModal').modal('toggle')
+                },
+                eventDidMount: function (info) {
+                        $(info.el).popover(
+                        {
+                            title: 'Dettagli',
+                            placement: 'top',
+                            trigger: 'click',
+                            content: info.event.extendedProps.content,
+                            container: 'body',
+                            html: true,
+                            sanitize: false,
+                            role: 'button'
+                        }
+                    ).popover().show()
+                },
             })
+            calendar.render()
         })
     </script>
 @endsection

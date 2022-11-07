@@ -11,7 +11,7 @@ class EngagementController extends Controller
     public function index(){
         return view('engagement.index',[
             'holidays' => Holiday::with('user')->get(),
-            'users' => User::with('hours')->get()
+            'users' => User::with('hours','engagements')->get()
         ]);
     }
 }

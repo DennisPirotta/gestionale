@@ -21,42 +21,34 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
-use Illuminate\Support\Facades\Log;
 
 class HourController extends Controller
 {
-    public function index(): Factory|View|Application
+    public function index()
     {
-        if (request('all') && auth()->user()->hasRole('admin|boss')){
-            $hours = Hour::with(['user', 'hour_type'])->get();
-        }else{
-            $hours = auth()->user()->hours->load(['user', 'hour_type']);
+        $parameters = [
+          'user' => request('user') ?? auth()->id(),
+          'mese' => request('mese')
+        ];
+        $refresh = false;
+        if(!request()->has('user') || ( request()->has('user') && request('user') === null )) {
+            $parameters['user'] = auth()->id();
+            $refresh = true;
         }
-
-        $formatted = [];
-        foreach ($hours as $hour) {
-            $content = '<form method="POST" action="' . route('hours.destroy', $hour->id) . '">' . csrf_field() . method_field('DELETE') . '<button class="btn btn-outline-danger" onclick="return confirm("Sicuro di voler Eliminare?")"><i class="bi bi-trash me-1 fs-4"></i></button></form>';
-            $formatted[] = [
-                'title' => $hour->user->name . " " . $hour->user->surname . " - " . $hour->hour_type->description,
-                'start' => $hour->date,
-                'end' => $hour->date,
-                'allDay' => true,
-                'extendedProps' => [
-                    'content' => $content,
-                    'hour_type' => $hour->hour_type->description,
-                    'name' => $hour->user->name . " " . $hour->user->surname,
-                ]
-            ];
+        if(!request()->has('mese') || ( request()->has('mese') && request('mese') === null )) {
+            $parameters['mese'] = Carbon::now()->format('Y-m');
+            $refresh = true;
         }
-
+        if ($refresh){
+            return redirect()->route('hours.index',$parameters);
+        }
         return view('hours.index', [
-            'hours' => $formatted,
+            'users' => User::with('hours')->get(),
             'hour_types' => HourType::all(),
             'job_types' => JobType::all(),
-            'orders' => Order::with(['status', 'customer'])->orderBy('status_id')->get(),
+            'original_orders' => Order::with(['status', 'customer'])->orderBy('status_id')->get(),
             'customers' => Customer::all(),
             'technical_reports' => TechnicalReport::with(['customer', 'secondary_customer'])->orderBy('customer_id')->get(),
-            'users' => User::all()
         ]);
     }
 
@@ -68,15 +60,22 @@ class HourController extends Controller
     {
         $default = $request->validate([
             'count' => 'required',
-            'hour_type_id' => 'required'
+            'hour_type_id' => 'required',
+            'day_start' => 'required',
         ]);
         $user = auth()->id();
         if (isset($request['user_id'])) {
             $user = (int)$request['user_id'];
         }
+
+        if ($request['day_end'] !== null){
+            $period = CarbonPeriod::create($request['day_start'], $request['day_end']);
+            $period->setEndDate($period->getEndDate()->modify('-1 day'));
+        }else{
+            $period = CarbonPeriod::create($request['day_start'], $request['day_start']);
+        }
+
         $message = '';
-        $period = CarbonPeriod::create($request['day_start'], $request['day_end']);
-        $period->setEndDate($period->getEndDate()->modify('-1 day'));
 
         $multiple = false;
 
@@ -245,7 +244,12 @@ class HourController extends Controller
     public function report(): Factory|View|Application
     {
         return view('hours.report', [
-            'users' => User::with('hours')->get()
+            'users' => User::with('hours')->get(),
+            'hour_types' => HourType::all(),
+            'job_types' => JobType::all(),
+            'orders' => Order::with(['status', 'customer'])->orderBy('status_id')->get(),
+            'customers' => Customer::all(),
+            'technical_reports' => TechnicalReport::with(['customer', 'secondary_customer'])->orderBy('customer_id')->get(),
         ]);
     }
 }

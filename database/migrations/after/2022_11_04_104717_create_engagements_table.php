@@ -22,9 +22,7 @@ return new class extends Migration
                     ->cascadeOnUpdate();
 
             $table->string('description');
-            $table->date('start');
-            $table->date('end');
-
+            $table->date('date');
             $table  ->foreignId('order_id')
                     ->constrained()
                     ->cascadeOnUpdate()

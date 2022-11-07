@@ -190,7 +190,7 @@
                         @endforeach
                     </tr>
                 @endforeach
-                @if($user->hourDetails($period) > 0)
+                @if($user->hourDetails($period)['total'] > 0)
                     <tr>
                         <th scope="row" colspan="{{ $period->count() + 1 }}" class="border-end-0 text-start">Ferie</th>
                     </tr>

@@ -58,6 +58,7 @@
         $mese = Carbon::now();
         $user = User::find(request('user'));
         if ($user){
+            $other = $user->hours->whereNotIn('hour_type_id',[1,2,6]);
             $user->load('business_hours');
             if (($user->id !== auth()->id()) && !auth()->user()->hasRole('admin|boss')){
                     Session::flash('error', 'Puoi vedere solo i tuoi report');
@@ -68,7 +69,6 @@
             $mese = Carbon::parse(request('mese'));
             $period = CarbonPeriod::create(Carbon::parse(request('mese'))->firstOfMonth(),Carbon::parse(request('mese'))->lastOfMonth());
         }
-        $other = $user->hours->whereNotIn('hour_type_id',[1,2,6]);
     @endphp
     <div class="container-fluid px-5 mt-5 table-responsive">
         <div class="d-flex align-items-center">

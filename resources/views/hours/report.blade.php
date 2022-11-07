@@ -68,6 +68,7 @@
             $mese = Carbon::parse(request('mese'));
             $period = CarbonPeriod::create(Carbon::parse(request('mese'))->firstOfMonth(),Carbon::parse(request('mese'))->lastOfMonth());
         }
+        $other = $user->hours->whereNotIn('hour_type_id',[1,2,6]);
     @endphp
     <div class="container-fluid px-5 mt-5 table-responsive">
         <div class="d-flex align-items-center">
@@ -209,6 +210,183 @@
                         @endforeach
                     </tr>
                 @endif
+                @unless($other->count() < 0)
+                    @if($other->where('hour_type_id',8)->count() > 0)
+                        <tr>
+                            <th scope="row" colspan="{{ $period->count() + 1 }}" class="border-end-0 text-start">
+                                Ufficio
+                            </th>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            @foreach($period as $day)
+                                @php($flag = false)
+
+                                @foreach($other->where('hour_type_id',8) as $office)
+                                    @if($office->date === $day->format('Y-m-d'))
+                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif >{{ $office->count }}</td>
+                                        @php($flag = true)
+                                    @endif
+                                @endforeach
+
+                                @if(!$flag)
+                                    <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif ></td>
+                                @endif
+                            @endforeach
+                        </tr>
+                    @endif
+
+                    @if($other->where('hour_type_id',3)->count() > 0)
+                        <tr>
+                            <th scope="row" colspan="{{ $period->count() + 1 }}" class="border-end-0 text-start">
+                                Assistenza
+                            </th>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            @foreach($period as $day)
+                                @php($flag = false)
+
+                                @foreach($other->where('hour_type_id',3) as $office)
+                                    @if($office->date === $day->format('Y-m-d'))
+                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif >{{ $office->count }}</td>
+                                        @php($flag = true)
+                                    @endif
+                                @endforeach
+
+                                @if(!$flag)
+                                    <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif ></td>
+                                @endif
+                            @endforeach
+                        </tr>
+                    @endif
+
+                    @if($other->where('hour_type_id',4)->count() > 0)
+                        <tr>
+                            <th scope="row" colspan="{{ $period->count() + 1 }}" class="border-end-0 text-start">
+                                AVIS
+                            </th>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            @foreach($period as $day)
+                                @php($flag = false)
+
+                                @foreach($other->where('hour_type_id',4) as $office)
+                                    @if($office->date === $day->format('Y-m-d'))
+                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif >{{ $office->count }}</td>
+                                        @php($flag = true)
+                                    @endif
+                                @endforeach
+
+                                @if(!$flag)
+                                    <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif ></td>
+                                @endif
+                            @endforeach
+                        </tr>
+                    @endif
+
+                    @if($other->where('hour_type_id',5)->count() > 0)
+                        <tr>
+                            <th scope="row" colspan="{{ $period->count() + 1 }}" class="border-end-0 text-start">
+                                Corso
+                            </th>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            @foreach($period as $day)
+                                @php($flag = false)
+
+                                @foreach($other->where('hour_type_id',5) as $office)
+                                    @if($office->date === $day->format('Y-m-d'))
+                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif >{{ $office->count }}</td>
+                                        @php($flag = true)
+                                    @endif
+                                @endforeach
+
+                                @if(!$flag)
+                                    <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif ></td>
+                                @endif
+                            @endforeach
+                        </tr>
+                    @endif
+
+                    @if($other->where('hour_type_id',7)->count() > 0)
+                        <tr>
+                            <th scope="row" colspan="{{ $period->count() + 1 }}" class="border-end-0 text-start">
+                                Malattia
+                            </th>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            @foreach($period as $day)
+                                @php($flag = false)
+
+                                @foreach($other->where('hour_type_id',7) as $office)
+                                    @if($office->date === $day->format('Y-m-d'))
+                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif >{{ $office->count }}</td>
+                                        @php($flag = true)
+                                    @endif
+                                @endforeach
+
+                                @if(!$flag)
+                                    <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif ></td>
+                                @endif
+                            @endforeach
+                        </tr>
+                    @endif
+
+                    @if($other->where('hour_type_id',9)->count() > 0)
+                        <tr>
+                            <th scope="row" colspan="{{ $period->count() + 1 }}" class="border-end-0 text-start">
+                                Visita medica
+                            </th>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            @foreach($period as $day)
+                                @php($flag = false)
+
+                                @foreach($other->where('hour_type_id',9) as $office)
+                                    @if($office->date === $day->format('Y-m-d'))
+                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif >{{ $office->count }}</td>
+                                        @php($flag = true)
+                                    @endif
+                                @endforeach
+
+                                @if(!$flag)
+                                    <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif ></td>
+                                @endif
+                            @endforeach
+                        </tr>
+                    @endif
+
+                    @if($other->where('hour_type_id',10)->count() > 0)
+                        <tr>
+                            <th scope="row" colspan="{{ $period->count() + 1 }}" class="border-end-0 text-start">
+                                Altro
+                            </th>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            @foreach($period as $day)
+                                @php($flag = false)
+
+                                @foreach($other->where('hour_type_id',10) as $office)
+                                    @if($office->date === $day->format('Y-m-d'))
+                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif >{{ $office->count }}</td>
+                                        @php($flag = true)
+                                    @endif
+                                @endforeach
+
+                                @if(!$flag)
+                                    <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif ></td>
+                                @endif
+                            @endforeach
+                        </tr>
+                    @endif
+
+                @endunless
                 </tbody>
                 <tfoot>
                 <tr>

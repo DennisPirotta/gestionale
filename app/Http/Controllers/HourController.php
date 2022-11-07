@@ -68,11 +68,14 @@ class HourController extends Controller
             $user = (int)$request['user_id'];
         }
 
-        if ($request['day_end'] !== null){
+        $end = $request['day_end'];
+
+        if ($end !== null){
             $period = CarbonPeriod::create($request['day_start'], $request['day_end']);
             $period->setEndDate($period->getEndDate()->modify('-1 day'));
         }else{
             $period = CarbonPeriod::create($request['day_start'], $request['day_start']);
+            $end = $request['day_start'];
         }
 
         $message = '';
@@ -168,7 +171,7 @@ class HourController extends Controller
                         $holiday = Holiday::create([
                             'approved' => true,
                             'start' => $request['day_start'],
-                            'end' => $request['day_end'],
+                            'end' => $end,
                             'user_id' => auth()->id()
                         ]);
                         $holiday->sendMail();

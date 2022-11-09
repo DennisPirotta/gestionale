@@ -144,12 +144,12 @@
                 @endif
                 @foreach($orders->get() as $order)
                     <tr>
-                        <th scope="row">{{ $order->innerCode }}</th>
+                        <th scope="row">{{ $order->innerCode }}<br><small class="fw-light">{{ $order->outerCode }}</small><br><small class="fw-light">{{ $order->description }}</small></th>
                         @foreach($period as $day)
                             @php($flag = true)
-                            @foreach($order->order_details as $details)
+                            @foreach($order->order_details->load('job_type') as $details)
                                 @if($details->hour->date === $day->format('Y-m-d'))
-                                    <td @if($day->isWeekend()) class="bg-secondary" @endif >{{ $details->hour->count }}</td>
+                                    <td @if($day->isWeekend()) class="bg-secondary" @endif >{{ $details->hour->count }}<br><span class="badge text-bg-{{ $details->job_type->color }}">{{ $details->job_type->title }}</span></td>
                                     @php($flag = false)
                                 @endif
                             @endforeach

@@ -16,13 +16,13 @@ class StaticSeeder extends Seeder
     public function run()
     {
         $jobTypes = [
-            ['description' => 'Sviluppo Software', 'color' => 'light'],
-            ['description' => 'Messa in servizio', 'color' => 'info'],
-            ['description' => 'Safety', 'color' => 'success'],
-            ['description' => 'Collaudo', 'color' => 'secondary'],
-            ['description' => 'Modifiche', 'color' => 'danger'],
-            ['description' => 'Riunioni', 'color' => 'dark'],
-            ['description' => 'Assistenza', 'color' => 'primary'],
+            ['description' => 'Sviluppo Software', 'color' => 'light','title' => 'SW'],
+            ['description' => 'Messa in servizio', 'color' => 'info','title' => 'MS'],
+            ['description' => 'Safety', 'color' => 'success', 'title' => 'SAF'],
+            ['description' => 'Collaudo', 'color' => 'secondary','title' => 'FAT'],
+            ['description' => 'Modifiche', 'color' => 'danger','title' => 'MOD'],
+            ['description' => 'Riunioni', 'color' => 'dark', 'title' => 'RIU'],
+            ['description' => 'Assistenza', 'color' => 'primary', 'title' => 'ASS'],
         ];
         $hoursType = [
             ['description' => 'Commessa'],

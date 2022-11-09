@@ -92,7 +92,7 @@
                             @php($flag = true)
                             @foreach($order->order_details as $details)
                                 @if($details->hour->date === $day->format('Y-m-d'))
-                                    <td @if($day->isWeekend()) class="bg-secondary" @endif >{{ $details->hour->count }}<br><span class="badge text-bg-{{ $details->job_type->color }}">{{ $details->job_type->title }}</span></td>
+                                    <td @if($day->isWeekend()) class="bg-secondary" @endif >{{ $details->hour->count }}<br><span class="badge text-bg-{{ $details->job_type->color }}" @if($details->job_type->color === 'light') style="border: 1px solid #c4bdbd" @endif >{{ $details->job_type->title }}</span></td>
                                     @php($flag = false)
                                 @endif
                             @endforeach

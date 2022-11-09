@@ -144,11 +144,11 @@
                             @foreach($user->hoursInPeriod($period)->filter(static function($item){ return $item->hour_type_id === 6; }) as $holiday_hour)
                                 @if($holiday_hour->date === $day->format('Y-m-d'))
                                     @php($flag = false)
-                                    <td @if(Carbon::parse($day)->isClosed()) class="bg-secondary bg-opacity-10" @endif >{{ $holiday_hour->count }}</td>
+                                    <td @if(Carbon::parse($day)->isWeekend()) class="bg-secondary bg-opacity-10" @endif >{{ $holiday_hour->count }}</td>
                                 @endif
                             @endforeach
                             @if($flag)
-                                <td @if(Carbon::parse($day)->isClosed()) class="bg-secondary bg-opacity-10" @endif ></td>
+                                <td @if(Carbon::parse($day)->isWeekend()) class="bg-secondary bg-opacity-10" @endif ></td>
                             @endif
                         @endforeach
                     </tr>

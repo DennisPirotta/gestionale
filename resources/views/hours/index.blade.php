@@ -87,12 +87,18 @@
                 @endif
                 @foreach($orders->get() as $order)
                     <tr>
-                        <th scope="row">{{ $order->innerCode }}<br><small class="fw-light">{{ $order->outerCode }}</small><br><small class="fw-light">{{ $order->description }}</small></th>
+                        <th scope="row">{{ $order->innerCode }}<br><small
+                                    class="fw-light">{{ $order->outerCode }}</small><br><small
+                                    class="fw-light">{{ $order->description }}</small></th>
                         @foreach($period as $day)
                             @php($flag = true)
                             @foreach($order->order_details as $details)
                                 @if($details->hour->date === $day->format('Y-m-d'))
-                                    <td @if($day->isWeekend()) class="bg-secondary" @endif >{{ $details->hour->count }}<br><span class="badge text-bg-{{ $details->job_type->color }}" @if($details->job_type->color === 'light') style="border: 1px solid #c4bdbd" @endif >{{ $details->job_type->title }}</span></td>
+                                    <td @if($day->isWeekend()) class="bg-secondary"
+                                        @endif  id="hour_{{ $details->hour->id }}">{{ $details->hour->count }}<br><span
+                                                class="badge text-bg-{{ $details->job_type->color }}"
+                                                @if($details->job_type->color === 'light') style="border: 1px solid #c4bdbd" @endif >{{ $details->job_type->title }}</span>
+                                    </td>
                                     @php($flag = false)
                                 @endif
                             @endforeach
@@ -116,7 +122,8 @@
                             @php($flag = true)
                             @foreach($technical_report->technical_report_details as $details)
                                 @if($details->hour->date === $day->format('Y-m-d'))
-                                    <td @if($day->isWeekend()) class="bg-secondary" @endif id="hour_{{ $details->hour->id }}">
+                                    <td @if($day->isWeekend()) class="bg-secondary"
+                                        @endif id="hour_{{ $details->hour->id }}">
                                         {{ $details->hour->count }}
                                         @if($details->nightEU)
                                             <span class="badge text-bg-primary">EU</span>
@@ -167,7 +174,8 @@
 
                                 @foreach($other->where('hour_type_id',8) as $office)
                                     @if($office->date === $day->format('Y-m-d'))
-                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif id="hour_{{ $office->id }}">{{ $office->count }}</td>
+                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10"
+                                            @endif id="hour_{{ $office->id }}">{{ $office->count }}</td>
                                         @php($flag = true)
                                     @endif
                                 @endforeach
@@ -192,7 +200,8 @@
 
                                 @foreach($other->where('hour_type_id',3) as $office)
                                     @if($office->date === $day->format('Y-m-d'))
-                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif id="hour_{{ $office->id }}" >{{ $office->count }}</td>
+                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10"
+                                            @endif id="hour_{{ $office->id }}">{{ $office->count }}</td>
                                         @php($flag = true)
                                     @endif
                                 @endforeach
@@ -217,7 +226,8 @@
 
                                 @foreach($other->where('hour_type_id',4) as $office)
                                     @if($office->date === $day->format('Y-m-d'))
-                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif id="hour_{{ $office->id }}" >{{ $office->count }}</td>
+                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10"
+                                            @endif id="hour_{{ $office->id }}">{{ $office->count }}</td>
                                         @php($flag = true)
                                     @endif
                                 @endforeach
@@ -242,7 +252,8 @@
 
                                 @foreach($other->where('hour_type_id',5) as $office)
                                     @if($office->date === $day->format('Y-m-d'))
-                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif id="hour_{{ $office->id }}" >{{ $office->count }}</td>
+                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10"
+                                            @endif id="hour_{{ $office->id }}">{{ $office->count }}</td>
                                         @php($flag = true)
                                     @endif
                                 @endforeach
@@ -267,7 +278,8 @@
 
                                 @foreach($other->where('hour_type_id',7) as $office)
                                     @if($office->date === $day->format('Y-m-d'))
-                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif id="hour_{{ $office->id }}" >{{ $office->count }}</td>
+                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10"
+                                            @endif id="hour_{{ $office->id }}">{{ $office->count }}</td>
                                         @php($flag = true)
                                     @endif
                                 @endforeach
@@ -292,7 +304,8 @@
 
                                 @foreach($other->where('hour_type_id',9) as $office)
                                     @if($office->date === $day->format('Y-m-d'))
-                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif id="hour_{{ $office->id }}" >{{ $office->count }}</td>
+                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10"
+                                            @endif id="hour_{{ $office->id }}">{{ $office->count }}</td>
                                         @php($flag = true)
                                     @endif
                                 @endforeach
@@ -317,7 +330,8 @@
 
                                 @foreach($other->where('hour_type_id',10) as $office)
                                     @if($office->date === $day->format('Y-m-d'))
-                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif id="hour_{{ $office->id }}" >{{ $office->count }}</td>
+                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10"
+                                            @endif id="hour_{{ $office->id }}">{{ $office->count }}</td>
                                         @php($flag = true)
                                     @endif
                                 @endforeach
@@ -428,7 +442,7 @@
                         <div class="col-4">
                             <div class="input-group col-md-4 col-sm-6">
                                 <span class="input-group-text"><i class="bi bi-clipboard-data me-2"></i>Ore</span>
-                                <input type="text" class="form-control" name="count" value="8">
+                                <input type="text" class="form-control" name="count" value="8" id="hour_count">
                             </div>
                             @error('count')
                             <p class="text-danger fs-6">{{$message}}</p>
@@ -799,10 +813,50 @@
 
     <script>
         $(() => {
+
+            let hours = @json(\App\Models\Hour::all(), JSON_THROW_ON_ERROR);
+            let order_details = @json(\App\Models\OrderDetails::all(), JSON_THROW_ON_ERROR);
+            let fi_details = @json(\App\Models\TechnicalReportDetails::all(), JSON_THROW_ON_ERROR);
+
             $('#date').on('change', (e) => {
                 console.log($(e.target).val())
                 $('#queryData').submit()
             })
+
+            $('td').click( e => {
+                let content = `<form method="POST" action="/ore/${e.target.id.split('_')[1]}">@csrf @method('DELETE')<button class="btn btn-outline-danger" onclick="return confirm('Sicuro di voler Eliminare?')"><i class="bi bi-trash me-1 fs-4"></i></button></form>`
+                $(e.target).popover(
+                    {
+                        title: 'Azioni',
+                        placement: 'top',
+                        trigger: 'click',
+                        content: content,
+                        container: 'body',
+                        html: true,
+                        sanitize: false,
+                        role: 'button'
+                    }
+                ).popover().show()
+            })
+
+            /*
+            $('td').click(e => {
+                if ($(e.target).attr('id')) {
+                    let hour_id = $(e.target).attr('id').split('_')[1]
+                    console.log(hour_id)
+                    console.log(hours)
+                    let res = hours.find( (value) => {
+                        return value.id == hour_id
+                    } )
+                    let modal = bootstrap.Modal.getOrCreateInstance('#myModal')
+                    modal.show()
+                    $('#multiple_toggle').attr('disabled',true)
+                    $('#day_start').val(res.date)
+                    $('#hour_count').val(res.count)
+                    $(`#hour_type_id option[value='${res.hour_type_id}']`).attr('selected',true)
+                }
+            })
+             */
         })
     </script>
 @endsection

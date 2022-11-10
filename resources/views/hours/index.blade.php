@@ -116,7 +116,7 @@
                             @php($flag = true)
                             @foreach($technical_report->technical_report_details as $details)
                                 @if($details->hour->date === $day->format('Y-m-d'))
-                                    <td @if($day->isWeekend()) class="bg-secondary" @endif >
+                                    <td @if($day->isWeekend()) class="bg-secondary" @endif id="hour_{{ $details->hour->id }}">
                                         {{ $details->hour->count }}
                                         @if($details->nightEU)
                                             <span class="badge text-bg-primary">EU</span>
@@ -167,7 +167,7 @@
 
                                 @foreach($other->where('hour_type_id',8) as $office)
                                     @if($office->date === $day->format('Y-m-d'))
-                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif >{{ $office->count }}</td>
+                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif id="hour_{{ $office->id }}">{{ $office->count }}</td>
                                         @php($flag = true)
                                     @endif
                                 @endforeach
@@ -192,7 +192,7 @@
 
                                 @foreach($other->where('hour_type_id',3) as $office)
                                     @if($office->date === $day->format('Y-m-d'))
-                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif >{{ $office->count }}</td>
+                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif id="hour_{{ $office->id }}" >{{ $office->count }}</td>
                                         @php($flag = true)
                                     @endif
                                 @endforeach
@@ -217,7 +217,7 @@
 
                                 @foreach($other->where('hour_type_id',4) as $office)
                                     @if($office->date === $day->format('Y-m-d'))
-                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif >{{ $office->count }}</td>
+                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif id="hour_{{ $office->id }}" >{{ $office->count }}</td>
                                         @php($flag = true)
                                     @endif
                                 @endforeach
@@ -242,7 +242,7 @@
 
                                 @foreach($other->where('hour_type_id',5) as $office)
                                     @if($office->date === $day->format('Y-m-d'))
-                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif >{{ $office->count }}</td>
+                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif id="hour_{{ $office->id }}" >{{ $office->count }}</td>
                                         @php($flag = true)
                                     @endif
                                 @endforeach
@@ -267,7 +267,7 @@
 
                                 @foreach($other->where('hour_type_id',7) as $office)
                                     @if($office->date === $day->format('Y-m-d'))
-                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif >{{ $office->count }}</td>
+                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif id="hour_{{ $office->id }}" >{{ $office->count }}</td>
                                         @php($flag = true)
                                     @endif
                                 @endforeach
@@ -292,7 +292,7 @@
 
                                 @foreach($other->where('hour_type_id',9) as $office)
                                     @if($office->date === $day->format('Y-m-d'))
-                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif >{{ $office->count }}</td>
+                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif id="hour_{{ $office->id }}" >{{ $office->count }}</td>
                                         @php($flag = true)
                                     @endif
                                 @endforeach
@@ -317,7 +317,7 @@
 
                                 @foreach($other->where('hour_type_id',10) as $office)
                                     @if($office->date === $day->format('Y-m-d'))
-                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif >{{ $office->count }}</td>
+                                        <td @if($day->isWeekend()) class="bg-secondary bg-opacity-10" @endif id="hour_{{ $office->id }}" >{{ $office->count }}</td>
                                         @php($flag = true)
                                     @endif
                                 @endforeach

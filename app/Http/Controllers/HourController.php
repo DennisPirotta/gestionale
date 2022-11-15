@@ -83,9 +83,9 @@ class HourController extends Controller
         $multiple = false;
 
         foreach ($period as $day) {
-            if (!Carbon::isOpenOn($day->format('Y-m-d'))) {
-                continue;
-            }
+//            if (!Carbon::isOpenOn($day->format('Y-m-d'))) {
+//                continue;
+//            }
             $hour = Hour::create([
                 'count' => str_replace(',', '.', $default['count']),
                 'date' => $day,

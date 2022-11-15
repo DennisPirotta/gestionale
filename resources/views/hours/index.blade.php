@@ -1,4 +1,53 @@
 @extends('layouts.app')
+<style>
+    @media print {
+        @page {
+            size: landscape;
+            margin: 0
+        }
+
+        .table {
+            font-size: 10px;
+        }
+
+        .x-card-value {
+            font-size: 20px !important;
+            padding-left: 10px !important;
+            padding-right: 10px !important;
+        }
+
+        .x-card-title {
+            font-size: 10px !important;
+            padding-left: 10px !important;
+            padding-right: 10px !important;
+        }
+
+        .container-fluid {
+            padding-left: 5px !important;
+            padding-right: 5px !important;
+        }
+
+        input {
+            display: none !important;
+        }
+
+        button {
+            display: none !important;
+        }
+
+        select {
+            display: none !important;
+        }
+
+        td {
+            padding: 1px !important;
+        }
+
+        .dayName {
+            display: none !important;
+        }
+    }
+</style> <!-- Stili per stampa -->
 @section('content')
     @php
         use App\Models\Order;use App\Models\TechnicalReport;use Carbon\Carbon;
@@ -33,13 +82,23 @@
             <button class="btn btn-primary me-2 ms-auto" data-bs-target="#myModal" data-bs-toggle="modal"><i
                         class="bi bi-plus-circle me-2"></i>Aggiungi ore
             </button>
-            <form class="m-0" id="queryData">
-                <div class="row">
-                    <div class="col pe-0">
-                        <label for="date" class="d-none"></label><input type="month" class="form-control" name="mese"
-                                                                        id="date" value="{{ $mese->format('Y-m') }}">
+            <form class="m-0 d-flex" id="queryData">
+                    <div class="pe-0">
+                        <label for="date" class="d-none"></label><input type="month" class="form-control" name="mese" id="date" value="{{ $mese->format('Y-m') }}">
                     </div>
+                @role('admin|boss')
+                <div class="ps-2 me-2">
+                    <label for="user" class="d-none"></label><select name="user" class="form-select" id="user">
+                        <option disabled selected>Utente</option>
+                        @foreach($users as $select_user)
+                            <option value="{{ $select_user->id }}"
+                                    @if(request('user') === (string)$select_user->id) selected @endif>{{ $select_user->name }} {{ $select_user->surname }}</option>
+                        @endforeach
+                    </select>
                 </div>
+                <button class="btn btn-primary me-2 ms-auto" onclick="window.print()"><i class="bi bi-printer me-2"></i>Stampa
+                </button>
+                @endrole
             </form>
 
         </div>
@@ -395,8 +454,10 @@
                            :value="$user->hourDetails($period)['eu']"></x-report-card>
             <x-report-card :title="'Notte Extra UE'" :icon="'bi-globe2'"
                            :value="$user->hourDetails($period)['xeu']"></x-report-card>
-            <x-report-card :title="'Ore Festivi'" :icon="'bi-calendar4-week'"
-                           :value="$user->hourDetails($period)['festive']"></x-report-card>
+            <x-report-card :title="'Straordinari 25%'" :icon="'bi-plug'"
+                           :value="$user->hourDetails($period)['str25']"></x-report-card>
+            <x-report-card :title="'Straordinari 50%'" :icon="'bi-plug'"
+                           :value="$user->hourDetails($period)['str50']"></x-report-card>
         </div>
     </div>
     @endif
@@ -473,7 +534,7 @@
                                 <select class="form-select" id="user_id" name="user_id">
                                     <option value='' selected>Seleziona un dipendente</option>
                                     @foreach($users as $user)
-                                        <option value="{{$user->id}}">{{ $user->name }} {{ $user->surname }}</option>
+                                        <option value="{{$user->id}}" @if(request('user') == $user->id) selected @endif >{{ $user->name }} {{ $user->surname }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -814,49 +875,30 @@
     <script>
         $(() => {
 
-            let hours = @json(\App\Models\Hour::all(), JSON_THROW_ON_ERROR);
-            let order_details = @json(\App\Models\OrderDetails::all(), JSON_THROW_ON_ERROR);
-            let fi_details = @json(\App\Models\TechnicalReportDetails::all(), JSON_THROW_ON_ERROR);
-
             $('#date').on('change', (e) => {
-                console.log($(e.target).val())
+                $('#queryData').submit()
+            })
+            $('#user').on('change', (e) => {
                 $('#queryData').submit()
             })
 
             $('td').click( e => {
                 let content = `<form method="POST" action="/ore/${e.target.id.split('_')[1]}">@csrf @method('DELETE')<button class="btn btn-outline-danger" onclick="return confirm('Sicuro di voler Eliminare?')"><i class="bi bi-trash me-1 fs-4"></i></button></form>`
-                $(e.target).popover(
-                    {
-                        title: 'Azioni',
-                        placement: 'top',
-                        trigger: 'click',
-                        content: content,
-                        container: 'body',
-                        html: true,
-                        sanitize: false,
-                        role: 'button'
-                    }
-                ).popover().show()
-            })
-
-            /*
-            $('td').click(e => {
-                if ($(e.target).attr('id')) {
-                    let hour_id = $(e.target).attr('id').split('_')[1]
-                    console.log(hour_id)
-                    console.log(hours)
-                    let res = hours.find( (value) => {
-                        return value.id == hour_id
-                    } )
-                    let modal = bootstrap.Modal.getOrCreateInstance('#myModal')
-                    modal.show()
-                    $('#multiple_toggle').attr('disabled',true)
-                    $('#day_start').val(res.date)
-                    $('#hour_count').val(res.count)
-                    $(`#hour_type_id option[value='${res.hour_type_id}']`).attr('selected',true)
+                if(e.target.id != ''){
+                    $(e.target).popover(
+                        {
+                            title: 'Azioni',
+                            placement: 'top',
+                            trigger: 'click',
+                            content: content,
+                            container: 'body',
+                            html: true,
+                            sanitize: false,
+                            role: 'button'
+                        }
+                    ).show()
                 }
             })
-             */
         })
     </script>
 @endsection

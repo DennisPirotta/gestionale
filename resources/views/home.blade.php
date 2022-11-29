@@ -54,13 +54,12 @@
 
             <x-home-card :redirect="route('orders.index')" :icon="'bi-clipboard-plus'" :title="'Commesse'"></x-home-card>
             <x-home-card :redirect="route('locations.index')" :icon="'bi-globe2'" :title="'Dove Sono'"></x-home-card>
-            <x-home-card :redirect="route('hours.index')" :icon="'bi-clock-history'" :title="'Gestione Ore'"></x-home-card>
+            <x-home-card :redirect="route('hours.index').'?month='.Carbon\Carbon::now()->format('Y-m').'&user='.auth()->id()" :icon="'bi-clock-history'" :title="'Gestione Ore'"></x-home-card>
             <x-home-card :redirect="route('holidays.index')" :icon="'bi-calendar4-week'" :title="'Ferie'"></x-home-card>
             @hasanyrole('boss|admin')
             <x-home-card :redirect="route('customers.index')" :icon="'bi-people'" :title="'Clienti'"></x-home-card>
             <x-home-card :redirect="route('orders.report')" :icon="'bi-journals'" :title="'Report Commesse'"></x-home-card>
             <x-home-card :redirect="route('users.index')" :icon="'bi-person-workspace'" :title="'Gestione Dipendenti'"></x-home-card>
-            <x-home-card :redirect="route('hours.report')" :icon="'bi-hourglass-split'" :title="'Report ore'"></x-home-card>
             @endhasanyrole
 
             @role('boss')

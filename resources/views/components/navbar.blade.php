@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg fixed-top bg-light shadow-sm">
     <div class="container-fluid">
-        <div>
+        <div class="flex">
             <a href="{{url('/')}}" class="me-1"><img src="{{asset("images/logo_3d.svg")}}" width="30" alt=""/></a>
             <a href="{{url('/')}}"><img src="{{asset("images/logo_sph.svg")}}" width="30" alt=""/></a>
         </div>

@@ -153,7 +153,7 @@
                 </tbody>
             </table>
     </div>
-    @php($user = App\Models\User::find(request('user'))->exists() ? App\Models\User::find(request('user')) : auth()->user())
+    @php($user = App\Models\User::find(request('user')) ?? auth()->user())
     <div class="container-fluid p-5">
         <div class="row row-cols-3 g-3 justify-content-center">
             <x-report-card :title="'Totale ore'" :icon="'bi-bar-chart-fill'"

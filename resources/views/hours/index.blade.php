@@ -125,11 +125,10 @@
                                         <div>
                                             {{ App\Models\TechnicalReport::where('number',(string) $key)->first()->customer->name }}
                                         </div>
-                                    @else
-                                        <div class="w-15 dark:bg-blue-100 bg-blue-300 text-blue-800 text-xs font-medium px-2 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800">
-                                            {{ $job_type }}
-                                        </div>
                                     @endif
+                                    <div class="w-15 dark:bg-blue-100 bg-blue-300 text-blue-800 text-xs font-medium px-2 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800">
+                                        {{ $job_type }}
+                                    </div>
                                 </th>
                                 @foreach($period as $day)
                                     <td class="border-r dark:border-gray-700"

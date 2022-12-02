@@ -11,11 +11,11 @@ class BugReport extends Model
     use HasFactory;
 
     protected $fillable = [
-        'object','description','fixed','reported_by'
+        'object', 'description', 'fixed', 'reported_by',
     ];
 
     public function reporter(): BelongsTo
     {
-        return $this->belongsTo(User::class,'reported_by');
+        return $this->belongsTo(User::class, 'reported_by');
     }
 }

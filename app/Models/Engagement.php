@@ -11,15 +11,16 @@ class Engagement extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id'
+        'user_id',
     ];
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class,'user_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
+
     public function order(): BelongsTo
     {
-        return $this->belongsTo(Order::class,'order_id');
+        return $this->belongsTo(Order::class, 'order_id');
     }
 }

@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -16,11 +15,11 @@ class StaticSeeder extends Seeder
     public function run()
     {
         $jobTypes = [
-            ['description' => 'Sviluppo Software', 'color' => 'light','title' => 'SW'],
-            ['description' => 'Messa in servizio', 'color' => 'info','title' => 'MS'],
+            ['description' => 'Sviluppo Software', 'color' => 'light', 'title' => 'SW'],
+            ['description' => 'Messa in servizio', 'color' => 'info', 'title' => 'MS'],
             ['description' => 'Safety', 'color' => 'success', 'title' => 'SAF'],
-            ['description' => 'Collaudo', 'color' => 'secondary','title' => 'FAT'],
-            ['description' => 'Modifiche', 'color' => 'danger','title' => 'MOD'],
+            ['description' => 'Collaudo', 'color' => 'secondary', 'title' => 'FAT'],
+            ['description' => 'Modifiche', 'color' => 'danger', 'title' => 'MOD'],
             ['description' => 'Riunioni', 'color' => 'dark', 'title' => 'RIU'],
             ['description' => 'Assistenza', 'color' => 'primary', 'title' => 'ASS'],
         ];
@@ -289,7 +288,7 @@ class StaticSeeder extends Seeder
         ];
         $companies = [
             ['name' => '3D Automation'],
-            ['name' => 'S+H Technology']
+            ['name' => 'S+H Technology'],
         ];
         $statuses = [
             ['description' => 'Aperta', 'color' => 'light'],
@@ -297,7 +296,7 @@ class StaticSeeder extends Seeder
             ['description' => 'Ordine', 'color' => 'success'],
             ['description' => 'Sospesa', 'color' => 'secondary'],
             ['description' => 'Annullata', 'color' => 'danger'],
-            ['description' => 'Chiusa', 'color' => 'dark']
+            ['description' => 'Chiusa', 'color' => 'dark'],
         ];
         DB::table('countries')->insert($countries);
         DB::table('companies')->insert($companies);

@@ -13,22 +13,22 @@ use Illuminate\Support\Facades\Mail;
 
 class BugReportController extends Controller
 {
-
     public function send(Request $request): RedirectResponse
     {
         $data = $request->validate([
             'object' => 'required',
-            'description' => 'required'
+            'description' => 'required',
         ]);
         $this->store($data);
-        Mail::to('dennispirotta@gmail.com')->send(new BugReportMail($data['object'],$data['description'],auth()->user()->email));
-        return back()->with('message',"L'errore è stato segnalato");
+        Mail::to('dennispirotta@gmail.com')->send(new BugReportMail($data['object'], $data['description'], auth()->user()->email));
+
+        return back()->with('message', "L'errore è stato segnalato");
     }
 
     public function index(): Factory|View|Application
     {
-        return view('debug.index',[
-            'bugs' => BugReport::with('reporter')->get()
+        return view('debug.index', [
+            'bugs' => BugReport::with('reporter')->get(),
         ]);
     }
 
@@ -41,12 +41,11 @@ class BugReportController extends Controller
     public function update(BugReport $bugReport)
     {
         $bugReport->update([
-            'fixed' => true
+            'fixed' => true,
         ]);
     }
 
     public function delete()
     {
-
     }
 }

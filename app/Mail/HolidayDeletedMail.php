@@ -13,7 +13,9 @@ class HolidayDeletedMail extends Mailable
     use Queueable, SerializesModels;
 
     public string $start;
+
     public string $end;
+
     public string $user;
 
     /**
@@ -25,7 +27,7 @@ class HolidayDeletedMail extends Mailable
     {
         $this->start = Carbon::parse($holiday->start)->translatedFormat('l j F Y');
         $this->end = Carbon::parse($holiday->end)->translatedFormat('l j F Y');
-        $this->user = $holiday->user->name . ' ' . $holiday->user->surname;
+        $this->user = $holiday->user->name.' '.$holiday->user->surname;
     }
 
     /**

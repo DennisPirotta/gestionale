@@ -6,13 +6,9 @@ use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\EncryptCookies;
 use App\Http\Middleware\PreventRequestsDuringMaintenance;
 use App\Http\Middleware\RedirectIfAuthenticated;
-use App\Http\Middleware\RequireAdvancedPermissions;
-use App\Http\Middleware\RequireBasicPermissions;
-use App\Http\Middleware\RequireMediumPermissions;
 use App\Http\Middleware\TrimStrings;
 use App\Http\Middleware\TrustProxies;
 use App\Http\Middleware\VerifyCsrfToken;
-use App\Http\Middleware\VerifyLevel;
 use Illuminate\Auth\Middleware\AuthenticateWithBasicAuth;
 use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
@@ -47,7 +43,7 @@ class Kernel extends HttpKernel
         PreventRequestsDuringMaintenance::class,
         ValidatePostSize::class,
         TrimStrings::class,
-        ConvertEmptyStringsToNull::class
+        ConvertEmptyStringsToNull::class,
     ];
 
     /**
@@ -90,6 +86,6 @@ class Kernel extends HttpKernel
         'signed' => ValidateSignature::class,
         'throttle' => ThrottleRequests::class,
         'verified' => EnsureEmailIsVerified::class,
-        'role' => RoleMiddleware::class
+        'role' => RoleMiddleware::class,
     ];
 }

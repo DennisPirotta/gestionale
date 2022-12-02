@@ -20,7 +20,8 @@ export default defineConfig({
         mkcert(),
         laravel({
             input: [
-                'resources/js/app.js'
+                'resources/js/app.js',
+                'resources/css/tailwind.css'
             ],
             refresh: true,
         }),

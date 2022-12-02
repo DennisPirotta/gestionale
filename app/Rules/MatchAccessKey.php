@@ -28,11 +28,12 @@ class MatchAccessKey implements Rule
     public function passes($attribute, $value): bool
     {
         $match = false;
-        foreach (AccessKey::all() as $accessKey){
-            if($value === Crypt::decryptString($accessKey->key)) {
+        foreach (AccessKey::all() as $accessKey) {
+            if ($value === Crypt::decryptString($accessKey->key)) {
                 $match = true;
             }
         }
+
         return $match;
     }
 

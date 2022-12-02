@@ -8,7 +8,7 @@ return [
      */
 
     /** @link      https://github.com/Laravel-Lang/lang */
-    'vendor'    => [
+    'vendor' => [
         base_path('vendor/laravel-lang/lang/locales'),
     ],
 
@@ -18,8 +18,8 @@ return [
      | If you want to limit your translations, set your supported locales list.
      */
 
-    'locales'   => [
-        'it'
+    'locales' => [
+        'it',
     ],
 
     /* -----------------------------------------------------------------
@@ -27,8 +27,8 @@ return [
      | -----------------------------------------------------------------
      */
 
-    'check'     => [
-        'ignore'  => [
+    'check' => [
+        'ignore' => [
             'validation.custom',
             'validation.attributes',
         ],

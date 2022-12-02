@@ -2,8 +2,8 @@
 
 namespace App\Support\Database;
 
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Support\Facades\Cache;
 
 class Builder extends QueryBuilder
 {
@@ -14,7 +14,7 @@ class Builder extends QueryBuilder
      */
     protected function runSelect()
     {
-        return Cache::store('request')->remember($this->getCacheKey(), 1, function() {
+        return Cache::store('request')->remember($this->getCacheKey(), 1, function () {
             return parent::runSelect();
         });
     }
@@ -27,7 +27,7 @@ class Builder extends QueryBuilder
     protected function getCacheKey()
     {
         return json_encode([
-            $this->toSql() => $this->getBindings()
+            $this->toSql() => $this->getBindings(),
         ]);
     }
 }

@@ -16,14 +16,14 @@ return new class extends Migration
         Schema::create('engagements', function (Blueprint $table) {
             $table->id();
 
-            $table  ->foreignId('user_id')
+            $table->foreignId('user_id')
                     ->constrained()
                     ->cascadeOnDelete()
                     ->cascadeOnUpdate();
 
             $table->string('description');
             $table->date('date');
-            $table  ->foreignId('order_id')
+            $table->foreignId('order_id')
                     ->constrained()
                     ->cascadeOnUpdate()
                     ->cascadeOnDelete();

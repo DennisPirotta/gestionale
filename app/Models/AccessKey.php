@@ -10,6 +10,6 @@ class AccessKey extends Model
     use HasFactory;
 
     protected $fillable = [
-      'key','name'
+        'key', 'name',
     ];
 }

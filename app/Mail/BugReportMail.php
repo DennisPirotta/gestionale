@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
@@ -12,7 +11,9 @@ class BugReportMail extends Mailable
     use Queueable, SerializesModels;
 
     public string $object;
+
     public string $description;
+
     public string $sender;
 
     /**
@@ -20,7 +21,7 @@ class BugReportMail extends Mailable
      *
      * @return void
      */
-    public function __construct($object,$description,$sender)
+    public function __construct($object, $description, $sender)
     {
         $this->object = $object;
         $this->description = $description;
@@ -35,10 +36,10 @@ class BugReportMail extends Mailable
     public function build()
     {
         return $this->subject('Bug Report')
-                    ->markdown('mails.bug-report',[
+                    ->markdown('mails.bug-report', [
                         'sender' => $this->sender,
                         'object' => $this->object,
-                        'description' => $this->description
+                        'description' => $this->description,
                     ]);
     }
 }

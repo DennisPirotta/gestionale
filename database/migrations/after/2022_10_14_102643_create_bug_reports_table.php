@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('object');
             $table->string('description');
             $table->boolean('fixed')->default(false);
-            $table  ->foreignId('reported_by')
+            $table->foreignId('reported_by')
                     ->nullable()
                     ->constrained('users')
                     ->cascadeOnUpdate()

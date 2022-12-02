@@ -1,27 +1,5 @@
 @extends('layouts.app')
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
-
-<script>
-    localStorage.theme = 'light'
-    tailwind.config = {
-        darkMode: 'class',
-        theme: {
-            extend: {
-                colors: {
-                    clifford: '#da373d',
-                }
-            }
-        }
-    }
-</script>
-<style type="text/tailwindcss">
-    @layer utilities {
-        .content-auto {
-            content-visibility: auto;
-        }
-    }
-</style>
+@vite('resources/css/tailwind.css')
 <style>
     @media print {
         @page {
@@ -41,9 +19,9 @@
             display: none !important;
         }
     }
-</style> <!-- Stili per stampa -->
+</style>
 @section('content')
-    <div class="container-fluid px-5 mt-5 table-responsive">
+    <div class="container-fluid px-5 mt-5">
         <div class="d-flex align-items-center">
             <div class="h1 m-0">
                 Ore
@@ -82,38 +60,36 @@
                     @endrole
                 </form>
             </div>
-
-
         </div>
         <hr class="hr my-3">
+        @php($user = App\Models\User::find(request('user')) ?? auth()->user())
         @unless($data->count() === 0 || !request('month'))
-            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 text-center">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                    <th scope="col" class="py-2 px-4">
-                        #
-                    </th>
-                    @foreach($period as $day)
-                        <th scope="col"
-                            class="py-2 px-4 border-l border-gray-300 dark:border-gray-500">{{ $day->format('j') }}</th>
-                    @endforeach
-                </tr>
+            <div class="overflow-x-auto relative shadow-md sm:rounded-lg">
+                <table class="w-full text-sm text-left text-gray-500  text-center">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-200 ">
+                    <tr>
+                        <th scope="col" class="py-2 px-4">
+                            #
+                        </th>
+                        @foreach($period as $day)
+                            <th scope="col" class="py-2 px-4 border-l border-gray-200 ">{{ $day->translatedFormat('D j') }}</th>
+                        @endforeach
+                        <th scope="col" class="py-2 px-4 border-l border-gray-200 ">TOT</th>
+                    </tr>
                 </thead>
                 <tbody>
                 @foreach($data as $desc=>$type)
-                    <tr class="bg-gray-50 dark:bg-gray-500 dark:border-gray-800">
-                        <td class="py-2 px-4 dark:bg-gray-800 border-l">{{ $desc }}</td>
-                        <td colspan="{{$period->count()}}" class="py-2 px-4 dark:bg-gray-800"></td>
+                    <tr class="bg-gray-50">
+                        <td class="py-2 px-4 bg-gray-50 border-l">{{ $desc }}</td>
+                        <td colspan="{{$period->count() + 1}}" class="bg-gray-50 py-2 px-4"></td>
                     </tr>
                     @foreach($type as $key=>$content)
                         @foreach($content as $job_type=>$hours)
-                            <tr class="bg-gray-100 dark:bg-gray-900 dark:border-gray-800 border-b">
-                                <th scope="row"
-                                    class="border-r dark:border-gray-700 p-1.5 grid grid-cols-1 place-items-center">
+                            <tr class="bg-gray-100 border-b">
+                                <th scope="row" class="border-r p-1.5 grid grid-cols-1 place-items-center">
                                     <div class="font-bold">
                                         {{ $key !== 0 ? $key : '' }}
                                     </div>
-
                                     @if(App\Models\Order::where('innerCode',$key)->exists())
                                         <div>
                                             {{ App\Models\Order::where('innerCode',$key)->value('outerCode') }}
@@ -126,57 +102,108 @@
                                             {{ App\Models\TechnicalReport::where('number',(string) $key)->first()->customer->name }}
                                         </div>
                                     @endif
-                                    <div class="w-15 dark:bg-blue-100 bg-blue-300 text-blue-800 text-xs font-medium px-2 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800">
+                                    <div class="w-15 bg-blue-300 text-blue-800 text-xs font-medium px-2 py-0.5 rounded">
                                         {{ $job_type }}
                                     </div>
                                 </th>
+                                @php($count = 0)
                                 @foreach($period as $day)
-                                    <td class="border-r dark:border-gray-700"
-                                        data-datetime="{{ $day->format('Y-m-d') }}"
-                                        data-row="{{ $hour_types->where('description',$desc)->value('id') }}"
-                                        data-extra="{{ $key }}"
-                                        data-job="{{ $job_types->where('title',$job_type)->value('id') }}"
-                                        contenteditable="true"
-                                        @foreach($hours as $hour)
-                                            @if($hour->date === $day->format('Y-m-d'))
+                                    @php($insert=true)
+                                    @foreach($hours as $hour)
+                                        @if($hour->date === $day->format('Y-m-d'))
+                                            @php($insert=false)
+                                            @php($count+=$hour->count)
+                                            <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif "
+                                                data-datetime="{{ $day->format('Y-m-d') }}"
+                                                data-row="{{ $hour_types->where('description',$desc)->value('id') }}"
+                                                data-extra="{{ $key }}"
+                                                data-job="{{ $job_types->where('title',$job_type)->value('id') }}"
+                                                contenteditable="true"
                                                 data-hour="{{ $hour->id }}">
-                                        {{ $hour->count }}
+                                                {{ $hour->count }}
+                                            </td>
                                         @endif
-                                        @endforeach
-                                    </td>
+                                    @endforeach
+                                    @if($insert)
+                                        <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif "
+                                            data-datetime="{{ $day->format('Y-m-d') }}"
+                                            data-row="{{ $hour_types->where('description',$desc)->value('id') }}"
+                                            data-extra="{{ $key }}"
+                                            data-job="{{ $job_types->where('title',$job_type)->value('id') }}"
+                                            contenteditable="true">
+                                        </td>
+                                    @endif
                                 @endforeach
+                                <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif ">{{ $count }}</td>
                             </tr>
                         @endforeach
                     @endforeach
                 @endforeach
                 </tbody>
+                <tfoot>
+                <tr class="bg-gray-50">
+                    <td class="py-2 px-4 border-l">Parziale</td>
+                    <td colspan="{{$period->count()}}" class="py-2 px-4 "></td>
+                </tr>
+                    <tr class="bg-gray-100 border-b">
+                        <th scope="row">
+                            Totale
+                        </th>
+                        @foreach($period as $day)
+                            <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif ">{{ $user->hourDetails(Carbon\CarbonPeriod::create($day,$day))['total'] }}</td>
+                        @endforeach
+                        <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif ">{{ $user->hourDetails($period)['total'] }}</td>
+                    </tr>
+                    <tr class="bg-gray-100 border-b">
+                        <th scope="row">
+                            Straordinari 25%
+                        </th>
+                        @foreach($period as $day)
+                            <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif ">{{ $user->hourDetails(Carbon\CarbonPeriod::create($day,$day))['str25'] }}</td>
+                        @endforeach
+                        <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif ">{{ $user->hourDetails($period)['str25'] }}</td>
+                    </tr>
+                    <tr class="bg-gray-100 border-b">
+                        <th scope="row">
+                            Straordinari 50%
+                        </th>
+                        @foreach($period as $day)
+                            <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif ">{{ $user->hourDetails(Carbon\CarbonPeriod::create($day,$day))['str50'] }}</td>
+                        @endforeach
+                        <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif ">{{ $user->hourDetails($period)['str50'] }}</td>
+                    </tr>
+                </tfoot>
             </table>
+            </div>
+            <div class="container-fluid p-5">
+                <div class="row row-cols-3 g-3 justify-content-center">
+                    <x-report-card :title="'Totale ore'" :icon="'bi-bar-chart-fill'"
+                                   :value="$user->hourDetails($period)['total']"></x-report-card>
+                    <x-report-card :title="'Ferie'" :icon="'bi-cup-hot'"
+                                   :value="$user->hourDetails($period)['holidays']"></x-report-card>
+                    <x-report-card :title="'Notte UE'" :icon="'bi-currency-euro'"
+                                   :value="$user->hourDetails($period)['eu']"></x-report-card>
+                    <x-report-card :title="'Notte Extra UE'" :icon="'bi-globe2'"
+                                   :value="$user->hourDetails($period)['xeu']"></x-report-card>
+                    <x-report-card :title="'Straordinari 25%'" :icon="'bi-plug'"
+                                   :value="$user->hourDetails($period)['str25']"></x-report-card>
+                    <x-report-card :title="'Straordinari 50%'" :icon="'bi-plug'"
+                                   :value="$user->hourDetails($period)['str50']"></x-report-card>
+                </div>
+            </div>
+        @else
+            <div class="container justify-content-center text-center">
+                <img src="{{ asset('images/no-orders.svg') }}" alt="" class="mx-auto" style="width: 40rem">
+                <div class="fs-1">Nessuna ora trovata</div>
+            </div>
+        @endunless
     </div>
-    @php($user = App\Models\User::find(request('user')) ?? auth()->user())
-    <div class="container-fluid p-5">
-        <div class="row row-cols-3 g-3 justify-content-center">
-            <x-report-card :title="'Totale ore'" :icon="'bi-bar-chart-fill'"
-                           :value="$user->hourDetails($period)['total']"></x-report-card>
-            <x-report-card :title="'Ferie'" :icon="'bi-cup-hot'"
-                           :value="$user->hourDetails($period)['holidays']"></x-report-card>
-            <x-report-card :title="'Notte UE'" :icon="'bi-currency-euro'"
-                           :value="$user->hourDetails($period)['eu']"></x-report-card>
-            <x-report-card :title="'Notte Extra UE'" :icon="'bi-globe2'"
-                           :value="$user->hourDetails($period)['xeu']"></x-report-card>
-            <x-report-card :title="'Straordinari 25%'" :icon="'bi-plug'"
-                           :value="$user->hourDetails($period)['str25']"></x-report-card>
-            <x-report-card :title="'Straordinari 50%'" :icon="'bi-plug'"
-                           :value="$user->hourDetails($period)['str50']"></x-report-card>
+    <div class="tooltip bs-tooltip-top" role="tooltip" id="tooltip">
+        <div class="tooltip-arrow"></div>
+        <div class="tooltip-inner">
+            Utilizza il punto al posto della virgola
         </div>
     </div>
-    @else
-        <div class="container justify-content-center text-center">
-            <img src="{{ asset('images/no-orders.svg') }}" alt="" style="width: 40rem">
-            <div class="fs-1">Seleziona un utente e un mese</div>
-        </div>
-        </div>
-    @endunless
-
     <script>
         $(() => {
 
@@ -189,25 +216,25 @@
             const token = $('meta[name="csrf-token"]').attr('content')
             let cells = $('td')
             cells.on('focusout', e => {
+                let hour = $(e.target).attr('data-hour') ?? null
                 let url = '{{ route('hours.store') }}'
                 let method = 'POST'
-                if ($(e.target).attr('data-hour')) {
-                    url = '/ore/' + $(e.target).attr('data-hour')
+                if (hour) {
+                    url = '/ore/' + hour
                     if ($(e.target).text().trim() === '' || $(e.target).text().trim() === '0') method = 'DELETE'
                     else method = 'PUT'
                 }
                 const data = {
                     '_token': token,
                     '_method': method,
-                    'count': $(e.target).text().trim(),
+                    'count': $(e.target).text().trim().replace(',','.'),
                     'date': $(e.target).attr('data-datetime'),
                     'description': null,
                     'hour_type_id': $(e.target).attr('data-row'),
                     'extra': $(e.target).attr('data-extra'),
                     'job': $(e.target).attr('data-job'),
-                    'hour': $(e.target).attr('data-hour')
+                    'hour': hour
                 };
-
 
                 fetch(url, {
                     method: 'POST',
@@ -222,8 +249,10 @@
                 })
             })
             cells.keypress(e => {
+                console.log(e.which)
                 if (e.which < 48 || e.which > 57) {
-                    e.preventDefault();
+                    if(!(e.which == 44 || e.which == 46))
+                        e.preventDefault();
                 }
                 if (e.keyCode === 13) {
                     e.preventDefault();

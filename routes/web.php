@@ -29,7 +29,6 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 Auth::routes(['verify' => true]);
 Route::middleware(['auth'])->group(function () {
-
     /*
     *  GESTIONE ROUTES COMMESSE
     */
@@ -90,7 +89,6 @@ Route::middleware(['auth'])->group(function () {
     // Elimina ferie multiplo
     Route::post('/ferie/delete', [HolidayController::class, 'destroyMore'])->name('holidays.destroyMore');
 
-
     /*
     *  GESTIONE ROUTES ORE
     */
@@ -112,7 +110,6 @@ Route::middleware(['auth'])->group(function () {
 
     // Elimina ore
     Route::delete('/ore/{hour}', [HourController::class, 'destroy'])->name('hours.destroy');
-
 
     Route::get('change-password', [ChangePasswordController::class, 'index']);
     Route::post('change-password', [ChangePasswordController::class, 'store']);
@@ -141,15 +138,14 @@ Route::middleware(['auth'])->group(function () {
     // Contrassegna bug come risolto
     Route::put('/bug-report/update/{bugReport}', [BugReportController::class, 'update'])->name('bug.report.update');
 
-    Route::get('/expense-report',[ExpenseReportController::class, 'index'])->name('expense_report.index');
+    Route::get('/expense-report', [ExpenseReportController::class, 'index'])->name('expense_report.index');
 
-    Route::post('/expense-report',[ExpenseReportController::class, 'store'])->name('expense_report.store');
+    Route::post('/expense-report', [ExpenseReportController::class, 'store'])->name('expense_report.store');
 
     // Mostra report ore
     Route::get('/ore/report', [HourController::class, 'report'])->name('hours.report');
 
     Route::group(['middleware' => ['role:admin|boss']], static function () {
-
         /*
         *  GESTIONE ROUTES CLIENTI
         */
@@ -215,22 +211,21 @@ Route::middleware(['auth'])->group(function () {
         // Aggiorna ore ferie
         Route::put('/dipendenti/{user}/holidays/update', [UserController::class, 'updateHolidaysHour'])->name('users.holidays.update');
 
-        Route::post('/dipendenti/{user}/roles/update',[UserController::class,'updatePermissions'])->name('users.permissions.update');
+        Route::post('/dipendenti/{user}/roles/update', [UserController::class, 'updatePermissions'])->name('users.permissions.update');
     });
 
     Route::group(['middleware' => ['role:boss']], static function () {
-
-        Route::get('/impegni',[EngagementController::class,'index'])->name('engagement.index');
-
+        Route::get('/impegni', [EngagementController::class, 'index'])->name('engagement.index');
     });
-
 });
-
 
 Route::post('/debug/change_permissions', static function () {
     try {
         \auth()->user()->syncRoles();
         auth()->user()->assignRole(request('role'));
+
         return redirect('/')->with('message', 'livello di accesso cambiato');
-    } catch (Exception) { return back(); }
+    } catch (Exception) {
+        return back();
+    }
 });

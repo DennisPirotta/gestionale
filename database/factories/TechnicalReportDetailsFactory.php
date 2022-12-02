@@ -20,7 +20,7 @@ class TechnicalReportDetailsFactory extends Factory
     {
         return [
             'hour_id' => Hour::all()->random()->id,
-            'technical_report_id' => TechnicalReport::all()->random()->id
+            'technical_report_id' => TechnicalReport::all()->random()->id,
         ];
     }
 }

@@ -11,24 +11,26 @@ class Customer extends Model
     use HasFactory;
 
     protected $fillable = [
-      'name'
+        'name',
     ];
 
     public function orders(): HasMany
     {
-        return $this->hasMany(Order::class,'customer_id');
+        return $this->hasMany(Order::class, 'customer_id');
     }
 
     public function technical_reports_first(): HasMany
     {
-        return $this->hasMany(TechnicalReport::class,'customer_id');
+        return $this->hasMany(TechnicalReport::class, 'customer_id');
     }
+
     public function technical_reports_second(): HasMany
     {
-        return $this->hasMany(TechnicalReport::class,'secondary_customer_id');
+        return $this->hasMany(TechnicalReport::class, 'secondary_customer_id');
     }
+
     public function expense_reports(): HasMany
     {
-        return $this->hasMany(ExpenseReport::class,'customer_id');
+        return $this->hasMany(ExpenseReport::class, 'customer_id');
     }
 }

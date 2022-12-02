@@ -2,8 +2,8 @@
 
 namespace App\Notifications;
 
-use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
 
 class ResetPassword extends Notification
 {
@@ -26,6 +26,5 @@ class ResetPassword extends Notification
             ->line('Hai ricevuto questa email in seguito alla una richiesta di reimpostazione della password per il tuo account.')
             ->action('Reset Password', url('password/reset', $this->token))
             ->line('Se non hai richiesto di reimpostare la password, non sono necessarie ulteriori azioni.');
-
     }
 }

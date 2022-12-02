@@ -14,9 +14,9 @@ class ExpenseReportController extends Controller
 {
     public function index(): Factory|View|Application
     {
-        return view('expense-report.index',[
-            'users' => User::with('expense_reports','expense_reports.customer')->get(),
-            'customers' => Customer::all()
+        return view('expense-report.index', [
+            'users' => User::with('expense_reports', 'expense_reports.customer')->get(),
+            'customers' => Customer::all(),
         ]);
     }
 
@@ -37,6 +37,6 @@ class ExpenseReportController extends Controller
 
         ExpenseReport::create($data);
 
-        return back()->with('message','Nota spesa inserita correttamente');
+        return back()->with('message', 'Nota spesa inserita correttamente');
     }
 }

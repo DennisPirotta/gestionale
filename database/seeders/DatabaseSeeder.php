@@ -14,7 +14,6 @@ use App\Models\User;
 use Doctrine\DBAL\Exception;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
@@ -23,6 +22,7 @@ class DatabaseSeeder extends Seeder
      * Seed the application's database.
      *
      * @return void
+     *
      * @throws Exception
      */
     public function run(): void
@@ -36,15 +36,13 @@ class DatabaseSeeder extends Seeder
             'surname' => 'Pirotta',
             'email' => 'dennispirotta@gmail.com',
             'password' => Hash::make('pellio2014'),
-        ])->assignRole('boss','user','admin','developer');
+        ])->assignRole('boss', 'user', 'admin', 'developer');
         BusinessHour::init($me);
-
 
         AccessKey::factory()->create([
             'key' => Crypt::encryptString('3DAutomation'),
-            'name' => 'default'
+            'name' => 'default',
         ]);
-
 
         Customer::factory(10)->create();
         User::factory(2)->create();
@@ -55,6 +53,5 @@ class DatabaseSeeder extends Seeder
         //OrderDetails::factory(100)->create();
         //TechnicalReportDetails::factory(100)->create();
         //AccessKey::factory(4)->create();
-
     }
 }

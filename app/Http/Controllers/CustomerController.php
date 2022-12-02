@@ -10,8 +10,9 @@ class CustomerController extends Controller
     public function index()
     {
         $customers = Customer::latest()->get();
+
         return view('customers.index', [
-            'customers' => $customers
+            'customers' => $customers,
         ]);
     }
 
@@ -20,9 +21,10 @@ class CustomerController extends Controller
     public function store(Request $request)
     {
         $formFields = $request->validate([
-            'name' => 'required'
+            'name' => 'required',
         ]);
         Customer::create($formFields);
+
         return redirect('/clienti')->with('message', 'Cliente inserito con successo');
     }
 
@@ -34,23 +36,24 @@ class CustomerController extends Controller
     public function edit(Customer $customer)
     {
         return view('customers.edit', [
-            'customer' => $customer
+            'customer' => $customer,
         ]);
     }
 
     public function update(Request $request, Customer $customer)
     {
         $formFields = $request->validate([
-            'name' => 'required'
+            'name' => 'required',
         ]);
         $customer->update($formFields);
+
         return redirect('/clienti')->with('message', 'Cliente aggiornato con successo');
     }
 
     public function destroy(Customer $customer)
     {
         $customer->delete();
+
         return back()->with('message', 'Cliente eliminato con successo');
     }
-
 }

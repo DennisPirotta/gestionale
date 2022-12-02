@@ -15,7 +15,7 @@ class Holiday extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'approved', 'start', 'end'
+        'user_id', 'approved', 'start', 'end',
     ];
 
     public function user(): BelongsTo
@@ -25,12 +25,10 @@ class Holiday extends Model
 
     public function sendMail(Holiday $old = null, $approved = false, $deleted = false): void
     {
-        if ($this->user->company->id === 1) // 3D
-        {
+        if ($this->user->company->id === 1) { // 3D
             $to = 'amministrazione@3dautomation.it';
             $cc = ['administration@sphtechnology.ch'];
-        } else if ($this->user->company->id === 2) // SPH
-        {
+        } elseif ($this->user->company->id === 2) { // SPH
             $to = 'administration@sphtechnology.ch';
             $cc = ['amministrazione@3dautomation.it'];
         }
@@ -39,10 +37,10 @@ class Holiday extends Model
         if ($deleted) {
             Mail::to($to)->cc($cc)->send(new HolidayDeletedMail($this));
 //            Mail::to('dennispirotta@gmail.com')->send(new HolidayDeletedMail($this));
-        } else if ($approved) {
+        } elseif ($approved) {
             Mail::to($this->user->email)->send(new HolidayApprovedMail($this));
         } else {
-            Mail::to($to)->cc($cc)->send(new HolidayRequestMail($this,$old));
+            Mail::to($to)->cc($cc)->send(new HolidayRequestMail($this, $old));
 //            Mail::to('dennispirotta@gmail.com')->send(new HolidayRequestMail($this, $old));
         }
     }

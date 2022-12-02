@@ -22,14 +22,14 @@ class DailyWhereAmI extends Command
      */
     protected $description = 'Reset Whereami flag';
 
-
     public function handle(): int
     {
-        foreach (User::all() as $user){
+        foreach (User::all() as $user) {
             $user->update([
                 'position' => false,
             ]);
         }
+
         return CommandAlias::SUCCESS;
     }
 }

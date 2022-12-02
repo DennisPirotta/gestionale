@@ -12,6 +12,6 @@ class Country extends Model
 
     public function orders(): HasMany
     {
-        return $this->hasMany(Order::class,'country_id');
+        return $this->hasMany(Order::class, 'country_id');
     }
 }

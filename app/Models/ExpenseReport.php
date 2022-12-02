@@ -11,15 +11,16 @@ class ExpenseReport extends Model
     use HasFactory;
 
     protected $fillable = [
-        'date','location','km','various','food','transport','note','user_id','customer_id'
+        'date', 'location', 'km', 'various', 'food', 'transport', 'note', 'user_id', 'customer_id',
     ];
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class,'user_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
+
     public function customer(): BelongsTo
     {
-        return $this->belongsTo(Customer::class,'customer_id');
+        return $this->belongsTo(Customer::class, 'customer_id');
     }
 }

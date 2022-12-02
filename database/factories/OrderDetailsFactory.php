@@ -3,13 +3,10 @@
 namespace Database\Factories;
 
 use App\Models\Hour;
-use App\Models\HourType;
 use App\Models\JobType;
 use App\Models\Order;
-use App\Models\OrderDetails;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Log;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\OrderDetails>
@@ -33,7 +30,7 @@ class OrderDetailsFactory extends Factory
         return [
             'order_id' => Order::all()->random()->id,
             'hour_id' => $hour->id,
-            'job_type_id' => JobType::all()->random()->id
+            'job_type_id' => JobType::all()->random()->id,
         ];
     }
 }

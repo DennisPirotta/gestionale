@@ -46,7 +46,7 @@ class RegisterController extends Controller
     /**
      * Get a validator for an incoming registration request.
      *
-     * @param array $data
+     * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function validator(array $data): \Illuminate\Contracts\Validation\Validator
@@ -57,14 +57,14 @@ class RegisterController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'key' => ['required', new MatchAccessKey],
-            'company' => 'required'
+            'company' => 'required',
         ]);
     }
 
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param array $data
+     * @param  array  $data
      * @return User
      */
     protected function create(array $data): User
@@ -75,9 +75,10 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'company_id' => $data['company'],
-            'holidays' => $data['company'] === '2' ? 160 : 240
+            'holidays' => $data['company'] === '2' ? 160 : 240,
         ])->assignRole('user');
         BusinessHour::init($user);
+
         return $user;
     }
 }

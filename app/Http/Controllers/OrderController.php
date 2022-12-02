@@ -23,7 +23,7 @@ class OrderController extends Controller
     // Visualizza tutte le commesse
     public function index(): Factory|View|Application
     {
-        $commesse = Order::with(['user','status','company','customer']);
+        $commesse = Order::with(['user', 'status', 'company', 'customer']);
         if (request('customer')) {
             $commesse = $commesse->filter(request(['customer']));
         } elseif (request('search')) {
@@ -34,7 +34,7 @@ class OrderController extends Controller
 
         return view('orders.index', [
             'commesse' => $commesse->get(),
-            'statuses' => Status::all()
+            'statuses' => Status::all(),
         ]);
     }
 
@@ -42,7 +42,7 @@ class OrderController extends Controller
     public function show(Order $order): Factory|View|Application
     {
         return view('orders.show', [
-            'commessa' => $order->load(['technical_reports.customer','technical_reports.secondary_customer','technical_reports.user','order_details.hour','order_details.job_type'])
+            'commessa' => $order->load(['technical_reports.customer', 'technical_reports.secondary_customer', 'technical_reports.user', 'order_details.hour', 'order_details.job_type']),
         ]);
     }
 
@@ -61,7 +61,7 @@ class OrderController extends Controller
             'customer_id' => 'required',
             'user_id' => 'required',
             'innerCode' => 'required',
-            'outerCode' => 'nullable'
+            'outerCode' => 'nullable',
         ]);
 
         $formFields['created_by'] = auth()->id();
@@ -83,7 +83,7 @@ class OrderController extends Controller
             'hour_types' => HourType::all(),
             'job_types' => JobType::all(),
             'orders' => Order::all(),
-            'users' => User::all()
+            'users' => User::all(),
         ]);
     }
 
@@ -98,7 +98,7 @@ class OrderController extends Controller
             'countries' => Country::all(),
             'customers' => Customer::all(),
             'users' => User::all(),
-            'job_types' => JobType::all()
+            'job_types' => JobType::all(),
         ]);
     }
 
@@ -120,7 +120,7 @@ class OrderController extends Controller
             'user_id' => 'required',
             'innerCode' => 'required',
             'outerCode' => 'nullable',
-            'closing' => 'nullable'
+            'closing' => 'nullable',
         ]);
 
         $order->update($formFields);
@@ -132,15 +132,16 @@ class OrderController extends Controller
     public function destroy(Order $order): RedirectResponse
     {
         $order->delete();
+
         return back()->with('message', 'Commessa eliminata con successo');
     }
 
     // Report commesse
     public function report(): Factory|View|Application
     {
-        return view('orders.report',[
-            'orders' => Order::with(['job_type','status','country','company','user','customer','order_details'])->orderBy('status_id')->get(),
-            'order_details' => OrderDetails::with(['hour','order'])->get()
+        return view('orders.report', [
+            'orders' => Order::with(['job_type', 'status', 'country', 'company', 'user', 'customer', 'order_details'])->orderBy('status_id')->get(),
+            'order_details' => OrderDetails::with(['hour', 'order'])->get(),
         ]);
     }
 }

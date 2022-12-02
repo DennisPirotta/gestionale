@@ -11,11 +11,11 @@ class Location extends Model
     use HasFactory;
 
     protected $fillable = [
-      'date', 'description', 'user_id'
+        'date', 'description', 'user_id',
     ];
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class,'user_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

@@ -31,7 +31,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'position',
         'level',
         'company_id',
-        'holidays'
+        'holidays',
     ];
 
     /**
@@ -55,60 +55,65 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function company(): BelongsTo
     {
-        return $this->belongsTo(Company::class,'company_id');
+        return $this->belongsTo(Company::class, 'company_id');
     }
 
     public function orders(): HasMany
     {
-        return $this->hasMany(Order::class,['user_id','created_by']);
+        return $this->hasMany(Order::class, ['user_id', 'created_by']);
     }
 
     public function holidayList(): HasMany
     {
-        return $this->hasMany(Holiday::class,'user_id');
+        return $this->hasMany(Holiday::class, 'user_id');
     }
+
     public function hours(): HasMany
     {
-        return $this->hasMany(Hour::class,'user_id');
+        return $this->hasMany(Hour::class, 'user_id');
     }
+
     public function locations(): HasMany
     {
-        return $this->hasMany(Location::class,'user_id');
+        return $this->hasMany(Location::class, 'user_id');
     }
+
     public function technical_reports(): HasMany
     {
-        return $this->hasMany(TechnicalReport::class,'user_id');
+        return $this->hasMany(TechnicalReport::class, 'user_id');
     }
+
     public function business_hours(): HasMany
     {
-        return $this->hasMany(BusinessHour::class,'user_id');
+        return $this->hasMany(BusinessHour::class, 'user_id');
     }
 
     public function bug_reports(): HasMany
     {
-        return $this->hasMany(BugReport::class,'reported_by');
+        return $this->hasMany(BugReport::class, 'reported_by');
     }
 
     public function expense_reports(): HasMany
     {
-        return $this->hasMany(ExpenseReport::class,'customer_id');
+        return $this->hasMany(ExpenseReport::class, 'customer_id');
     }
 
     public function engagements(): HasMany
     {
-        return $this->hasMany(Engagement::class,'user_id');
+        return $this->hasMany(Engagement::class, 'user_id');
     }
 
     public function getLeftHolidays(): int
     {
-        $holidays =  Holiday::where('user_id',$this->id)
-                            ->whereBetween('start',[Carbon::now()->firstOfYear(),Carbon::now()->lastOfYear()])
-                            ->whereBetween('end',[Carbon::now()->firstOfYear(),Carbon::now()->lastOfYear()]);
+        $holidays = Holiday::where('user_id', $this->id)
+                            ->whereBetween('start', [Carbon::now()->firstOfYear(), Carbon::now()->lastOfYear()])
+                            ->whereBetween('end', [Carbon::now()->firstOfYear(), Carbon::now()->lastOfYear()]);
         $count = 0;
         Carbon::setOpeningHours(BusinessHour::getWorkingHours($this));
-        foreach ($holidays->get() as $holiday){
+        foreach ($holidays->get() as $holiday) {
             $count += Carbon::parse($holiday->start)->diffInBusinessHours($holiday->end);
         }
+
         return $this->holidays - $count;
     }
 
@@ -120,26 +125,26 @@ class User extends Authenticatable implements MustVerifyEmail
             'eu' => 0,
             'xeu' => 0,
             'str25' => 0,
-            'str50' => 0
+            'str50' => 0,
         ];
 
-        foreach ($this->hoursInPeriod($period) as $hour){
+        foreach ($this->hoursInPeriod($period) as $hour) {
             $data['total'] += $hour->count;
-            if (Carbon::parse($hour->date)->isHoliday() || Carbon::parse($hour->date)->isWeekend()){
+            if (Carbon::parse($hour->date)->isHoliday() || Carbon::parse($hour->date)->isWeekend()) {
                 $data['str50'] += $hour->count;
             }
-            if ($hour->count > 8 && Carbon::parse($hour->date)->isWeekday()){
+            if ($hour->count > 8 && Carbon::parse($hour->date)->isWeekday()) {
                 $data['str25'] += $hour->count - 8;
             }
-            if ($hour->hour_type_id === 6){
+            if ($hour->hour_type_id === 6) {
                 $data['holidays'] += $hour->count;
             }
-            if ($hour->hour_type_id === 2){
-                $report = TechnicalReportDetails::where('hour_id',$hour->id)->first();
-                if ($report->nightEU === 1){
+            if ($hour->hour_type_id === 2) {
+                $report = TechnicalReportDetails::where('hour_id', $hour->id)->first();
+                if ($report->nightEU === 1) {
                     $data['eu'] += $hour->count;
                 }
-                if ($report->nightExtraEU === 1){
+                if ($report->nightExtraEU === 1) {
                     $data['xeu'] += $hour->count;
                 }
             }
@@ -148,7 +153,10 @@ class User extends Authenticatable implements MustVerifyEmail
         return $data;
     }
 
-    public function hoursInPeriod(CarbonPeriod $period){
-        return $this->hours->filter(static function($item) use ($period){ return Carbon::parse($item->date)->isBetween(clone $period->first(),$period->last());});
+    public function hoursInPeriod(CarbonPeriod $period)
+    {
+        return $this->hours->filter(static function ($item) use ($period) {
+        return Carbon::parse($item->date)->isBetween(clone $period->first(), $period->last());
+        });
     }
 }

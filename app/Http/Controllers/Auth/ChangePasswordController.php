@@ -35,7 +35,7 @@ class ChangePasswordController extends Controller
     /**
      * Show the application dashboard.
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return RedirectResponse
      */
     public function store(Request $request): RedirectResponse
@@ -46,8 +46,8 @@ class ChangePasswordController extends Controller
             'new_confirm_password' => ['same:new_password'],
         ]);
 
-        User::find(auth()->id())->update(['password'=> Hash::make($request->new_password)]);
+        User::find(auth()->id())->update(['password' => Hash::make($request->new_password)]);
 
-        return redirect('/')->with('message','Password modificata con successo');
+        return redirect('/')->with('message', 'Password modificata con successo');
     }
 }

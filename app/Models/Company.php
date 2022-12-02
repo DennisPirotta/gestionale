@@ -12,10 +12,11 @@ class Company extends Model
 
     public function users(): HasMany
     {
-        return $this->hasMany(User::class,'company_id');
+        return $this->hasMany(User::class, 'company_id');
     }
+
     public function orders(): HasMany
     {
-        return $this->hasMany(Order::class,'company_id');
+        return $this->hasMany(Order::class, 'company_id');
     }
 }

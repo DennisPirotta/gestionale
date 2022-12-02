@@ -29,7 +29,7 @@ class StoreHourRequest extends FormRequest
             'start' => 'required_without:date',
             'end' => 'required_without:date',
             'description' => 'nullable',
-            'hour_type_id' => ['required','not_in:0'],
+            'hour_type_id' => ['required', 'not_in:0'],
             'user_id' => 'nullable',
         ];
     }

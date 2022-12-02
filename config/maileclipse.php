@@ -89,7 +89,7 @@ return [
     'middlewares' => [
         'web',
         'auth',
-        'role:admin|boss|developer'
+        'role:admin|boss|developer',
     ],
 
     /*

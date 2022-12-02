@@ -24,12 +24,12 @@ return new class extends Migration
             $table->double('transport');
             $table->string('note')->nullable();
 
-            $table  ->foreignId('user_id')
+            $table->foreignId('user_id')
                     ->constrained()
                     ->cascadeOnUpdate()
                     ->cascadeOnDelete();
 
-            $table  ->foreignId('customer_id')
+            $table->foreignId('customer_id')
                     ->constrained()
                     ->cascadeOnUpdate()
                     ->cascadeOnDelete();

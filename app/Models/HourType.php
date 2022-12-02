@@ -12,6 +12,6 @@ class HourType extends Model
 
     public function hours(): HasMany
     {
-        return $this->hasMany(Hour::class,'hour_type_id');
+        return $this->hasMany(Hour::class, 'hour_type_id');
     }
 }

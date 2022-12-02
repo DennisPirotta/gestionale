@@ -15,18 +15,18 @@ return new class extends Migration
     {
         Schema::create('technical_report_details', function (Blueprint $table) {
             $table->id();
-            $table  ->foreignId('hour_id')
+            $table->foreignId('hour_id')
                     ->constrained()
                     ->cascadeOnUpdate()
                     ->cascadeOnDelete();
 
-            $table  ->foreignId('technical_report_id')
+            $table->foreignId('technical_report_id')
                     ->constrained()
                     ->cascadeOnUpdate()
                     ->cascadeOnDelete();
 
-            $table  ->boolean('nightEU')->default(false);
-            $table  ->boolean('nightExtraEU')->default(false);
+            $table->boolean('nightEU')->default(false);
+            $table->boolean('nightExtraEU')->default(false);
 
             $table->timestamps();
         });

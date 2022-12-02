@@ -12,12 +12,11 @@ class JobType extends Model
 
     public function orders(): HasMany
     {
-        return $this->hasMany(Order::class,'job_type_id');
+        return $this->hasMany(Order::class, 'job_type_id');
     }
+
     public function order_details(): HasMany
     {
-        return $this->hasMany(OrderDetails::class,'job_type_id');
+        return $this->hasMany(OrderDetails::class, 'job_type_id');
     }
-
-
 }

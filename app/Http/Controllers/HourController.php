@@ -67,7 +67,7 @@ class HourController extends Controller
         if (! isset($validated['date'])) {
             $this->multipleStore($request);
         } else {
-            $validated['user_id'] = $request->get('user_id',$request->input('user',auth()->id()));
+            $validated['user_id'] = $request->get('user_id', auth()->id());
             $hour = Hour::create($validated);
             if ($hour->hour_type->id === 1) {
                 $this->storeOrderHour($hour, $request);

@@ -107,7 +107,7 @@
                     <div class="card-body">
                         <i class="bi bi-clock fs-3"></i>
                         <p class="card-title">Ore SW</p>
-                        <b>{{ round($commessa->getHours()['sw'] ?? null) }}</b>
+                        <b>{{ round($commessa->hourSW ?? null) }}</b>
                     </div>
                 </div>
             </div>
@@ -116,7 +116,7 @@
                     <div class="card-body">
                         <i class="bi bi-clock fs-3"></i>
                         <p class="card-title">Ore MS</p>
-                        <b>{{ round($commessa->getHours()['ms'] ?? null) }}</b>
+                        <b>{{ round($commessa->hourMS ?? null) }}</b>
                     </div>
                 </div>
             </div>
@@ -125,7 +125,7 @@
                     <div class="card-body">
                         <i class="bi bi-clock fs-3"></i>
                         <p class="card-title">Ore FAT</p>
-                        <b>{{ round($commessa->getHours()['fat'] ?? null) }}</b>
+                        <b>{{ round($commessa->hourFAT ?? null) }}</b>
                     </div>
                 </div>
             </div>
@@ -134,7 +134,7 @@
                     <div class="card-body">
                         <i class="bi bi-clock fs-3"></i>
                         <p class="card-title">Ore SAF</p>
-                        <b>{{ round($commessa->getHours()['saf'] ?? null) }}</b>
+                        <b>{{ round($commessa->hourSAF ?? null) }}</b>
                     </div>
                 </div>
             </div>

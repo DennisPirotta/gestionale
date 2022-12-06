@@ -93,7 +93,7 @@
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <span class="input-group-text"><i class="bi bi-clock me-2"></i>Ore SW</span>
                     <input type="number" class="form-control" aria-label="Descrizione" name="hourSW"
-                           value="{{$commessa->getHours()['sw']}}">
+                           value="{{$commessa->hourSW}}">
                 </div>
                 @error('hourSW')
                 <p class="text-danger fs-6">{{$message}}</p>
@@ -103,7 +103,7 @@
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <span class="input-group-text"><i class="bi bi-clock me-2"></i>Ore MS</span>
                     <input type="number" class="form-control" aria-label="Descrizione" name="hourMS"
-                           value="{{$commessa->getHours()['ms']}}">
+                           value="{{$commessa->hourMS}}">
                 </div>
                 @error('hourMS')
                 <p class="text-danger fs-6">{{$message}}</p>
@@ -113,7 +113,7 @@
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <span class="input-group-text"><i class="bi bi-clock me-2"></i>Ore FAT</span>
                     <input type="number" class="form-control" aria-label="Descrizione" name="hourFAT"
-                           value="{{$commessa->getHours()['fat']}}">
+                           value="{{$commessa->hourFAT}}">
                 </div>
                 @error('hourFAT')
                 <p class="text-danger fs-6">{{$message}}</p>
@@ -123,7 +123,7 @@
                 <div class="input-group mb-3 col-md-4 col-sm-6">
                     <span class="input-group-text"><i class="bi bi-clock me-2"></i>Ore SAF</span>
                     <input type="number" class="form-control" aria-label="Descrizione" name="hourSAF"
-                           value="{{$commessa->getHours()['saf']}}">
+                           value="{{$commessa->hourSAF}}">
                 </div>
                 @error('hourSAF')
                 <p class="text-danger fs-6">{{$message}}</p>

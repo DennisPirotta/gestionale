@@ -6,7 +6,7 @@
             cursor: pointer;
         }
     </style>
-    <div class="container-fluid w-75 shadow-sm my-3 text-center justify-content-center p-3 text-center">
+    <div class="mx-5 shadow-sm my-3 text-center justify-content-center p-3 text-center">
         <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
                 <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home"
@@ -21,22 +21,36 @@
         <div class="tab-content" id="nav-tabContent">
             <div class="tab-pane fade show active p-3 mt-3" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab"
                  tabindex="0" style="overflow-y: scroll;height: 70vh">
-                <table class="table">
-                    <thead>
+                <table class="table text-center table-bordered">
+                    <thead class="align-content-center">
                     <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Commessa Interna</th>
-                        <th scope="col">Commessa Esterna</th>
-                        <th scope="col">Descrizione</th>
-                        <th scope="col">Ore SW</th>
-                        <th scope="col">Ore MS</th>
-                        <th scope="col">Ore FAT</th>
-                        <th scope="col">Ore SAF</th>
-                        <th scope="col">Apertura</th>
-                        <th scope="col">Chiusura</th>
-                        <th scope="col">Cliente</th>
-                        <th scope="col">Responsabile</th>
-                        <th scope="col">Progressi</th>
+                        <th scope="col" rowspan="2">#</th>
+                        <th scope="col" rowspan="2">Commessa Interna</th>
+                        <th scope="col" rowspan="2">Commessa Esterna</th>
+                        <th scope="col" rowspan="2">Descrizione</th>
+                        <th scope="col" colspan="3">Ore SW</th>
+                        <th scope="col" colspan="3">Ore MS</th>
+                        <th scope="col" colspan="3">Ore FAT</th>
+                        <th scope="col" colspan="3">Ore SAF</th>
+                        <th scope="col" rowspan="2">Apertura</th>
+                        <th scope="col" rowspan="2">Chiusura</th>
+                        <th scope="col" rowspan="2">Cliente</th>
+                        <th scope="col" rowspan="2">Responsabile</th>
+                        <th scope="col" rowspan="2">Progressi</th>
+                    </tr>
+                    <tr>
+                        <th>Preventivate</th>
+                        <th>Usate</th>
+                        <th>Residue</th>
+                        <th>Preventivate</th>
+                        <th>Usate</th>
+                        <th>Residue</th>
+                        <th>Preventivate</th>
+                        <th>Usate</th>
+                        <th>Residue</th>
+                        <th>Preventivate</th>
+                        <th>Usate</th>
+                        <th>Residue</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -47,10 +61,23 @@
                             <td>{{$order->innerCode}}</td>
                             <td>{{$order->outerCode}}</td>
                             <td>{{$order->description}}</td>
+
+                            <td>{{ round($order->hourSW) }}</td>
                             <td>{{ round($order->getHours()['sw'] ?? null) }}</td>
+                            <td>{{ round($order->hourSW) - round($order->getHours()['sw'] ?? null) }}</td>
+
+                            <td>{{ round($order->hourMS) }}</td>
                             <td>{{ round($order->getHours()['ms'] ?? null) }}</td>
+                            <td>{{ round($order->hourMS) - round($order->getHours()['ms'] ?? null) }}</td>
+
+                            <td>{{ round($order->hourFAT) }}</td>
                             <td>{{ round($order->getHours()['fat'] ?? null) }}</td>
+                            <td>{{ round($order->hourFAT) - round($order->getHours()['fat'] ?? null) }}</td>
+
+                            <td>{{ round($order->hourSAF) }}</td>
                             <td>{{ round($order->getHours()['saf'] ?? null) }}</td>
+                            <td>{{ round($order->hourSAF) - round($order->getHours()['saf'] ?? null) }}</td>
+
                             <td>{{Carbon::parse($order->opening)->format('d-m-Y')}}</td>
                             <td>{{$order->closing !== null ? Carbon::parse($order->closing)->format('d-m-Y') : '/' }}</td>
                             <td>{{$order->customer->name}}</td>

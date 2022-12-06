@@ -233,7 +233,8 @@
                     'hour_type_id': $(e.target).attr('data-row'),
                     'extra': $(e.target).attr('data-extra'),
                     'job': $(e.target).attr('data-job'),
-                    'hour': hour
+                    'hour': hour,
+                    'user_id': {{ $user->id }}
                 };
 
                 fetch(url, {

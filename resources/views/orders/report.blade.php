@@ -1,4 +1,4 @@
-@php use Carbon\Carbon; @endphp
+@php use Carbon\Carbon; use App\Models\JobType @endphp
 @extends('layouts.app')
 @section('content')
     <style>
@@ -22,7 +22,7 @@
             <div class="tab-pane fade show active p-3 mt-3" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab"
                  tabindex="0" style="overflow-y: scroll;height: 70vh">
                 <table class="table text-center table-bordered">
-                    <thead class="align-content-center">
+                    <thead headers="sticky">
                     <tr>
                         <th scope="col" rowspan="2">#</th>
                         <th scope="col" rowspan="2">Commessa Interna</th>
@@ -39,18 +39,18 @@
                         <th scope="col" rowspan="2">Progressi</th>
                     </tr>
                     <tr>
-                        <th>Preventivate</th>
-                        <th>Usate</th>
-                        <th>Residue</th>
-                        <th>Preventivate</th>
-                        <th>Usate</th>
-                        <th>Residue</th>
-                        <th>Preventivate</th>
-                        <th>Usate</th>
-                        <th>Residue</th>
-                        <th>Preventivate</th>
-                        <th>Usate</th>
-                        <th>Residue</th>
+                        <th scope="col" headers="sub">Preventivate</th>
+                        <th scope="col">Usate</th>
+                        <th scope="col">Residue</th>
+                        <th scope="col">Preventivate</th>
+                        <th scope="col">Usate</th>
+                        <th scope="col">Residue</th>
+                        <th scope="col">Preventivate</th>
+                        <th scope="col">Usate</th>
+                        <th scope="col">Residue</th>
+                        <th scope="col">Preventivate</th>
+                        <th scope="col">Usate</th>
+                        <th scope="col">Residue</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -63,20 +63,60 @@
                             <td>{{$order->description}}</td>
 
                             <td>{{ round($order->hourSW) }}</td>
-                            <td>{{ round($order->getHours()['sw'] ?? null) }}</td>
-                            <td>{{ round($order->hourSW) - round($order->getHours()['sw'] ?? null) }}</td>
+                            <td>
+                                {{ round($order->getHours(JobType::SVILUPPO_SOFTWARE)->get('count',0)) }}
+                                <br>
+                                @if(count($order->getHours(JobType::SVILUPPO_SOFTWARE)) > 1)
+                                    @php($sw = '')
+                                    @foreach($order->getHours(JobType::SVILUPPO_SOFTWARE)->forget('count') as $user=>$hour)
+                                        @php($sw .= '<b>'.$user.'</b> : '.$hour.'<br>')
+                                    @endforeach
+                                    <a tabindex="0" class="bi bi-info-circle text-primary" data-bs-trigger="focus" data-bs-toggle="popover" data-bs-title="Dettagli" data-bs-content="{{ $sw }}"></a>
+                                @endif
+                            </td>
+                            <td>{{ round($order->hourSW) - round($order->getHours(JobType::SVILUPPO_SOFTWARE)['count'] ?? 0) }}</td>
 
                             <td>{{ round($order->hourMS) }}</td>
-                            <td>{{ round($order->getHours()['ms'] ?? null) }}</td>
-                            <td>{{ round($order->hourMS) - round($order->getHours()['ms'] ?? null) }}</td>
+                            <td>
+                                {{ round($order->getHours(JobType::MESSA_IN_SERVIZIO)->get('count',0)) }}
+                                <br>
+                                @if(count($order->getHours(JobType::MESSA_IN_SERVIZIO)) > 1)
+                                    @php($ms = '')
+                                    @foreach($order->getHours(JobType::MESSA_IN_SERVIZIO)->forget('count') as $user=>$hour)
+                                        @php($ms .= '<b>'.$user.'</b> : '.$hour.'<br>')
+                                    @endforeach
+                                    <a tabindex="0" class="bi bi-info-circle text-primary" data-bs-trigger="focus" data-bs-toggle="popover" data-bs-title="Dettagli" data-bs-content="{{ $ms }}"></a>
+                                @endif
+                            </td>
+                            <td>{{ round($order->hourMS) - round($order->getHours(JobType::MESSA_IN_SERVIZIO)['count'] ?? 0) }}</td>
 
                             <td>{{ round($order->hourFAT) }}</td>
-                            <td>{{ round($order->getHours()['fat'] ?? null) }}</td>
-                            <td>{{ round($order->hourFAT) - round($order->getHours()['fat'] ?? null) }}</td>
+                            <td>
+                                {{ round($order->getHours(JobType::COLLAUDO)->get('count',0)) }}
+                                <br>
+                                @if(count($order->getHours(JobType::COLLAUDO)) > 1)
+                                    @php($fat = '')
+                                    @foreach($order->getHours(JobType::COLLAUDO)->forget('count') as $user=>$hour)
+                                        @php($fat .= '<b>'.$user.'</b> : '.$hour.'<br>')
+                                    @endforeach
+                                    <a tabindex="0" class="bi bi-info-circle text-primary" data-bs-trigger="focus" data-bs-toggle="popover" data-bs-title="Dettagli" data-bs-content="{{ $fat }}"></a>
+                                @endif
+                            </td>
+                            <td>{{ round($order->hourFAT) - round($order->getHours(JobType::COLLAUDO)['count'] ?? 0) }}</td>
 
                             <td>{{ round($order->hourSAF) }}</td>
-                            <td>{{ round($order->getHours()['saf'] ?? null) }}</td>
-                            <td>{{ round($order->hourSAF) - round($order->getHours()['saf'] ?? null) }}</td>
+                            <td>
+                                {{ round($order->getHours(JobType::SAFETY)->get('count',0)) }}
+                                <br>
+                                @if(count($order->getHours(JobType::SAFETY)) > 1)
+                                    @php($saf = '')
+                                    @foreach($order->getHours(JobType::SAFETY)->forget('count') as $user=>$hour)
+                                        @php($saf .= '<b>'.$user.'</b> : '.$hour.'<br>')
+                                    @endforeach
+                                    <a tabindex="0" class="bi bi-info-circle text-primary" data-bs-trigger="focus" data-bs-toggle="popover" data-bs-title="Dettagli" data-bs-content="{{ $saf }}"></a>
+                                @endif
+                            </td>
+                            <td>{{ round($order->hourSAF) - round($order->getHours(JobType::SAFETY)['count'] ?? 0) }}</td>
 
                             <td>{{Carbon::parse($order->opening)->format('d-m-Y')}}</td>
                             <td>{{$order->closing !== null ? Carbon::parse($order->closing)->format('d-m-Y') : '/' }}</td>
@@ -108,6 +148,8 @@
     </div>
     <script>
         $(function () {
+            const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+            const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl,{ html:true }))
 
             $(".progress").each(function () {
 

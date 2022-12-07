@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
 
 class Order extends Model
 {
@@ -88,33 +89,21 @@ class Order extends Model
         return $this->hasMany(Engagement::class, 'order_id');
     }
 
-    public function getHours(): array
+    public function getHours(int $job_type_id)
     {
-        $data = [
-            'sw' => 0,
-            'ms' => 0,
-            'fat' => 0,
-            'saf' => 0,
-        ];
-        foreach ($this->order_details->load('hour') as $detail) {
-            if ($detail->job_type_id === 1) {
-                $data['sw'] += $detail->hour->count;
-            } elseif ($detail->job_type_id === 2) {
-                $data['ms'] += $detail->hour->count;
-            } elseif ($detail->job_type_id === 3) {
-                $data['saf'] += $detail->hour->count;
-            } elseif ($detail->job_type_id === 4) {
-                $data['fat'] += $detail->hour->count;
+        $temp = new Collection();
+        foreach ($this->order_details->where('job_type_id',$job_type_id) as $detail) {
+            $temp->push($detail->hour);
+        }
+        $data = [];
+        foreach ($temp->groupBy(function ($item){ return $item->user->name . ' ' . $item->user->surname; }) as $user=>$item){
+            $data[$user] = 0;
+            $data['count'] = 0;
+            foreach ($item as $dato){
+                $data[$user] += $dato->count;
+                $data['count'] += $dato->count;
             }
         }
-
-        return $data;
-    }
-
-    public function setHours(array $hours): void
-    {
-        $this->update([
-
-        ]);
+        return collect($data);
     }
 }

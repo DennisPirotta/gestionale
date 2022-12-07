@@ -44,6 +44,7 @@
                                                                         id="date"
                                                                         value="{{ request('month') !== null ? Carbon\Carbon::parse(request('month'))->format('Y-m') : ''}}">
                     </div>
+
                     @role('admin|boss')
                     <div class="ps-2 me-2">
                         <label for="user" class="d-none"></label><select name="user" class="form-select" id="user">
@@ -57,6 +58,8 @@
                     <button class="btn btn-primary me-2 ms-auto" onclick="window.print()"><i
                                 class="bi bi-printer me-2"></i>Stampa
                     </button>
+                    @else
+                        <input type="hidden" name="user" value="{{ auth()->id() }}">
                     @endrole
                 </form>
             </div>

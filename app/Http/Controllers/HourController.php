@@ -79,7 +79,7 @@ class HourController extends Controller
             return response('Ora Inserita Correttamente');
         }
 
-        return redirect()->action([__CLASS__, 'index'], ['month' => Carbon::now()->format('Y-m')])->with('message', 'Ora Inserita Correttamente');
+        return redirect()->action([__CLASS__, 'index'], ['month' => Carbon::now()->format('Y-m'), 'user' => $request->get('user_id', auth()->id())])->with('message', 'Ora Inserita Correttamente');
     }
 
     public function create(): Response

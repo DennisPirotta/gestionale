@@ -6,7 +6,7 @@
             cursor: pointer;
         }
     </style>
-    <div class="mx-5 shadow-sm my-3 text-center justify-content-center p-3 text-center">
+    <div class="mx-3 shadow-sm my-3 text-center justify-content-center p-3 text-center">
         <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
                 <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home"
@@ -23,7 +23,7 @@
                  tabindex="0" style="overflow-y: scroll;height: 70vh">
                 <table class="table text-center table-bordered">
                     <thead headers="sticky">
-                    <tr>
+                    <tr class="head">
                         <th scope="col" rowspan="2">#</th>
                         <th scope="col" rowspan="2">Commessa Interna</th>
                         <th scope="col" rowspan="2">Commessa Esterna</th>
@@ -38,8 +38,8 @@
                         <th scope="col" rowspan="2">Responsabile</th>
                         <th scope="col" rowspan="2">Progressi</th>
                     </tr>
-                    <tr>
-                        <th scope="col" headers="sub">Preventivate</th>
+                    <tr class="head">
+                        <th scope="col">Preventivate</th>
                         <th scope="col">Usate</th>
                         <th scope="col">Residue</th>
                         <th scope="col">Preventivate</th>
@@ -176,20 +176,27 @@
 
         });
 
-        $('th').click(function(){
-            let table = $(this).parents('table').eq(0)
-            let rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()));
-            this.asc = !this.asc
-            if (!this.asc){rows = rows.reverse()}
-            for (let i = 0; i < rows.length; i++){table.append(rows[i])}
-        })
-        function comparer(index) {
-            return function(a, b) {
-                let valA = getCellValue(a, index), valB = getCellValue(b, index);
-                return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB)
-            }
-        }
-        function getCellValue(row, index){ return $(row).children('td').eq(index).text() }
+        // $('th').click(function(){
+        //     if($(this).hasClass('head')) return
+        //     let table = $(this).parents('table').eq(0)
+        //     let rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()));
+        //     //console.log(rows)
+        //     rows = rows.filter( e => {
+        //         return !$(e).hasClass('head')
+        //     } )
+        //     this.asc = !this.asc
+        //     if (!this.asc){rows = rows.reverse()}
+        //     for (let i = 0; i < rows.length; i++){
+        //         table.append(rows[i])
+        //     }
+        // })
+        // function comparer(index) {
+        //     return function(a, b) {
+        //         let valA = getCellValue(a, index), valB = getCellValue(b, index);
+        //         return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB)
+        //     }
+        // }
+        // function getCellValue(row, index){ return $(row).children('td').eq(index).text() }
     </script>
 
 @endsection

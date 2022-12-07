@@ -140,7 +140,7 @@ class OrderController extends Controller
     public function report(): Factory|View|Application
     {
         return view('orders.report', [
-            'orders' => Order::with(['job_type', 'status', 'country', 'company', 'user', 'customer', 'order_details'])->orderBy('status_id')->get(),
+            'orders' => Order::with(['job_type', 'status', 'country', 'company', 'user', 'customer', 'order_details'])->orderBy('status_id')->orderBy('innerCode')->get(),
             'order_details' => OrderDetails::with(['hour', 'order'])->get(),
         ]);
     }

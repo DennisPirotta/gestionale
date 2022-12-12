@@ -127,6 +127,9 @@ Route::middleware(['auth'])->group(function () {
     // aggiorna posizione
     Route::put('/dove-siamo/{location}', [LocationController::class, 'update'])->name('locations.update');
 
+    // elimina posizione
+    Route::delete('/dove-siamo/{location}', [LocationController::class, 'destroy'])->name('locations.destroy');
+
     Route::get('/fi/{technical_report}', [TechnicalReportDetailsController::class, 'show'])->name('technical_report_details.show');
 
     // Mostra pagina per report bug

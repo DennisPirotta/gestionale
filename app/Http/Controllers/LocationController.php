@@ -78,4 +78,10 @@ class LocationController extends Controller
 
         return back()->with('error', 'Puoi modificare solo la tua posizione');
     }
+
+    public function destroy(Location $location)
+    {
+        $location->delete();
+        return back()->with('message','Posizione eliminata con successo');
+    }
 }

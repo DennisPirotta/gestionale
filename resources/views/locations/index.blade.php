@@ -22,7 +22,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancella</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+                        <button id="delete" type="submit" class="btn btn-danger d-none" data-bs-dismiss="modal">Elimina</button>
                         <button type="submit" class="btn btn-primary">Salva</button>
                     </div>
                 </form>
@@ -37,7 +38,6 @@
                 $('#whereami').modal('toggle')
                 $('#date').val(date.format('YYYY-MM-DD'))
             })
-
         </script>
     @endif
     <div class="container mt-3 mb-1 shadow-sm p-5">
@@ -78,6 +78,7 @@
                     $('#position').val(info.event.extendedProps.description)
                     $('#actionForm').attr('action','{{ url('/dove-siamo') }}/'+info.event.extendedProps.locationId)
                     $('#_method').val('PUT')
+                    $('#delete').removeClass('d-none')
                 },
                 select: (info) => {
                     $('#actionForm').attr('action','{{ route('locations.store') }}')
@@ -87,6 +88,12 @@
                 }
             })
             calendar.render()
+        })
+
+        $('#whereami').on('hide.bs.modal',()=>{ $('#delete').addClass('d-none') })
+
+        $('#delete').click(()=>{
+            $('#_method').val('DELETE')
         })
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js" integrity="sha384-qlmct0AOBiA2VPZkMY3+2WqkHtIQ9lSdAsAn5RUJD/3vA5MKDgSGcdmIv4ycVxyn" crossorigin="anonymous"></script>

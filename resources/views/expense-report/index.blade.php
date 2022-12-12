@@ -1,15 +1,5 @@
-@php use App\Models\ExpenseReport;use App\Models\User;use Carbon\Carbon;use Carbon\CarbonPeriod; @endphp
+@php use Carbon\Carbon @endphp
 @extends('layouts.app')
-@php
-    $user = request('user') ?? auth()->id();
-    $month = request('mese') ?? Carbon::now()->format('Y-m');
-    $user = User::find($user);
-    $month = Carbon::parse($month);
-    $period = CarbonPeriod::create(clone $month->firstOfMonth(),$month->lastOfMonth());
-    $reports = $user->expense_reports->filter(static function($item) use ($period){
-        return Carbon::parse($item->date)->isBetween($period->first(),$period->last());
-    })->load('customer');
-@endphp
 <style>
     @media print {
         @page {
@@ -26,12 +16,14 @@
         <div class="d-flex align-items-center">
             <span class="m-0 h1">Rimborso {{ $month->translatedFormat('F Y') }} {{ $user->name }} {{ $user->surname }}</span>
             <form class="ms-auto d-flex me-2 align-items-center my-0" id="user_form">
+                @role('admin|boss')
                 <label for="user_select"></label><select id="user_select" class="form-select me-2" name="user">
                     @foreach($users as $current)
                         <option value="{{ $current->id }}"
                                 @if(request('user') === (string) $current->id) selected @endif>{{ $current->name }} {{ $current->surname }}</option>
                     @endforeach
                 </select>
+                @endrole
                 <label>
                     <input type="month" name="mese" id="mese" class="form-control" value="{{ $month->format('Y-m') }}">
                 </label>

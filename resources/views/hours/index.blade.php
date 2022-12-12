@@ -31,7 +31,7 @@
             </div>
             <div class="no-print flex ml-auto">
                 <button class="btn btn-primary me-2 ms-auto"
-                        onclick="window.location.href = '{{ route('expense_report.index') }}'"><i
+                        onclick="window.location.href = '{{ route('expense_report.index') }}?month={{ request('month',\Carbon\Carbon::now()->format('Y-m')) }}&user={{ request('user',auth()->id()) }}'"><i
                             class="bi bi-hourglass-split me-2"></i>Nota spese
                 </button>
                 <button class="btn btn-primary me-2" data-bs-target="#myModal"

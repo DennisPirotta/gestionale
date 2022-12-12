@@ -25,7 +25,7 @@
                 </select>
                 @endrole
                 <label>
-                    <input type="month" name="mese" id="mese" class="form-control" value="{{ $month->format('Y-m') }}">
+                    <input type="month" name="month" id="mese" class="form-control" value="{{ $month->format('Y-m') }}">
                 </label>
             </form>
             <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#add">Aggiungi nota</button>

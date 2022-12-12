@@ -18,13 +18,13 @@ class ExpenseReportController extends Controller
     public function index(): Application|Factory|View|RedirectResponse
     {
         $user = User::find(request('user', auth()->id()));
-        $month = Carbon::parse(request('mese', 'now'));
+        $month = Carbon::parse(request('month', 'now'));
         $period = CarbonPeriod::create(clone $month->firstOfMonth(), $month->lastOfMonth());
         $reports = $user->expense_reports->filter(static function ($item) use ($period) {
             return Carbon::parse($item->date)->isBetween($period->first(), $period->last());
         })->load('customer');
         if (auth()->id() != request('user') && !auth()->user()->hasRole('admin|boss')) {
-            return redirect()->action([__CLASS__, 'index'], ['mese' => $month, 'user' => auth()->id()]);
+            return redirect()->action([__CLASS__, 'index'], ['month' => $month->format('Y-m'), 'user' => auth()->id()]);
         }
         return view('expense-report.index', [
             'users' => User::with('expense_reports', 'expense_reports.customer')->get(),

@@ -81,7 +81,10 @@ class LocationController extends Controller
 
     public function destroy(Location $location)
     {
+        if ($location->user->id !== auth()->id() && !auth()->user()->hasRole('admin|boss')) {
+            return back()->with('message', 'Impossibile eliminare la posizione');
+        }
         $location->delete();
-        return back()->with('message','Posizione eliminata con successo');
+        return back()->with('message', 'Posizione eliminata con successo');
     }
 }

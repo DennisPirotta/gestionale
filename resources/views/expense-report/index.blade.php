@@ -1,5 +1,6 @@
 @php use Carbon\Carbon @endphp
 @extends('layouts.app')
+@dd($month,$period,$user,$reports)
 <style>
     @media print {
         @page {

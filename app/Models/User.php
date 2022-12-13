@@ -138,7 +138,7 @@ class User extends Authenticatable implements MustVerifyEmail
                 $hours += $item->count;
             }
             if ($hours > 8 && Carbon::parse($hour->date)->isWeekday()) {
-                $data['str25'] += $hour->count - 8;
+                $data['str25'] += $hours - 8;
             }
             if ($hour->hour_type_id === 6) {
                 $data['holidays'] += $hour->count;

@@ -28,8 +28,7 @@
     <div>
         <x-input-label for="secondary_customer_id" :value="__('Secondary Customer')"/>
         <select :disabled="type !== '2'" id="secondary_customer_id" name="secondary_customer_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-            <option selected>{{__('Choose a secondary customer')}}</option>
-            <option value="">{{__('Without customer')}}</option>
+            <option value="" selected>{{__('Without customer')}}</option>
             @foreach($customers as $customer)
                 <option value="{{ $customer->id }}" >{{ $customer->name }}</option>
             @endforeach

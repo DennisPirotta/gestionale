@@ -50,7 +50,7 @@
             <tbody>
             @foreach($reports as $report)
                 <tr>
-                    <td>{{ Carbon::parse($report->date)->translatedFormat('D d M Y') }}</td>
+                    <td>{{ Carbon::parse($report->date)->translatedFormat('D j M Y') }}</td>
                     <td>{{ $report->customer->name }}</td>
                     <td>{{ $report->location }}</td>
                     <td>{{ $report->km }}</td>

@@ -56,7 +56,7 @@
                     <td>{{ $report->food }} <i class="bi bi-currency-euro"></i></td>
                     <td>{{ $report->various }} <i class="bi bi-currency-euro"></i></td>
                     <td>{{ $report->transport }} <i class="bi bi-currency-euro"></i></td>
-                    <td></td>
+                    <td>{{ $report->food + $report->various + $report->transport }} <i class="bi bi-currency-euro"></i></td>
                     <td>{{ $report->note ?? '/' }}</td>
                 </tr>
             @endforeach

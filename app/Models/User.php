@@ -95,7 +95,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function expense_reports(): HasMany
     {
-        return $this->hasMany(ExpenseReport::class, 'customer_id');
+        return $this->hasMany(ExpenseReport::class, 'user_id');
     }
 
     public function engagements(): HasMany

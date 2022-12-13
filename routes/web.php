@@ -145,6 +145,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/expense-report', [ExpenseReportController::class, 'store'])->name('expense_report.store');
 
+    Route::delete('/expense-report/{expenseReport}', [ExpenseReportController::class, 'destroy'])->name('expense_report.destroy');
+
     // Mostra report ore
     Route::get('/ore/report', [HourController::class, 'report'])->name('hours.report');
 

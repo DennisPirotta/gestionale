@@ -55,4 +55,13 @@ class ExpenseReportController extends Controller
 
         return back()->with('message', 'Nota spesa inserita correttamente');
     }
+
+    public function destroy(ExpenseReport $expenseReport)
+    {
+        if ($expenseReport->user->id !== auth()->id() && !auth()->user()->hasRole('admin|boss')) {
+            return back()->with('message', 'Impossibile eliminare la nota spese');
+        }
+        $expenseReport->delete();
+        return back()->with('message', 'Nota spese cancellata correttamente');
+    }
 }

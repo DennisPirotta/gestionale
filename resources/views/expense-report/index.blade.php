@@ -44,6 +44,7 @@
                 <th scope="col">Trasporti</th>
                 <th scope="col">Totale</th>
                 <th scope="col">Note</th>
+                <th scope="col">Azioni</th>
             </tr>
             </thead>
             <tbody>
@@ -58,6 +59,15 @@
                     <td>{{ $report->transport }} <i class="bi bi-currency-euro"></i></td>
                     <td>{{ $report->food + $report->various + $report->transport }} <i class="bi bi-currency-euro"></i></td>
                     <td>{{ $report->note ?? '/' }}</td>
+                    <td>
+                        <form class="m-0" action="{{ route('expense_report.destroy',$report) }}" method="post">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn btn-danger" onclick="return confirm('Eliminare la nota spese?')" type="submit">
+                                <i class="bi bi-trash3"></i>
+                            </button>
+                        </form>
+                    </td>
                 </tr>
             @endforeach
             </tbody>

@@ -53,7 +53,7 @@
                     <td>{{ Carbon::parse($report->date)->translatedFormat('D j M Y') }}</td>
                     <td>{{ $report->customer->name }}</td>
                     <td>{{ $report->location }}</td>
-                    <td>{{ $report->km }}</td>
+                    <td>{{ $report->km }}Km - {{ $report->km/0.4 }} <i class="bi bi-currency-euro"></i></td>
                     <td>{{ $report->food }} <i class="bi bi-currency-euro"></i></td>
                     <td>{{ $report->various }} <i class="bi bi-currency-euro"></i></td>
                     <td>{{ $report->transport }} <i class="bi bi-currency-euro"></i></td>

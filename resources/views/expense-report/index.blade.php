@@ -79,14 +79,14 @@
                             <span class="input-group-text"><i class="bi bi-calendar-date fs-5"></i></span>
                             <div class="form-floating">
                                 <input type="date" name="date" class="form-control" id="date" placeholder="Giorno"
-                                       value="{{ Carbon::now()->format('Y-m-d') }}">
+                                       value="{{ Carbon::now()->format('Y-m-d') }}" required>
                                 <label for="date">Giorno</label>
                             </div>
                         </div>
                         <div class="input-group mb-3">
                             <span class="input-group-text"><i class="bi bi-person fs-5"></i></span>
                             <div class="form-floating">
-                                <select class="form-select" id="customer" name="customer_id">
+                                <select class="form-select" id="customer" name="customer_id" required>
                                     @foreach($customers as $customer)
                                         <option value="{{ $customer->id }}">{{ $customer->name }}</option>
                                     @endforeach
@@ -98,14 +98,14 @@
                             <span class="input-group-text"><i class="bi bi-geo-alt fs-5"></i></span>
                             <div class="form-floating">
                                 <input type="text" name="location" class="form-control" id="location"
-                                       placeholder="Località">
+                                       placeholder="Località" required>
                                 <label for="location">Località</label>
                             </div>
                         </div>
                         <div class="input-group mb-3">
                             <span class="input-group-text"><i class="bi bi-signpost-2 fs-5"></i></span>
                             <div class="form-floating">
-                                <input type="number" step="0.1" name="km" class="form-control" id="km" placeholder="Km">
+                                <input type="number" step="0.1" name="km" class="form-control" id="km" placeholder="Km" required>
                                 <label for="km">Km</label>
                             </div>
                         </div>
@@ -113,7 +113,7 @@
                             <span class="input-group-text"><i class="bi bi-house fs-5"></i></span>
                             <div class="form-floating">
                                 <input type="number" step="0.1" name="food" class="form-control" id="food"
-                                       placeholder="Vitto e alloggio">
+                                       placeholder="Vitto e alloggio" required>
                                 <label for="food">Vitto e alloggio</label>
                             </div>
                             <span class="input-group-text"><i class="bi bi-currency-euro fs-5"></i></span>
@@ -122,7 +122,7 @@
                             <span class="input-group-text"><i class="bi bi-credit-card-2-front fs-5"></i></span>
                             <div class="form-floating">
                                 <input type="number" step="0.1" name="various" class="form-control" id="various"
-                                       placeholder="Spese varie">
+                                       placeholder="Spese varie" required>
                                 <label for="various">Spese varie</label>
                             </div>
                             <span class="input-group-text"><i class="bi bi-currency-euro fs-5"></i></span>
@@ -131,7 +131,7 @@
                             <span class="input-group-text"><i class="bi bi-bicycle fs-5"></i></span>
                             <div class="form-floating">
                                 <input type="number" step="0.1" name="transport" class="form-control" id="transport"
-                                       placeholder="Trasporti">
+                                       placeholder="Trasporti" required>
                                 <label for="transport">Trasporti</label>
                             </div>
                             <span class="input-group-text"><i class="bi bi-currency-euro fs-5"></i></span>

@@ -42,11 +42,16 @@ class ExpenseReportController extends Controller
             'date' => 'required',
             'customer_id' => 'required',
             'location' => 'required',
-            'km' => 'required',
-            'food' => 'required',
-            'various' => 'required',
-            'transport' => 'required',
+            'km' => 'nullable',
+            'food' => 'nullable',
+            'various' => 'nullable',
+            'transport' => 'nullable',
         ]);
+
+        $data = array_map(
+            fn ($value) => $value ?? 0,
+            $data
+        );
 
         $data['note'] = $request->get('note');
         $data['user_id'] = $request->get('user', auth()->id());

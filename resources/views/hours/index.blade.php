@@ -124,6 +124,9 @@
                                                 contenteditable="true"
                                                 data-hour="{{ $hour->id }}">
                                                 {{ $hour->count }}
+                                                @if($hour_types->where('description',$desc)->value('id') == 2)
+                                                    @include('hours.partial.change-fi-night')
+                                                @endif
                                             </td>
                                         @endif
                                     @endforeach
@@ -220,17 +223,18 @@
             let cells = $('td')
             cells.on('focusout', e => {
                 let hour = $(e.target).attr('data-hour') ?? null
+                let text = $(e.target).text().replace(/\b(?:EU|XEU|NO)\b/gi,'').trim().replace(',','.')
                 let url = '{{ route('hours.store') }}'
                 let method = 'POST'
                 if (hour) {
                     url = '/ore/' + hour
-                    if ($(e.target).text().trim() === '' || $(e.target).text().trim() === '0') method = 'DELETE'
+                    if (text === '' || text === '0') method = 'DELETE'
                     else method = 'PUT'
                 }
                 const data = {
                     '_token': token,
                     '_method': method,
-                    'count': $(e.target).text().trim().replace(',','.'),
+                    'count': text,
                     'date': $(e.target).attr('data-datetime'),
                     'description': null,
                     'hour_type_id': $(e.target).attr('data-row'),
@@ -263,6 +267,27 @@
                     $(e.target).blur()
                 }
             })
+
+            $('.night').click( e => {
+                let hour = $(e.target).attr('data-hour')
+                fetch('/ore/'+hour+'/updateNight',{
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                        "X-Requested-With": "XMLHttpRequest",
+                        "X-CSRF-TOKEN": token,
+                    },
+                    credentials: "same-origin",
+                    body: JSON.stringify({
+                        '_token': token,
+                    }),
+                })
+                location.reload()
+            } )
+
         })
+
+
     </script>
 @endsection

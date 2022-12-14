@@ -111,6 +111,8 @@ Route::middleware(['auth'])->group(function () {
     // Elimina ore
     Route::delete('/ore/{hour}', [HourController::class, 'destroy'])->name('hours.destroy');
 
+    Route::post('/ore/{hour}/updateNight', [HourController::class, 'updateNightFI'])->name('hours.night.update');
+
     Route::get('change-password', [ChangePasswordController::class, 'index']);
     Route::post('change-password', [ChangePasswordController::class, 'store']);
 

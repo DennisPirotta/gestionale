@@ -49,7 +49,8 @@ class HourController extends Controller
                         }
                         return false;
                     },
-                ]),
+                ]
+            ),
             'period' => CarbonPeriod::create(Carbon::parse(request('month'))->firstOfMonth(), Carbon::parse(request('month'))->lastOfMonth()),
             'hour_types' => HourType::all(),
             'job_types' => JobType::all(),
@@ -217,5 +218,20 @@ class HourController extends Controller
                 $this->storeTechnicalReportHour($hour, $request);
             }
         }
+    }
+
+    public function updateNightFI(Hour $hour)
+    {
+        $fi = TechnicalReportDetails::where('hour_id', $hour->id)->first();
+        if (!$fi->nightEU && !$fi->nightExtraEU) {
+            $fi->nightEU = true;
+        } elseif ($fi->nightEU) {
+            $fi->nightEU = false;
+            $fi->nightExtraEU = true;
+        } else {
+            $fi->nightExtraEU = false;
+            $fi->nightEU = false;
+        }
+        $fi->save();
     }
 }

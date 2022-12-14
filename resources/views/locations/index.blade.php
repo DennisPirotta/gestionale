@@ -23,8 +23,8 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
-                        <button id="delete" type="submit" class="btn btn-danger d-none" data-bs-dismiss="modal">Elimina</button>
                         <button type="submit" class="btn btn-primary">Salva</button>
+                        <button id="delete" type="submit" class="btn btn-danger d-none" data-bs-dismiss="modal">Elimina</button>
                     </div>
                 </form>
 

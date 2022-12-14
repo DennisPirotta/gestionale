@@ -148,10 +148,10 @@ class User extends Authenticatable implements MustVerifyEmail
             if ($hour->hour_type_id === 2) {
                 $report = TechnicalReportDetails::where('hour_id', $hour->id)->first();
                 if ($report->nightEU === 1) {
-                    $data['eu'] += $hour->count;
+                    $data['eu'] ++;
                 }
                 if ($report->nightExtraEU === 1) {
-                    $data['xeu'] += $hour->count;
+                    $data['xeu'] ++;
                 }
             }
         }

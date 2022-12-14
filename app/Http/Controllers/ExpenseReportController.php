@@ -54,7 +54,7 @@ class ExpenseReportController extends Controller
         );
 
         $data['note'] = $request->get('note');
-        $data['user_id'] = $request->get('user', auth()->id());
+        $data['user_id'] = $request->get('user_id', auth()->id());
 
         ExpenseReport::create($data);
 

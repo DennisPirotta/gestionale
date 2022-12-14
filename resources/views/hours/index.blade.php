@@ -18,10 +18,14 @@
         .no-print {
             display: none !important;
         }
+        #main{
+            padding-left: 10px !important;
+            padding-right: 10px !important;
+        }
     }
 </style>
 @section('content')
-    <div class="container-fluid px-5 mt-5">
+    <div id="main" class="container-fluid px-5 mt-5">
         <div class="d-flex align-items-center">
             <div class="h1 m-0">
                 Ore

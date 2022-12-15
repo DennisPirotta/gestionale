@@ -18,6 +18,7 @@ class ExpenseReportController extends Controller
     public function index(): Application|Factory|View|RedirectResponse
     {
         $user = User::find(request('user', auth()->id()));
+
         $month = Carbon::parse(request('month', 'now'));
         $period = CarbonPeriod::create(clone $month->firstOfMonth(), $month->lastOfMonth());
         $reports = $user->expense_reports->filter(static function ($item) use ($period) {

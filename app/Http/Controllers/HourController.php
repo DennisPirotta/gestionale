@@ -27,8 +27,11 @@ use Illuminate\Validation\ValidationException;
 
 class HourController extends Controller
 {
-    public function index(): Response
+    public function index(): Response|RedirectResponse
     {
+        if (auth()->id() != request('user') && !auth()->user()->hasRole('admin|boss')) {
+            return redirect()->action([__CLASS__, 'index'], ['month' => request('month',Carbon::now()->format('Y-m')), 'user' => auth()->id()]);
+        }
         return response()->view('hours.index', [
             'data' => Hour::with('hour_type')->filter(request(['month', 'user']))->get()->groupBy(
                 [

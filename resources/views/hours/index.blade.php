@@ -232,7 +232,7 @@
                 let method = 'POST'
                 if (hour) {
                     url = '/ore/' + hour
-                    if (text === '' || text === '0') method = 'DELETE'
+                    if (text === '') method = 'DELETE'
                     else method = 'PUT'
                 }
                 const data = {
@@ -258,10 +258,9 @@
                     },
                     credentials: "same-origin",
                     body: JSON.stringify(data),
-                })
+                }).then(()=>location.reload())
             })
             cells.keypress(e => {
-                console.log(e.which)
                 if (e.which < 48 || e.which > 57) {
                     if(!(e.which == 44 || e.which == 46))
                         e.preventDefault();
@@ -286,8 +285,8 @@
                     body: JSON.stringify({
                         '_token': token,
                     }),
-                })
-                location.reload()
+                }).then(()=>location.reload())
+
             } )
 
         })

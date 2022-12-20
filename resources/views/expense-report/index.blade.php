@@ -57,7 +57,7 @@
                     <td>{{ $report->food }} <i class="bi bi-currency-euro"></i></td>
                     <td>{{ $report->various }} <i class="bi bi-currency-euro"></i></td>
                     <td>{{ $report->transport }} <i class="bi bi-currency-euro"></i></td>
-                    <td>{{ $report->food + $report->various + $report->transport }} <i class="bi bi-currency-euro"></i></td>
+                    <td>{{ $report->food + $report->various + $report->transport + $report->km*0.4 }} <i class="bi bi-currency-euro"></i></td>
                     <td>{{ $report->note ?? '/' }}</td>
                     <td>
                         <form class="m-0" action="{{ route('expense_report.destroy',$report) }}" method="post">

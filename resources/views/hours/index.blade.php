@@ -93,7 +93,7 @@
                                     <tr class="bg-gray-100 border-b">
                                         <th scope="row" class="border-r p-1.5">
                                             <div class="font-bold">
-                                                {{ $key !== 0 ? $key : '' }}
+                                                {{ $key }}
                                             </div>
                                             @if(App\Models\Order::where('innerCode',$key)->exists())
                                                 <div>
@@ -107,9 +107,11 @@
                                                     {{ App\Models\TechnicalReport::where('number',(string) $key)->first()->customer->name }}
                                                 </div>
                                             @endif
-                                            <div class="w-15 bg-blue-300 text-blue-800 text-xs font-medium px-2 py-0.5 rounded">
-                                                {{ $job_type }}
-                                            </div>
+                                            @if($job_type !== 0)
+                                                <div class="w-15 bg-blue-300 text-blue-800 text-xs font-medium px-2 py-0.5 rounded">
+                                                    {{ App\Models\JobType::where('title',$job_type)->first()->description }}
+                                                </div>
+                                            @endif
                                         </th>
                                         @php($count = 0)
                                         @foreach($period as $day)

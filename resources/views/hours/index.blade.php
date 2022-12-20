@@ -1,6 +1,9 @@
 @extends('layouts.app')
 @vite('resources/css/tailwind.css')
 <style>
+    th, td{
+        max-width: 15px !important;
+    }
     @media print {
         @page {
             size: landscape;
@@ -11,17 +14,10 @@
             display: none;
         }
 
-        table {
-            transform: translate(-26%, -19%) scale(0.5);
-        }
-
         .no-print {
             display: none !important;
         }
-        #main{
-            padding-left: 10px !important;
-            padding-right: 10px !important;
-        }
+
     }
 </style>
 @section('content')
@@ -69,121 +65,123 @@
             </div>
         </div>
         <hr class="hr my-3">
+    </div>
         @php($user = App\Models\User::find(request('user')) ?? auth()->user())
         @unless($data->count() === 0 || !request('month'))
+        <div class="max-w-10xl mx-auto sm:px-6 lg:px-8">
             <div class="overflow-x-auto relative shadow-md sm:rounded-lg">
                 <table class="w-full text-sm text-left text-gray-500  text-center">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-200 ">
-                    <tr>
-                        <th scope="col" class="py-2 px-4">
-                            #
-                        </th>
-                        @foreach($period as $day)
-                            <th scope="col" class="py-2 px-4 border-l border-gray-200 ">{{ $day->translatedFormat('D j') }}</th>
-                        @endforeach
-                        <th scope="col" class="py-2 px-4 border-l border-gray-200 ">TOT</th>
-                    </tr>
-                </thead>
-                <tbody>
-                @foreach($data as $desc=>$type)
-                    <tr class="bg-gray-50">
-                        <td class="py-2 px-4 bg-gray-50 border-l">{{ $desc }}</td>
-                        <td colspan="{{$period->count() + 1}}" class="bg-gray-50 py-2 px-4"></td>
-                    </tr>
-                    @foreach($type as $key=>$content)
-                        @foreach($content as $job_type=>$hours)
-                            <tr class="bg-gray-100 border-b">
-                                <th scope="row" class="border-r p-1.5 grid grid-cols-1 place-items-center">
-                                    <div class="font-bold">
-                                        {{ $key !== 0 ? $key : '' }}
-                                    </div>
-                                    @if(App\Models\Order::where('innerCode',$key)->exists())
-                                        <div>
-                                            {{ App\Models\Order::where('innerCode',$key)->value('outerCode') }}
-                                        </div>
-                                        <div>
-                                            {{ App\Models\Order::where('innerCode',$key)->first()->customer->name }}
-                                        </div>
-                                    @elseif(App\Models\TechnicalReport::where('number',(string) $key)->exists())
-                                        <div>
-                                            {{ App\Models\TechnicalReport::where('number',(string) $key)->first()->customer->name }}
-                                        </div>
-                                    @endif
-                                    <div class="w-15 bg-blue-300 text-blue-800 text-xs font-medium px-2 py-0.5 rounded">
-                                        {{ $job_type }}
-                                    </div>
-                                </th>
-                                @php($count = 0)
-                                @foreach($period as $day)
-                                    @php($insert=true)
-                                    @foreach($hours as $hour)
-                                        @if($hour->date === $day->format('Y-m-d'))
-                                            @php($insert=false)
-                                            @php($count+=$hour->count)
-                                            <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif "
-                                                data-datetime="{{ $day->format('Y-m-d') }}"
-                                                data-row="{{ $hour_types->where('description',$desc)->value('id') }}"
-                                                data-extra="{{ $key }}"
-                                                data-job="{{ $job_types->where('title',$job_type)->value('id') }}"
-                                                contenteditable="true"
-                                                data-hour="{{ $hour->id }}">
-                                                {{ $hour->count }}
-                                                @if($hour_types->where('description',$desc)->value('id') == 2)
-                                                    @include('hours.partial.change-fi-night')
-                                                @endif
-                                            </td>
-                                        @endif
-                                    @endforeach
-                                    @if($insert)
-                                        <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif "
-                                            data-datetime="{{ $day->format('Y-m-d') }}"
-                                            data-row="{{ $hour_types->where('description',$desc)->value('id') }}"
-                                            data-extra="{{ $key }}"
-                                            data-job="{{ $job_types->where('title',$job_type)->value('id') }}"
-                                            contenteditable="true">
-                                        </td>
-                                    @endif
-                                @endforeach
-                                <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif ">{{ $count }}</td>
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-200 ">
+                        <tr>
+                            <th scope="col" class="py-2 px-4">
+                                #
+                            </th>
+                            @foreach($period as $day)
+                                <th scope="col" class="border-l border-gray-200 ">{{ $day->translatedFormat('D') }}<br>{{ $day->translatedFormat('j') }}</th>
+                            @endforeach
+                            <th scope="col" class="border-l border-gray-200 ">TOT</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($data as $desc=>$type)
+                            <tr class="bg-gray-50">
+                                <th scope="row" class="py-2 px-4 bg-gray-50 border-l">{{ $desc }}</th>
+                                <td colspan="{{$period->count() + 1}}" class="bg-gray-50 py-2 px-4"></td>
                             </tr>
+                            @foreach($type as $key=>$content)
+                                @foreach($content as $job_type=>$hours)
+                                    <tr class="bg-gray-100 border-b">
+                                        <th scope="row" class="border-r p-1.5">
+                                            <div class="font-bold">
+                                                {{ $key !== 0 ? $key : '' }}
+                                            </div>
+                                            @if(App\Models\Order::where('innerCode',$key)->exists())
+                                                <div>
+                                                    {{ App\Models\Order::where('innerCode',$key)->value('outerCode') }}
+                                                </div>
+                                                <div>
+                                                    {{ App\Models\Order::where('innerCode',$key)->first()->customer->name }}
+                                                </div>
+                                            @elseif(App\Models\TechnicalReport::where('number',(string) $key)->exists())
+                                                <div>
+                                                    {{ App\Models\TechnicalReport::where('number',(string) $key)->first()->customer->name }}
+                                                </div>
+                                            @endif
+                                            <div class="w-15 bg-blue-300 text-blue-800 text-xs font-medium px-2 py-0.5 rounded">
+                                                {{ $job_type }}
+                                            </div>
+                                        </th>
+                                        @php($count = 0)
+                                        @foreach($period as $day)
+                                            @php($insert=true)
+                                            @foreach($hours as $hour)
+                                                @if($hour->date === $day->format('Y-m-d'))
+                                                    @php($insert=false)
+                                                    @php($count+=$hour->count)
+                                                    <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif "
+                                                        data-datetime="{{ $day->format('Y-m-d') }}"
+                                                        data-row="{{ $hour_types->where('description',$desc)->value('id') }}"
+                                                        data-extra="{{ $key }}"
+                                                        data-job="{{ $job_types->where('title',$job_type)->value('id') }}"
+                                                        contenteditable="true"
+                                                        data-hour="{{ $hour->id }}">
+                                                        {{ $hour->count }}
+                                                        @if($hour_types->where('description',$desc)->value('id') == 2)
+                                                            @include('hours.partial.change-fi-night')
+                                                        @endif
+                                                    </td>
+                                                @endif
+                                            @endforeach
+                                            @if($insert)
+                                                <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif "
+                                                    data-datetime="{{ $day->format('Y-m-d') }}"
+                                                    data-row="{{ $hour_types->where('description',$desc)->value('id') }}"
+                                                    data-extra="{{ $key }}"
+                                                    data-job="{{ $job_types->where('title',$job_type)->value('id') }}"
+                                                    contenteditable="true">
+                                                </td>
+                                            @endif
+                                        @endforeach
+                                        <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif ">{{ $count }}</td>
+                                    </tr>
+                                @endforeach
+                            @endforeach
                         @endforeach
-                    @endforeach
-                @endforeach
-                </tbody>
-                <tfoot>
-                <tr class="bg-gray-50">
-                    <td class="py-2 px-4 border-l">Parziale</td>
-                    <td colspan="{{$period->count()}}" class="py-2 px-4 "></td>
-                </tr>
-                    <tr class="bg-gray-100 border-b">
-                        <th scope="row">
-                            Totale
-                        </th>
-                        @foreach($period as $day)
-                            <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif ">{{ $user->hourDetails(Carbon\CarbonPeriod::create($day,$day))['total'] }}</td>
-                        @endforeach
-                        <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif ">{{ $user->hourDetails($period)['total'] }}</td>
-                    </tr>
-                    <tr class="bg-gray-100 border-b">
-                        <th scope="row">
-                            Straordinari 25%
-                        </th>
-                        @foreach($period as $day)
-                            <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif ">{{ $user->hourDetails(Carbon\CarbonPeriod::create($day,$day))['str25'] }}</td>
-                        @endforeach
-                        <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif ">{{ $user->hourDetails($period)['str25'] }}</td>
-                    </tr>
-                    <tr class="bg-gray-100 border-b">
-                        <th scope="row">
-                            Straordinari 50%
-                        </th>
-                        @foreach($period as $day)
-                            <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif ">{{ $user->hourDetails(Carbon\CarbonPeriod::create($day,$day))['str50'] }}</td>
-                        @endforeach
-                        <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif ">{{ $user->hourDetails($period)['str50'] }}</td>
-                    </tr>
-                </tfoot>
-            </table>
+                    </tbody>
+                    <tfoot>
+                        <tr class="bg-gray-50">
+                            <td class="py-2 px-4 border-l">Parziale</td>
+                            <td colspan="{{$period->count()}}" class="py-2 px-4 "></td>
+                        </tr>
+                        <tr class="bg-gray-100 border-b">
+                            <th scope="row">
+                                Totale
+                            </th>
+                            @foreach($period as $day)
+                                <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif ">{{ $user->hourDetails(Carbon\CarbonPeriod::create($day,$day))['total'] }}</td>
+                            @endforeach
+                            <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif ">{{ $user->hourDetails($period)['total'] }}</td>
+                        </tr>
+                        <tr class="bg-gray-100 border-b">
+                            <th scope="row">
+                                Straordinari 25%
+                            </th>
+                            @foreach($period as $day)
+                                <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif ">{{ $user->hourDetails(Carbon\CarbonPeriod::create($day,$day))['str25'] }}</td>
+                            @endforeach
+                            <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif ">{{ $user->hourDetails($period)['str25'] }}</td>
+                        </tr>
+                        <tr class="bg-gray-100 border-b">
+                            <th scope="row">
+                                Straordinari 50%
+                            </th>
+                            @foreach($period as $day)
+                                <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif ">{{ $user->hourDetails(Carbon\CarbonPeriod::create($day,$day))['str50'] }}</td>
+                            @endforeach
+                            <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif ">{{ $user->hourDetails($period)['str50'] }}</td>
+                        </tr>
+                    </tfoot>
+                </table>
             </div>
             <div class="container-fluid p-5">
                 <div class="row row-cols-3 g-3 justify-content-center">
@@ -201,19 +199,13 @@
                                    :value="$user->hourDetails($period)['str50']"></x-report-card>
                 </div>
             </div>
+        </div>
         @else
             <div class="container justify-content-center text-center">
                 <img src="{{ asset('images/no-orders.svg') }}" alt="" class="mx-auto" style="width: 40rem">
                 <div class="fs-1">Nessuna ora trovata</div>
             </div>
         @endunless
-    </div>
-    <div class="tooltip bs-tooltip-top" role="tooltip" id="tooltip">
-        <div class="tooltip-arrow"></div>
-        <div class="tooltip-inner">
-            Utilizza il punto al posto della virgola
-        </div>
-    </div>
     <script>
         $(() => {
 

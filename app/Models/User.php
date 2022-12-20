@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -139,7 +140,7 @@ class User extends Authenticatable implements MustVerifyEmail
                 $hours += $item->count;
             }
             if ($hours > 8 && Carbon::parse($hour->date)->isWeekday()) {
-                $data['str25'] = $hours - 8;
+                $data['str25'] += $hours - 8;
             }
 
             if ($hour->hour_type_id === 6) {

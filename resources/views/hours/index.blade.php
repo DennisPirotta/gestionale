@@ -51,7 +51,7 @@
                             <option disabled selected>Utente</option>
                             @foreach($users as $select_user)
                                 <option value="{{ $select_user->id }}"
-                                        @if(request('user') === (string)$select_user->id) selected @endif>{{ $select_user->name }} {{ $select_user->surname }}</option>
+                                        @if(request('user') === (string)$select_user->id) selected @endif>{{ $select_user->surname }} {{ $select_user->name }}</option>
                             @endforeach
                         </select>
                     </div>

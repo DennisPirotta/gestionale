@@ -128,7 +128,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'str50' => 0,
         ];
 
-        foreach ($this->hoursInPeriod($period) as $hour) {
+        foreach ($this->hoursInPeriod($period)->where('count','>',0) as $hour) {
             $data['total'] += $hour->count;
             if (Carbon::parse($hour->date)->isHoliday() || Carbon::parse($hour->date)->isWeekend()) {
                 $data['str50'] += $hour->count;
@@ -138,9 +138,8 @@ class User extends Authenticatable implements MustVerifyEmail
             foreach ($this->hours->where('date', $hour->date) as $item) {
                 $hours += $item->count;
             }
-            if ($hours > 8 && Carbon::parse($hour->date)->isWeekday()) {
-                $data['str25'] += $hours - 8;
-            }
+            $data['str25'] += $hours - 8;
+
 
             if ($hour->hour_type_id === 6) {
                 $data['holidays'] += $hour->count;

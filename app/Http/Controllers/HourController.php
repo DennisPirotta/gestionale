@@ -61,7 +61,7 @@ class HourController extends Controller
             'hour_types' => HourType::all(),
             'job_types' => JobType::all(),
             'original_orders' => Order::with(['status', 'customer'])->orderBy('status_id')->get(),
-            'users' => User::all(),
+            'users' => User::orderBy('surname')->get(),
         ]);
     }
 

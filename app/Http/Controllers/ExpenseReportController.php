@@ -24,16 +24,17 @@ class ExpenseReportController extends Controller
         $reports = $user->expense_reports->filter(static function ($item) use ($period) {
             return Carbon::parse($item->date)->isBetween($period->first(), $period->last());
         })->load('customer');
-        if (auth()->id() != request('user') && !auth()->user()->hasRole('admin|boss')) {
+        if (auth()->id() != request('user') && ! auth()->user()->hasRole('admin|boss')) {
             return redirect()->action([__CLASS__, 'index'], ['month' => $month->format('Y-m'), 'user' => auth()->id()]);
         }
+
         return view('expense-report.index', [
             'users' => User::with('expense_reports', 'expense_reports.customer')->get(),
             'customers' => Customer::all(),
             'user' => $user,
             'month' => $month,
             'period' => $period,
-            'reports' => $reports
+            'reports' => $reports,
         ]);
     }
 
@@ -64,10 +65,11 @@ class ExpenseReportController extends Controller
 
     public function destroy(ExpenseReport $expenseReport)
     {
-        if ($expenseReport->user->id !== auth()->id() && !auth()->user()->hasRole('admin|boss')) {
+        if ($expenseReport->user->id !== auth()->id() && ! auth()->user()->hasRole('admin|boss')) {
             return back()->with('message', 'Impossibile eliminare la nota spese');
         }
         $expenseReport->delete();
+
         return back()->with('message', 'Nota spese cancellata correttamente');
     }
 }

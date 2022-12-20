@@ -92,18 +92,21 @@ class Order extends Model
     public function getHours(int $job_type_id)
     {
         $temp = new Collection();
-        foreach ($this->order_details->where('job_type_id',$job_type_id) as $detail) {
+        foreach ($this->order_details->where('job_type_id', $job_type_id) as $detail) {
             $temp->push($detail->hour);
         }
         $data = [];
-        foreach ($temp->groupBy(function ($item){ return $item->user->name . ' ' . $item->user->surname; }) as $user=>$item){
+        foreach ($temp->groupBy(function ($item) {
+        return $item->user->name.' '.$item->user->surname;
+        }) as $user => $item) {
             $data[$user] = 0;
             $data['count'] = 0;
-            foreach ($item as $dato){
+            foreach ($item as $dato) {
                 $data[$user] += $dato->count;
                 $data['count'] += $dato->count;
             }
         }
+
         return collect($data);
     }
 }

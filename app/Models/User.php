@@ -3,7 +3,6 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Barryvdh\Debugbar\Facades\Debugbar;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -149,10 +148,10 @@ class User extends Authenticatable implements MustVerifyEmail
             if ($hour->hour_type_id === 2) {
                 $report = TechnicalReportDetails::where('hour_id', $hour->id)->first();
                 if ($report->nightEU === 1) {
-                    $data['eu'] ++;
+                    $data['eu']++;
                 }
                 if ($report->nightExtraEU === 1) {
-                    $data['xeu'] ++;
+                    $data['xeu']++;
                 }
             }
         }

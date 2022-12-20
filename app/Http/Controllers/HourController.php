@@ -29,9 +29,10 @@ class HourController extends Controller
 {
     public function index(): Response|RedirectResponse
     {
-        if (auth()->id() != request('user') && !auth()->user()->hasRole('admin|boss')) {
-            return redirect()->action([__CLASS__, 'index'], ['month' => request('month',Carbon::now()->format('Y-m')), 'user' => auth()->id()]);
+        if (auth()->id() != request('user') && ! auth()->user()->hasRole('admin|boss')) {
+            return redirect()->action([__CLASS__, 'index'], ['month' => request('month', Carbon::now()->format('Y-m')), 'user' => auth()->id()]);
         }
+
         return response()->view('hours.index', [
             'data' => Hour::with('hour_type')->filter(request(['month', 'user']))->get()->groupBy(
                 [
@@ -45,11 +46,13 @@ class HourController extends Controller
                         if ($item->hour_type->description === 'Foglio intervento') {
                             return $item->technical_report_hour()->technical_report->number;
                         }
+
                         return false;
                     }, static function ($item) {
                         if ($item->hour_type->description === 'Commessa') {
                             return $item->order_hour()->job_type->title;
                         }
+
                         return false;
                     },
                 ]
@@ -88,11 +91,12 @@ class HourController extends Controller
 
     public function create(): Response
     {
-        if (auth()->user()->hasRole('admin|boss')){
+        if (auth()->user()->hasRole('admin|boss')) {
             $technical_reports = TechnicalReport::with('customer', 'secondary_customer')->get();
-        }else{
+        } else {
             $technical_reports = auth()->user()->technical_reports->load('customer', 'secondary_customer');
         }
+
         return response()->view('hours.create', [
             'hour_types' => HourType::all(),
             'orders' => Order::with('customer', 'status')->orderBy('status_id')->get(),
@@ -231,7 +235,7 @@ class HourController extends Controller
     public function updateNightFI(Hour $hour)
     {
         $fi = TechnicalReportDetails::where('hour_id', $hour->id)->first();
-        if (!$fi->nightEU && !$fi->nightExtraEU) {
+        if (! $fi->nightEU && ! $fi->nightExtraEU) {
             $fi->nightEU = true;
         } elseif ($fi->nightEU) {
             $fi->nightEU = false;

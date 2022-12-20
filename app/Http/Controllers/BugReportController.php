@@ -36,7 +36,8 @@ class BugReportController extends Controller
     {
         $data['reported_by'] = auth()->user()->id;
         BugReport::create($data);
-        return back()->with('message','Report aggiornato con successo');
+
+        return back()->with('message', 'Report aggiornato con successo');
     }
 
     public function update(BugReport $bugReport)

@@ -169,9 +169,9 @@
                                 Straordinari 25%
                             </th>
                             @foreach($period as $day)
-                                <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif ">{{ $user->hourDetails(Carbon\CarbonPeriod::create($day,$day))['str25'] }}</td>
+                                <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif @if($user->hourDetails(Carbon\CarbonPeriod::create($day,$day))['str25'] < 0) bg-red-200 text-red-900 @endif">{{ $user->hourDetails(Carbon\CarbonPeriod::create($day,$day))['str25'] }}</td>
                             @endforeach
-                            <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif ">{{ $user->hourDetails($period)['str25'] }}</td>
+                            <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif @if($user->hourDetails($period)['str25'] < 0) bg-red-200 text-red-900 @endif">{{ $user->hourDetails($period)['str25'] }}</td>
                         </tr>
                         <tr class="bg-gray-100 border-b">
                             <th scope="row">

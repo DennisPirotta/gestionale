@@ -30,6 +30,7 @@ class AppServiceProvider extends ServiceProvider
         App::setLocale('it');
         Lang::setLocale('it');
         Carbon::setLocale('it');
+        Carbon::setHolidaysRegion('it');
         //Model::preventLazyLoading(! app()->isProduction());
     }
 }

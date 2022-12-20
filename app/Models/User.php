@@ -134,11 +134,14 @@ class User extends Authenticatable implements MustVerifyEmail
                 $data['str50'] += $hour->count;
             }
 
-            $hours = 0;
-            foreach ($this->hours->where('date', $hour->date) as $item) {
-                $hours += $item->count;
+            if (Carbon::parse($hour->date)->isWeekday()){
+                $hours = 0;
+                foreach ($this->hours->where('date', $hour->date) as $item) {
+                    $hours += $item->count;
+                }
+                $data['str25'] += $hours - 8;
             }
-            $data['str25'] += $hours - 8;
+
 
 
             if ($hour->hour_type_id === 6) {

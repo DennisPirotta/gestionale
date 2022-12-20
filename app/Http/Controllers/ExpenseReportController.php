@@ -24,8 +24,8 @@ class ExpenseReportController extends Controller
         $reports = $user->expense_reports->filter(static function ($item) use ($period) {
             return Carbon::parse($item->date)->isBetween($period->first(), $period->last());
         })->load('customer');
-        if (auth()->id() != request('user') && ! auth()->user()->hasRole('admin|boss')) {
-            return redirect()->action([__CLASS__, 'index'], ['month' => $month->format('Y-m'), 'user' => auth()->id()]);
+        if (auth()->id() !== (int)request('user') && ! auth()->user()->hasRole('admin|boss')) {
+            return redirect()->action([self::class, 'index'], ['month' => $month->format('Y-m'), 'user' => auth()->id()]);
         }
 
         return view('expense-report.index', [

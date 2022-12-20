@@ -31,7 +31,7 @@
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^6.1",
         "nunomaduro/larastan": "^2.1",
-        "nunomaduro/phpinsights": "^2.4",
+        "nunomaduro/phpinsights": "^2.6",
         "phpunit/phpunit": "^9.5.10",
         "roave/security-advisories": "dev-latest",
         "spatie/laravel-ignition": "^1.0",

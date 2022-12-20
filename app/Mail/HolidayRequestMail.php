@@ -12,17 +12,17 @@ class HolidayRequestMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public string $start;
+    private string $start;
 
-    public string $end;
+    private string $end;
 
-    public string $user;
+    private string $user;
 
-    public bool $approved;
+    private bool $approved;
 
-    public string $old_start = '';
+    private string $old_start = '';
 
-    public string $old_end = '';
+    private string $old_end = '';
 
     /**
      * Create a new message instance.

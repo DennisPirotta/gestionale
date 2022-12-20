@@ -16,14 +16,8 @@ class LocationController extends Controller
 {
     public function index(): Factory|View|Application
     {
-        $locations = Location::with('user')->get();
         $events = [];
-
-        foreach ($locations as $location) {
-            $color = '#6C757DFF';
-            if ($location->user->id === auth()->id()) {
-                $color = '#0D6EFDFF';
-            }
+        foreach (Location::with('user')->get() as $location) {
             $events[] = [
                 'start' => Carbon::parse($location->date),
                 'end' => Carbon::parse($location->date),
@@ -33,7 +27,7 @@ class LocationController extends Controller
                 'name' => $location->user->name,
                 'surname' => $location->user->surname,
                 'locationId' => $location->id,
-                'backgroundColor' => $color,
+                'backgroundColor' => $location->user->id === auth()->id() ? '#0D6EFDFF' : '#6C757DFF',
             ];
         }
 

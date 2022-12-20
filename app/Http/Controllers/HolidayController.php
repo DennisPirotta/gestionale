@@ -73,7 +73,6 @@ class HolidayController extends Controller
 
         $start = Carbon::parse($request->start);
         $end = Carbon::parse($request->end);
-        $allDay = $request->allDay === 'true' ? true : false;
         $approved = false;
 
         if ($end->isPast()) {

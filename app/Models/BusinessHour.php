@@ -24,7 +24,7 @@ class BusinessHour extends Model
     {
         for ($i = 0; $i < 5; $i++) {
             $date = Carbon::parse('5-1-1970')->addDays($i);
-            $hour = self::create([
+            self::create([
                 'user_id' => $user->id,
                 'week_day' => strtolower($date->format('l')),
                 'morning_start' => Carbon::parse('8:00'),

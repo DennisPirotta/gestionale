@@ -12,11 +12,11 @@ class HolidayDeletedMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public string $start;
+    private string $start;
 
-    public string $end;
+    private string $end;
 
-    public string $user;
+    private string $user;
 
     /**
      * Create a new message instance.

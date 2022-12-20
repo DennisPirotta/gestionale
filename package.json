@@ -7,34 +7,34 @@
         "watch": "vite build --watch"
     },
     "devDependencies": {
-        "@popperjs/core": "^2.10.2",
+        "@popperjs/core": "^2.11.6",
         "autoprefixer": "^10.4.13",
-        "axios": "^0.27.2",
-        "bootstrap": "^5.1.3",
-        "laravel-vite-plugin": "^0.5.0",
-        "lodash": "^4.17.19",
-        "postcss": "^8.4.19",
+        "axios": "^1.2.1",
+        "bootstrap": "^5.2.3",
+        "laravel-vite-plugin": "^0.7.2",
+        "lodash": "^4.17.21",
+        "postcss": "^8.4.20",
         "progressbar.js": "^1.1.0",
-        "sass": "^1.32.11",
+        "sass": "^1.57.1",
         "tailwindcss": "^3.2.4",
-        "vite": "^3.0.0",
+        "vite": "^4.0.2",
         "vite-plugin-mkcert": "^1.10.1"
     },
     "dependencies": {
         "bootstrap": "^5.2.0",
-        "fullcalendar": "^5.11.3",
-        "isomorphic-dompurify": "^0.20.0",
+        "fullcalendar": "^6.0.0",
+        "isomorphic-dompurify": "^0.24.0",
         "jquery-circle-progress": "^1.2.2",
         "js-circle-progress": "^0.2.4",
         "moment": "^2.29.4",
         "moment-business": "^3.0.1",
         "moment-business-days": "^1.2.0",
         "moment-with-locales-es6": "^1.0.1",
-        "patch-package": "^6.4.7",
+        "patch-package": "^6.5.0",
         "progress.js": "^1.1.3",
         "progressbar.js": "^1.1.0",
-        "superagent": "^8.0.0",
+        "superagent": "^8.0.6",
         "watch": "^0.13.0",
-        "webextension-polyfill": "^0.9.0"
+        "webextension-polyfill": "^0.10.0"
     }
 }

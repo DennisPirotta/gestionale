@@ -30,7 +30,7 @@ class ExpenseReportController extends Controller
 
         return view('expense-report.index', [
             'users' => User::with('expense_reports', 'expense_reports.customer')->get(),
-            'customers' => Customer::all(),
+            'customers' => Customer::orderBy('name')->get(),
             'user' => $user,
             'month' => $month,
             'period' => $period,

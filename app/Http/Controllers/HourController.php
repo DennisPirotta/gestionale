@@ -102,7 +102,7 @@ class HourController extends Controller
             'orders' => Order::with('customer', 'status')->orderBy('status_id')->get(),
             'job_types' => JobType::all(),
             'technical_reports' => $technical_reports,
-            'customers' => Customer::all(),
+            'customers' => Customer::orderBy('name')->get(),
         ]);
     }
 

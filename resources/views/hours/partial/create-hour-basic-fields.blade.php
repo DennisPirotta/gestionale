@@ -16,8 +16,8 @@
             <x-input-label for="user_id" :value="__('User')"/>
             <select id="user_id" name="user_id"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                @foreach(\App\Models\User::all() as $user)
-                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+                @foreach(\App\Models\User::orderBy('surname')->get() as $user)
+                    <option value="{{ $user->id }}">{{ $user->surname }} {{ $user->name }}</option>
                 @endforeach
             </select>
             <x-input-error class="mt-2" :messages="$errors->get('user_id')"/>

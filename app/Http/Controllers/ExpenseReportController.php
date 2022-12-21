@@ -42,7 +42,6 @@ class ExpenseReportController extends Controller
     {
         $data = $request->validate([
             'date' => 'required',
-            'customer_id' => 'required',
             'location' => 'required',
             'km' => 'nullable',
             'food' => 'nullable',
@@ -57,6 +56,7 @@ class ExpenseReportController extends Controller
 
         $data['note'] = $request->get('note');
         $data['user_id'] = $request->get('user_id', auth()->id());
+        $data['customer_id'] = $request->get('customer_id');
 
         ExpenseReport::create($data);
 

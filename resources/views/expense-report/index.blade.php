@@ -51,7 +51,12 @@
             @foreach($reports as $report)
                 <tr>
                     <td>{{ Carbon::parse($report->date)->translatedFormat('D j M Y') }}</td>
-                    <td>{{ $report->customer->name }}</td>
+                    @if($report->customer !== null)
+                        <td>{{ $report->customer->name }}</td>
+                    @else
+                        <td>//</td>
+                    @endif
+
                     <td>{{ $report->location }}</td>
                     <td>{{ $report->km }}Km - {{ $report->km*0.4 }} <i class="bi bi-currency-euro"></i></td>
                     <td>{{ $report->food }} <i class="bi bi-currency-euro"></i></td>
@@ -96,7 +101,8 @@
                         <div class="input-group mb-3">
                             <span class="input-group-text"><i class="bi bi-person fs-5"></i></span>
                             <div class="form-floating">
-                                <select class="form-select" id="customer" name="customer_id" required>
+                                <select class="form-select" id="customer" name="customer_id">
+                                    <option selected value="">Nessun cliente</option>
                                     @foreach($customers as $customer)
                                         <option value="{{ $customer->id }}">{{ $customer->name }}</option>
                                     @endforeach

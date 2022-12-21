@@ -20,7 +20,7 @@
                 <label for="user_select"></label><select id="user_select" class="form-select me-2" name="user">
                     @foreach($users as $current)
                         <option value="{{ $current->id }}"
-                                @if(request('user') === (string) $current->id) selected @endif>{{ $current->name }} {{ $current->surname }}</option>
+                                @if(request('user') === (string) $current->id) selected @endif>{{ $current->surname }} {{ $current->name }}</option>
                     @endforeach
                 </select>
                 @endrole

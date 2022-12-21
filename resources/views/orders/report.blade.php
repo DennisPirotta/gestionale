@@ -62,9 +62,9 @@
                             <td>{{$order->outerCode}}</td>
                             <td>{{$order->description}}</td>
 
-                            <td>{{ round($order->hourSW) }}</td>
+                            <td>{{ $order->hourSW }}</td>
                             <td>
-                                {{ round($order->getHours(JobType::SVILUPPO_SOFTWARE)->get('count',0)) }}
+                                {{ $order->getHours(JobType::SVILUPPO_SOFTWARE)->get('count',0) }}
                                 <br>
                                 @if(count($order->getHours(JobType::SVILUPPO_SOFTWARE)) > 1)
                                     @php($sw = '')
@@ -74,11 +74,11 @@
                                     <a tabindex="0" class="bi bi-info-circle text-primary" data-bs-trigger="focus" data-bs-toggle="popover" data-bs-title="Dettagli" data-bs-content="{{ $sw }}"></a>
                                 @endif
                             </td>
-                            <td>{{ round($order->hourSW) - round($order->getHours(JobType::SVILUPPO_SOFTWARE)['count'] ?? 0) }}</td>
+                            <td>{{ $order->hourSW - $order->getHours(JobType::SVILUPPO_SOFTWARE)['count'] ?? 0 }}</td>
 
-                            <td>{{ round($order->hourMS) }}</td>
+                            <td>{{ $order->hourMS }}</td>
                             <td>
-                                {{ round($order->getHours(JobType::MESSA_IN_SERVIZIO)->get('count',0)) }}
+                                {{ $order->getHours(JobType::MESSA_IN_SERVIZIO)->get('count',0) }}
                                 <br>
                                 @if(count($order->getHours(JobType::MESSA_IN_SERVIZIO)) > 1)
                                     @php($ms = '')
@@ -88,11 +88,11 @@
                                     <a tabindex="0" class="bi bi-info-circle text-primary" data-bs-trigger="focus" data-bs-toggle="popover" data-bs-title="Dettagli" data-bs-content="{{ $ms }}"></a>
                                 @endif
                             </td>
-                            <td>{{ round($order->hourMS) - round($order->getHours(JobType::MESSA_IN_SERVIZIO)['count'] ?? 0) }}</td>
+                            <td>{{ $order->hourMS - $order->getHours(JobType::MESSA_IN_SERVIZIO)['count'] ?? 0 }}</td>
 
-                            <td>{{ round($order->hourFAT) }}</td>
+                            <td>{{ $order->hourFAT }}</td>
                             <td>
-                                {{ round($order->getHours(JobType::COLLAUDO)->get('count',0)) }}
+                                {{ $order->getHours(JobType::COLLAUDO)->get('count',0) }}
                                 <br>
                                 @if(count($order->getHours(JobType::COLLAUDO)) > 1)
                                     @php($fat = '')
@@ -102,11 +102,11 @@
                                     <a tabindex="0" class="bi bi-info-circle text-primary" data-bs-trigger="focus" data-bs-toggle="popover" data-bs-title="Dettagli" data-bs-content="{{ $fat }}"></a>
                                 @endif
                             </td>
-                            <td>{{ round($order->hourFAT) - round($order->getHours(JobType::COLLAUDO)['count'] ?? 0) }}</td>
+                            <td>{{ $order->hourFAT - $order->getHours(JobType::COLLAUDO)['count'] ?? 0 }}</td>
 
-                            <td>{{ round($order->hourSAF) }}</td>
+                            <td>{{ $order->hourSAF }}</td>
                             <td>
-                                {{ round($order->getHours(JobType::SAFETY)->get('count',0)) }}
+                                {{ $order->getHours(JobType::SAFETY)->get('count',0) }}
                                 <br>
                                 @if(count($order->getHours(JobType::SAFETY)) > 1)
                                     @php($saf = '')
@@ -116,7 +116,7 @@
                                     <a tabindex="0" class="bi bi-info-circle text-primary" data-bs-trigger="focus" data-bs-toggle="popover" data-bs-title="Dettagli" data-bs-content="{{ $saf }}"></a>
                                 @endif
                             </td>
-                            <td>{{ round($order->hourSAF) - round($order->getHours(JobType::SAFETY)['count'] ?? 0) }}</td>
+                            <td>{{ $order->hourSAF - $order->getHours(JobType::SAFETY)['count'] ?? 0 }}</td>
 
                             <td>{{Carbon::parse($order->opening)->format('d-m-Y')}}</td>
                             <td>{{$order->closing !== null ? Carbon::parse($order->closing)->format('d-m-Y') : '/' }}</td>

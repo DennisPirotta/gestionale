@@ -15,6 +15,7 @@ use App\Models\TechnicalReportDetails;
 use App\Models\User;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
+use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -41,10 +42,18 @@ class HourController extends Controller
                     },
                     static function ($item) {
                         if ($item->hour_type->description === 'Commessa') {
-                            return $item->order_hour()->order->innerCode;
+                            try {
+                                return $item->order_hour()->order->innerCode;
+                            }catch (Exception){
+                                return false;
+                            }
                         }
                         if ($item->hour_type->description === 'Foglio intervento') {
-                            return $item->technical_report_hour()->technical_report->number;
+                            try {
+                                return $item->technical_report_hour()->technical_report->number;
+                            }catch (Exception){
+                                return false;
+                            }
                         }
 
                         return false;

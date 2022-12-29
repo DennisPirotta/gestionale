@@ -44,14 +44,14 @@ class HourController extends Controller
                         if ($item->hour_type->description === 'Commessa') {
                             try {
                                 return $item->order_hour()->order->innerCode;
-                            }catch (Exception){
+                            } catch (Exception) {
                                 return false;
                             }
                         }
                         if ($item->hour_type->description === 'Foglio intervento') {
                             try {
                                 return $item->technical_report_hour()->technical_report->number;
-                            }catch (Exception){
+                            } catch (Exception) {
                                 return false;
                             }
                         }

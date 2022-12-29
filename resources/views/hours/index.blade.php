@@ -212,6 +212,11 @@
     <script>
         $(() => {
 
+            let validate = function(e) {
+                let t = e.value;
+                e.value = (t.indexOf(".") >= 0) ? (t.substr(0, t.indexOf(".")) + t.substr(t.indexOf("."), 3)) : t;
+            }
+
             $('#date').on('change', (e) => {
                 $('#queryData').submit()
             })
@@ -256,6 +261,12 @@
                 }).then(()=>location.reload())
             })
             cells.keypress(e => {
+                // let count = Math.floor($(e.target).text().replace(/\b(?:EU|XEU|NO)\b/gi,'').trim().replace(',','.')+e.value)
+                // console.log($(e.target).text().replace(/\b(?:EU|XEU|NO)\b/gi,'').trim().replace(',','.'))
+                // console.log(count)
+                // console.log(count.countDecimals())
+
+
                 if (e.which < 48 || e.which > 57) {
                     if(!(e.which == 44 || e.which == 46))
                         e.preventDefault();

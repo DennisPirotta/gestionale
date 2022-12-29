@@ -152,28 +152,30 @@ Route::middleware(['auth'])->group(function () {
     // Mostra report ore
     Route::get('/ore/report', [HourController::class, 'report'])->name('hours.report');
 
-    Route::group(['middleware' => ['role:admin|boss']], static function () {
-        /*
+    /*
         *  GESTIONE ROUTES CLIENTI
         */
 
-        // Mostra pagina clienti
-        Route::get('/clienti', [CustomerController::class, 'index'])->name('customers.index');
+    // Mostra pagina clienti
+    Route::get('/clienti', [CustomerController::class, 'index'])->name('customers.index');
 
-        // Mostra pagina crea cliente
-        Route::get('/clienti/create', [CustomerController::class, 'create'])->name('customers.create');
+    // Mostra pagina crea cliente
+    Route::get('/clienti/create', [CustomerController::class, 'create'])->name('customers.create');
 
-        // Mostra pagina clienti
-        Route::post('/clienti', [CustomerController::class, 'store'])->name('customers.store');
+    // Mostra pagina clienti
+    Route::post('/clienti', [CustomerController::class, 'store'])->name('customers.store');
 
-        // Mostra pagina modifica
-        Route::get('/clienti/{customer}/edit', [CustomerController::class, 'edit'])->name('customers.edit');
+    // Mostra pagina modifica
+    Route::get('/clienti/{customer}/edit', [CustomerController::class, 'edit'])->name('customers.edit');
 
-        // Modifica cliente
-        Route::put('/clienti/{customer}', [CustomerController::class, 'update'])->name('customers.update');
+    // Modifica cliente
+    Route::put('/clienti/{customer}', [CustomerController::class, 'update'])->name('customers.update');
 
-        // Elimina cliente
-        Route::delete('/clienti/{customer}', [CustomerController::class, 'destroy'])->name('customers.destroy');
+    // Elimina cliente
+    Route::delete('/clienti/{customer}', [CustomerController::class, 'destroy'])->name('customers.destroy');
+
+    Route::group(['middleware' => ['role:admin|boss']], static function () {
+
 
         // Approva ferie
         Route::put('/ferie/approve/{holiday}', [HolidayController::class, 'approve'])->name('holidays.approve');

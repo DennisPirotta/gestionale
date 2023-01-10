@@ -11,7 +11,7 @@
             </th>
             @php($count=0)
             @foreach($period as $day)
-                <td class="border-r">
+                <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif ">
                     <div    contenteditable="true"
                             data-technical-report-id="{{ $technical_report_hour->first()->technical_report->id }}"
                             data-date="{{ $day->format('Y-m-d') }}"

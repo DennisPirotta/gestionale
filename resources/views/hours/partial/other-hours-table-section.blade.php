@@ -7,7 +7,7 @@
         <th scope="row" class="border-r p-1.5"></th>
         @php($count = 0)
         @foreach($period as $day)
-            <td class="border-r">
+            <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif ">
                 <div    contenteditable="true"
                         data-date="{{ $day->format('Y-m-d') }}"
                         data-hour-type="{{ $type }}"

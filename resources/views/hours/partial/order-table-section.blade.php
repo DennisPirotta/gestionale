@@ -12,7 +12,7 @@
             </th>
             @php($count = 0)
             @foreach($period as $day)
-                <td class="border-r">
+                <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif ">
                     <div    contenteditable="true"
                             data-order-id="{{ $order_hour->first()->order->id }}"
                             data-date="{{ $day->format('Y-m-d') }}"

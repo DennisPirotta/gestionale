@@ -128,34 +128,14 @@ class User extends Authenticatable implements MustVerifyEmail
             'str50' => 0,
         ];
 
-        foreach ($this->hoursInPeriod($period)->where('count','>',0) as $hour) {
-            $data['total'] += $hour->count;
-            if (Carbon::parse($hour->date)->isHoliday() || Carbon::parse($hour->date)->isWeekend()) {
-                $data['str50'] += $hour->count;
-            }
-
-            if (Carbon::parse($hour->date)->isWeekday()){
-                $hours = 0;
-                foreach ($this->hours->where('date', $hour->date) as $item) {
-                    $hours += $item->count;
-                }
-                $data['str25'] += $hours - 8;
-            }
-
-
-
-            if ($hour->hour_type_id === 6) {
-                $data['holidays'] += $hour->count;
-            }
-            if ($hour->hour_type_id === 2) {
-                $report = TechnicalReportDetails::where('hour_id', $hour->id)->first();
-                if ($report->nightEU === 1) {
-                    $data['eu']++;
-                }
-                if ($report->nightExtraEU === 1) {
-                    $data['xeu']++;
-                }
-            }
+        foreach ($period as $day){
+            $daily = $this->hoursInDay($day);
+            $data['total'] += $daily['total'];
+            $data['holidays'] += $daily['holidays'];
+            $data['eu'] += $daily['eu'];
+            $data['xeu'] += $daily['xeu'];
+            $data['str25'] += $daily['str25'];
+            $data['str50'] += $daily['str50'];
         }
 
         return $data;
@@ -166,5 +146,39 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hours->filter(static function ($item) use ($period) {
             return Carbon::parse($item->date)->isBetween(clone $period->first(), $period->last());
         });
+    }
+
+    public function hoursInDay(Carbon $day): array
+    {
+        $hours = $this->hours->where('date', $day->format('Y-m-d'));
+        $data = [
+            'total' => 0,
+            'holidays' => 0,
+            'eu' => 0,
+            'xeu' => 0,
+            'str25' => 0,
+            'str50' => 0,
+        ];
+        foreach ($hours as $hour) {
+            $data['total'] += $hour->count;
+            if ($day->isHoliday() || $day->isWeekend()) {
+                $data['str50'] += $hour->count;
+            }
+            if ($data['total'] > 8) {
+                $data['str25'] = $data['total'] - 8;
+            }
+            if ($hour->hour_type_id === 6) {
+                $data['holidays'] += $hour->count;
+            }
+            if ($hour->hour_type_id === 2) {
+                if ($hour->technical_report_details->first()->nightEU) {
+                    $data['eu']++;
+                }
+                if ($hour->technical_report_details->first()->nightExtraEU) {
+                    $data['xeu']++;
+                }
+            }
+        }
+        return $data;
     }
 }

@@ -11,6 +11,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\HourController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\OrderDetailsController;
 use App\Http\Controllers\TechnicalReportDetailsController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
@@ -29,6 +30,11 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 Auth::routes(['verify' => true]);
 Route::middleware(['auth'])->group(function () {
+
+
+    Route::resource('/technical-report-hours', TechnicalReportDetailsController::class);
+    Route::resource('/order-hours', OrderDetailsController::class);
+
     /*
     *  GESTIONE ROUTES COMMESSE
     */

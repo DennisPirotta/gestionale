@@ -1,6 +1,7 @@
 import './bootstrap'
 import '../sass/app.scss'
 import '../css/app.css'
+import "flowbite"
 import DOMPurify from "isomorphic-dompurify";
 const token = document.querySelector('meta[name="csrf-token"]').content;
 

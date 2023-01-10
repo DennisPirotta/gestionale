@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreHourRequest;
-use App\Http\Requests\UpdateHourRequest;
 use App\Models\Customer;
 use App\Models\Hour;
 use App\Models\HourType;
@@ -15,146 +14,132 @@ use App\Models\TechnicalReportDetails;
 use App\Models\User;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
-use Exception;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
-use Illuminate\Routing\Redirector;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
 class HourController extends Controller
 {
-    public function index(): Response|RedirectResponse
+    /**
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
+    public function index(): Response
     {
-        if (auth()->id() !== (int)request('user') && ! auth()->user()->hasRole('admin|boss')) {
-            return redirect()->action([self::class, 'index'], ['month' => request('month', Carbon::now()->format('Y-m')), 'user' => auth()->id()]);
-        }
+        $data = Hour::with('hour_type')->filter(request(['month', 'user']))->get();
+        $user = User::find(request('user', auth()->id()));
+
+        $technical_report_hours = TechnicalReportDetails::with(['technical_report','technical_report.customer','hour'])->whereIn('hour_id', $data->where('hour_type_id', 2)->map(function ($item) {
+            return $item->id;
+        }))->get();
+        $order_hours = OrderDetails::with(['order','order.customer','hour'])->whereIn('hour_id', $data->where('hour_type_id', 1)->map(function ($item) {
+            return $item->id;
+        }))->get();
 
         return response()->view('hours.index', [
-            'data' => Hour::with('hour_type')->filter(request(['month', 'user']))->get()->groupBy(
-                [
-                    static function ($item) {
-                        return $item->hour_type->description;
-                    },
-                    static function ($item) {
-                        if ($item->hour_type->description === 'Commessa') {
-                            try {
-                                return $item->order_hour()->order->innerCode;
-                            } catch (Exception) {
-                                return false;
-                            }
-                        }
-                        if ($item->hour_type->description === 'Foglio intervento') {
-                            try {
-                                return $item->technical_report_hour()->technical_report->number;
-                            } catch (Exception) {
-                                return false;
-                            }
-                        }
-
-                        return false;
-                    }, static function ($item) {
-                        if ($item->hour_type->description === 'Commessa') {
-                            return $item->order_hour()->job_type->title;
-                        }
-
-                        return false;
-                    },
-                ]
-            ),
+            'user' => $user,
+            'technical_report_hours' => $technical_report_hours->groupBy('technical_report_id'),
+            'order_hours' => $order_hours->groupBy('order_id'),
+            'other_hours' => $data->whereNotIn('hour_type_id', [1,2])->groupBy('hour_type_id'),
             'period' => CarbonPeriod::create(Carbon::parse(request('month'))->firstOfMonth(), Carbon::parse(request('month'))->lastOfMonth()),
-            'hour_types' => HourType::all(),
-            'job_types' => JobType::all(),
-            'original_orders' => Order::with(['status', 'customer'])->orderBy('status_id')->get(),
-            'users' => User::orderBy('surname')->get(),
         ]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function create(): Response
+    {
+        return response()->view('hours.create', [
+            'hour_types' => HourType::all(),
+            'orders' => Order::with('customer', 'status')->orderBy('status_id')->get(),
+            'job_types' => JobType::all(),
+            'technical_reports' => TechnicalReport::with('customer', 'secondary_customer')->get(),
+            'customers' => Customer::all(),
+        ]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param StoreHourRequest $request
+     * @return RedirectResponse|Hour
+     */
+    public function store(StoreHourRequest $request)
+    {
+        if ($request->has('date')) {
+            $validated = $request->validated();
+            if ($validated['user_id'] ?? true) {
+                $validated['user_id'] = auth()->id();
+            }
+            $hour = Hour::create($validated);
+            if ($request->ajax()) {
+                return $hour;
+            }
+            if ($hour->hour_type->id === 1) {
+                $this->storeOrderDetails($hour, $request);
+            } elseif ($request->get('hour_type_id') === '2') {
+                $this->storeTechnicalReportDetails($hour, $request);
+            }
+        } else {
+            $this->multipleStore($request);
+        }
+        return redirect()->action([__CLASS__, 'index'], ['month' => Carbon::now()->format('Y-m'), 'user' => request('user',auth()->id())])->with('message', 'Ora Inserita Correttamente');
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  Hour  $hour
+     * @return void
+     */
+    public function show(Hour $hour): void
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  Hour  $hour
+     * @return void
+     */
+    public function edit(Hour $hour): void
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  Hour  $hour
+     * @return RedirectResponse
+     */
+    public function destroy(Hour $hour): RedirectResponse
+    {
+        if ($hour->order_hour()) {
+            $hour->order_hour()->delete();
+        }
+        if ($hour->technical_report_hour()) {
+            $hour->technical_report_hour()->delete();
+        }
+        $hour->delete();
+
+        return back()->with('message', 'Ora eliminata con successo');
     }
 
     /**
      * @throws ValidationException
      */
-    public function store(StoreHourRequest $request): Redirector|Application|RedirectResponse|Response
-    {
-        $validated = $request->validated();
-        if (! isset($validated['date'])) {
-            $this->multipleStore($request);
-        } else {
-            $validated['user_id'] = $request->get('user_id', auth()->id());
-            $hour = Hour::create($validated);
-            if ($hour->hour_type->id === 1) {
-                $this->storeOrderHour($hour, $request);
-            } elseif ($hour->hour_type->id === 2) {
-                $this->storeTechnicalReportHour($hour, $request);
-            }
-        }
-        if ($request->ajax()) {
-            return response('Ora Inserita Correttamente');
-        }
-
-        return redirect()->action([self::class, 'index'], ['month' => Carbon::now()->format('Y-m'), 'user' => $request->get('user_id', auth()->id())])->with('message', 'Ora Inserita Correttamente');
-    }
-
-    public function create(): Response
-    {
-        if (auth()->user()->hasRole('admin|boss')) {
-            $technical_reports = TechnicalReport::with('customer', 'secondary_customer')->get();
-        } else {
-            $technical_reports = auth()->user()->technical_reports->load('customer', 'secondary_customer');
-        }
-
-        return response()->view('hours.create', [
-            'hour_types' => HourType::all(),
-            'orders' => Order::with('customer', 'status')->orderBy('status_id')->get(),
-            'job_types' => JobType::all(),
-            'technical_reports' => $technical_reports,
-            'customers' => Customer::orderBy('name')->get(),
-        ]);
-    }
-
-    public function update(UpdateHourRequest $request, Hour $hour): Response|RedirectResponse|Application|ResponseFactory
-    {
-        $validated = $request->validated();
-        $validated['user_id'] = $request->get('user_id', auth()->id());
-        $hour->update($validated);
-        if ($hour->hour_type->id === 1) {
-            $details = Validator::make($request->only(['extra', 'job', 'signed']), [
-                'extra' => 'required',
-                'job' => 'required',
-                'signed' => 'nullable',
-            ]);
-            $hour->order_hour()->update($details->validated());
-        } elseif ($hour->hour_type->id === 2) {
-            $details = Validator::make($request->only(['extra', 'night']), [
-                'extra' => 'required',
-                'night' => 'required',
-            ]);
-            $hour->technical_report_hour()->update($details->validated());
-        }
-        if ($request->ajax()) {
-            return response('Ora Modificata Correttamente');
-        }
-
-        return redirect()->route('hours.index')->with('message', 'Ora Modificata Correttamente');
-    }
-
-    public function destroy(Hour $hour): RedirectResponse
-    {
-        if (OrderDetails::where('hour_id', $hour->id)->exists()) {
-            OrderDetails::where('hour_id', $hour->id)->delete();
-        }
-        if (TechnicalReportDetails::where('hour_id', $hour->id)->exists()) {
-            TechnicalReportDetails::where('hour_id', $hour->id)->delete();
-        }
-        $hour->delete();
-
-        return redirect()->route('hours.index')->with('message', 'Ora eliminata con successo');
-    }
-
-    public function storeOrderHour(Hour $hour, StoreHourRequest $request): void
+    public function storeOrderDetails(Hour $hour, StoreHourRequest $request): void
     {
         $details = Validator::make($request->only(['extra', 'job', 'signed']), [
             'extra' => 'required',
@@ -178,11 +163,11 @@ class HourController extends Controller
     /**
      * @throws ValidationException
      */
-    public function storeTechnicalReportHour(Hour $hour, StoreHourRequest $request): void
+    public function storeTechnicalReportDetails(Hour $hour, StoreHourRequest $request): void
     {
         $details = Validator::make($request->only(['extra', 'night']), [
             'extra' => 'required',
-            'night' => 'nullable',
+            'night' => 'required',
         ]);
         if ($details->fails()) {
             Session::flash('hour_type', $hour->hour_type_id);
@@ -196,8 +181,8 @@ class HourController extends Controller
         }
         TechnicalReportDetails::create([
             'hour_id' => $hour->id,
-            'nightEU' => isset($info['night']) && $info['night'] === 'eu',
-            'nightExtraEU' => isset($info['night']) && $info['night'] === 'xeu',
+            'nightEU' => $info['night'] === 'eu',
+            'nightExtraEU' => $info['night'] === 'xeu',
             'technical_report_id' => $technical_report->id,
         ]);
     }
@@ -233,26 +218,42 @@ class HourController extends Controller
                 'description' => $validated['description'],
                 'user_id' => $request->get('user_id', auth()->id()),
             ]);
-            if ($hour->hour_type->id === 1) {
-                $this->storeOrderHour($hour, $request);
-            } elseif ($hour->hour_type->id === 2) {
-                $this->storeTechnicalReportHour($hour, $request);
+            if ($hour->type->id === 1) {
+                $this->storeOrderDetails($hour, $request);
+            } elseif ($hour->type->id === 2) {
+                $this->storeTechnicalReportDetails($hour, $request);
             }
         }
     }
 
-    public function updateNightFI(Hour $hour)
+    public function print(): Response
     {
-        $fi = TechnicalReportDetails::where('hour_id', $hour->id)->first();
-        if (! $fi->nightEU && ! $fi->nightExtraEU) {
-            $fi->nightEU = true;
-        } elseif ($fi->nightEU) {
-            $fi->nightEU = false;
-            $fi->nightExtraEU = true;
-        } else {
-            $fi->nightExtraEU = false;
-            $fi->nightEU = false;
-        }
-        $fi->save();
+        $data = Hour::with('type')->filter(request(['month', 'user']))->get();
+        $user = User::find(request('user', auth()->id()));
+
+        $technical_report_hours = TechnicalReportDetails::with(['technical_report','technical_report.customer','hour'])->whereIn('hour_id', $data->where('hour_type_id', 2)->map(function ($item) {
+            return $item->id;
+        }))->get();
+        $order_hours = OrderDetails::with(['order','order.customer','hour'])->whereIn('hour_id', $data->where('hour_type_id', 1)->map(function ($item) {
+            return $item->id;
+        }))->get();
+
+        return response()->view('hours.partial.print', [
+            'user' => $user,
+            'technical_report_hours' => $technical_report_hours->groupBy('technical_report_id'),
+            'order_hours' => $order_hours->groupBy('order_id'),
+            'other_hours' => $data->whereNotIn('hour_type_id', [1,2])->groupBy('hour_type_id'),
+            'period' => CarbonPeriod::create(Carbon::parse(request('month'))->firstOfMonth(), Carbon::parse(request('month'))->lastOfMonth()),
+        ]);
+    }
+
+    public function update(Request $request, Hour $hour)
+    {
+        $request->validate([
+            'count' => ['required','numeric']
+        ]);
+        $hour->update([
+            'count' => $request->get('count')
+        ]);
     }
 }

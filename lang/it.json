@@ -802,5 +802,9 @@
     "Select date start": "Seleziona inizio",
     "Select date end": "Seleziona fine",
     "From": "Da",
-    "To": "a"
+    "To": "a",
+    "Orders" : "Commesse",
+    "Technical Reports": "Fogli Intervento",
+    "Edit Job Type": "Modifica tipo di lavoro",
+    "Edit Night": "Modifica Notte"
 }

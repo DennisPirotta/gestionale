@@ -18,7 +18,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
@@ -77,7 +76,7 @@ class HourController extends Controller
     {
         if ($request->has('date')) {
             $validated = $request->validated();
-            if ($validated['user_id'] ?? true) {
+            if (!$request->has('user_id')) {
                 $validated['user_id'] = auth()->id();
             }
             $hour = Hour::create($validated);
@@ -86,7 +85,7 @@ class HourController extends Controller
             }
             if ($hour->hour_type->id === 1) {
                 $this->storeOrderDetails($hour, $request);
-            } elseif ($request->get('hour_type_id') === '2') {
+            } elseif ($hour->hour_type->id === 2) {
                 $this->storeTechnicalReportDetails($hour, $request);
             }
         } else {
@@ -218,9 +217,9 @@ class HourController extends Controller
                 'description' => $validated['description'],
                 'user_id' => $request->get('user_id', auth()->id()),
             ]);
-            if ($hour->type->id === 1) {
+            if ($hour->hour_type->id === 1) {
                 $this->storeOrderDetails($hour, $request);
-            } elseif ($hour->type->id === 2) {
+            } elseif ($hour->hour_type->id === 2) {
                 $this->storeTechnicalReportDetails($hour, $request);
             }
         }

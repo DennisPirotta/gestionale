@@ -91,7 +91,7 @@ class HourController extends Controller
         } else {
             $this->multipleStore($request);
         }
-        return redirect()->action([__CLASS__, 'index'], ['month' => Carbon::now()->format('Y-m'), 'user' => request('user', auth()->id())])->with('message', 'Ora Inserita Correttamente');
+        return redirect()->action([__CLASS__, 'index'], ['month' => Carbon::now()->format('Y-m'), 'user' => $validated['user_id'] ?? request('user', auth()->id())])->with('message', 'Ora Inserita Correttamente');
     }
 
     /**

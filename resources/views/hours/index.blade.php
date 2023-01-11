@@ -35,7 +35,7 @@
                             class="bi bi-hourglass-split me-2"></i>Nota spese
                 </button>
                 <button class="btn btn-primary me-2" data-bs-target="#myModal"
-                        onclick="window.location.href = '{{route('hours.create')}}'" data-bs-toggle="modal"><i
+                        onclick="sessionStorage.setItem('user',{{ request('user',auth()->id()) }}); window.location.href = '{{  route('hours.create') }}'" data-bs-toggle="modal"><i
                             class="bi bi-plus-circle me-2"></i>Aggiungi ore
                 </button>
                 <form class="m-0 d-flex" id="queryData">

@@ -40,5 +40,15 @@
 
         </form>
 
+        <script>
+            $(()=>{
+                let user = sessionStorage.getItem('user')
+                $('#user_id').children().each( (i,e) => {
+                    if (e.value == user){
+                        $(e).attr('selected',true)
+                    }
+                } )
+            })
+        </script>
     </div>
 @endsection

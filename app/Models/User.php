@@ -128,7 +128,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'str50' => 0,
         ];
 
-        foreach ($period as $day){
+        foreach ($period as $day) {
             $daily = $this->hoursInDay($day);
             $data['total'] += $daily['total'];
             $data['holidays'] += $daily['holidays'];
@@ -160,6 +160,19 @@ class User extends Authenticatable implements MustVerifyEmail
             'str50' => 0,
         ];
         foreach ($hours as $hour) {
+            if ($hour->hour_type_id === 2) {
+                if ($hour->technical_report_details->first() === null) {
+                    $hour->delete();
+                    break;
+                } else {
+                    if ($hour->technical_report_details->first()->nightEU) {
+                        $data['eu']++;
+                    }
+                    if ($hour->technical_report_details->first()->nightExtraEU) {
+                        $data['xeu']++;
+                    }
+                }
+            }
             $data['total'] += $hour->count;
             if ($day->isHoliday() || $day->isWeekend()) {
                 $data['str50'] += $hour->count;
@@ -169,14 +182,6 @@ class User extends Authenticatable implements MustVerifyEmail
             }
             if ($hour->hour_type_id === 6) {
                 $data['holidays'] += $hour->count;
-            }
-            if ($hour->hour_type_id === 2) {
-                if ($hour->technical_report_details->first()->nightEU) {
-                    $data['eu']++;
-                }
-                if ($hour->technical_report_details->first()->nightExtraEU) {
-                    $data['xeu']++;
-                }
             }
         }
         return $data;

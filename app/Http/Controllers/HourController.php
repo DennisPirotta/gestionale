@@ -76,8 +76,8 @@ class HourController extends Controller
     {
         if ($request->has('date')) {
             $validated = $request->validated();
-            if (!$request->has('user_id')) {
-                $validated['user_id'] = auth()->id();
+            if (!array_key_exists('user_id', $validated)) {
+                $validated['user_id'] = request('user', auth()->id());
             }
             $hour = Hour::create($validated);
             if ($request->ajax()) {
@@ -91,7 +91,7 @@ class HourController extends Controller
         } else {
             $this->multipleStore($request);
         }
-        return redirect()->action([__CLASS__, 'index'], ['month' => Carbon::now()->format('Y-m'), 'user' => request('user',auth()->id())])->with('message', 'Ora Inserita Correttamente');
+        return redirect()->action([__CLASS__, 'index'], ['month' => Carbon::now()->format('Y-m'), 'user' => request('user', auth()->id())])->with('message', 'Ora Inserita Correttamente');
     }
 
     /**

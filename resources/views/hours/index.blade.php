@@ -215,7 +215,8 @@
                             'count': $(e.target).text().trim(),
                             'date': $(e.target).attr('data-date'),
                             'hour_type_id': $(e.target).attr('data-hour-type'),
-                            '_token': token
+                            '_token': token,
+                            'user_id': {{ request('user') }}
                         })
                     }).then((response) => response.json())
                         .then((hour) => {

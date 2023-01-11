@@ -16,6 +16,7 @@
                     @if($record->date == $day->format('Y-m-d'))
                         @php($count+=$record->count)
                         {{ $record->count }}
+                            <data class="hidden">{{ $record->id }}</data>
                     @endif
                 @endforeach
                 </div>

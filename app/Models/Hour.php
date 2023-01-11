@@ -39,7 +39,7 @@ class Hour extends Model
         return $this->hasOne(OrderDetails::class, 'hour_id');
     }
 
-    public function order_hour(): OrderDetails
+    public function order_hour(): OrderDetails|null
     {
         return OrderDetails::where('hour_id', $this->id)->first();
     }

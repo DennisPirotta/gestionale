@@ -177,12 +177,16 @@ class User extends Authenticatable implements MustVerifyEmail
             if ($day->isHoliday() || $day->isWeekend()) {
                 $data['str50'] += $hour->count;
             }
-            if ($data['total'] > 8) {
+//            if ($data['total'] > 8) {
+//            if ($day->isPast()){
                 $data['str25'] = $data['total'] - 8;
-            }
+//            }
             if ($hour->hour_type_id === 6) {
                 $data['holidays'] += $hour->count;
             }
+        }
+        if ($hours->isEmpty() && $day->isPast() && !($day->isWeekend() || $day->isHoliday())){
+            $data['str25'] = $data['total'] - 8;
         }
         return $data;
     }

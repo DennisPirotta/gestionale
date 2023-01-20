@@ -2,8 +2,14 @@
 @php
     use Carbon\Carbon;
     $require_navbar_tools = true;
-    $first = $orders->sortByDesc('innerCode')->first();
-    $innerCode = $first->innerCode ?? Carbon::now()->format('Y') . "0001";
+    $first = $orders->sortByDesc('opening')->first();
+    $code = substr($first->innerCode, 4);
+    $year = substr($first->innerCode, 0,4);
+    if (Carbon::now()->format('Y') > $year){
+        $innerCode = Carbon::now()->format('Y') . "0000";
+    }else{
+        $innerCode = $first->innerCode;
+    }
     $outerCode = $first->outerCode ?? null;
 @endphp
 @section('content')

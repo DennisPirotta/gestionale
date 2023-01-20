@@ -59,7 +59,7 @@ class HourController extends Controller
     {
         return response()->view('hours.create', [
             'hour_types' => HourType::all(),
-            'orders' => Order::with('customer', 'status')->orderBy('status_id')->get(),
+            'orders' => Order::with('customer', 'status')->orderByDesc('innerCode')->get(),
             'job_types' => JobType::all(),
             'technical_reports' => TechnicalReport::with('customer', 'secondary_customer')->get(),
             'customers' => Customer::all(),
@@ -91,7 +91,7 @@ class HourController extends Controller
         } else {
             $this->multipleStore($request);
         }
-        return redirect()->action([__CLASS__, 'index'], ['month' => Carbon::now()->format('Y-m'), 'user' => $validated['user_id'] ?? request('user', auth()->id())])->with('message', 'Ora Inserita Correttamente');
+        return redirect()->action([__CLASS__, 'index'], ['month' => Carbon::parse($validated['date'] ?? $validated['start'] ?? 'now')->format('Y-m'), 'user' => $validated['user_id'] ?? request('user', auth()->id())])->with('message', 'Ora Inserita Correttamente');
     }
 
     /**

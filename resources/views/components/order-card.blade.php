@@ -3,7 +3,7 @@
         <!--  bg-black bg-opacity-25 -->
         <div class="card-body">
             <i class="bi bi-building"></i>
-            <span class="card-title">Commessa {{ ltrim(substr($commessa->innerCode,4), '0') }}</span>
+            <span class="card-title">Commessa {{ $commessa->innerCode }}</span>
             <a href="{{ route('orders.index',['company' => $commessa->company->name]) }}">
                 @if($commessa->company->id === 1)
                     <span class="badge text-bg-primary bg-opacity-100">3D</span>

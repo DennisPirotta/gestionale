@@ -80,7 +80,7 @@
                                 #
                             </th>
                             @foreach($period as $day)
-                                <th scope="col" class="border-l border-gray-300">{{ $day->translatedFormat('D') }}<br>{{ $day->translatedFormat('j') }}</th>
+                                <th scope="col" class="border-l border-gray-300 @if($day->isToday()) bg-gray-400 @endif ">{{ $day->translatedFormat('D') }}<br>{{ $day->translatedFormat('j') }}</th>
                             @endforeach
                             <th scope="col">Tot</th>
                         </tr>
@@ -100,7 +100,9 @@
                                 Totale
                             </th>
                             @foreach($period as $day)
-                                <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif ">{{ $user->hoursInDay($day)['total'] }}</td>
+                                <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif ">
+                                    {{ $user->hoursInDay($day)['total'] }}
+                                </td>
                             @endforeach
                             <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif ">{{ $user->hourDetails($period)['total'] }}</td>
                         </tr>
@@ -109,7 +111,9 @@
                                 Straordinari 25%
                             </th>
                             @foreach($period as $day)
-                                <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif @if($user->hoursInDay($day)['str25'] < 0) bg-red-200 text-red-900 @endif">{{ $user->hoursInDay($day)['str25'] }}</td>
+                                <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif @if($user->hoursInDay($day)['str25'] < 0) bg-red-200 text-red-900 @endif">
+                                    {{ $user->hoursInDay($day)['str25'] }}
+                                </td>
                             @endforeach
                             <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif @if($user->hourDetails($period)['str25'] < 0) bg-red-200 text-red-900 @endif">{{ $user->hourDetails($period)['str25'] }}</td>
                         </tr>

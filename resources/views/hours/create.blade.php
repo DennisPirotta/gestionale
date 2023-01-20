@@ -4,7 +4,7 @@
     <script src="https://unpkg.com/flowbite@1.5.4/dist/flowbite.js"></script>
     <script src="https://unpkg.com/flowbite@1.5.4/dist/datepicker.js"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <div class="mt-5" style="padding-top:100px;">
+    <div style="padding-top:70px;">
         <form action="{{ route('hours.store') }}" method="post" enctype="multipart/form-data">
             @csrf
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6" x-data="{type: '{{ Session::get('hour_type','') }}'}">

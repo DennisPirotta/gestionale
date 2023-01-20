@@ -48,7 +48,7 @@
                      role="tabpanel" aria-labelledby="nav-all-tab"
                      tabindex="0">
                     <div class="row">
-                        @foreach($commesse->sortBy(request('sort','status_id'),SORT_REGULAR,request('desc') === 'true' ? true : false) as $commessa)
+                        @foreach($commesse->sortBy(request('sort_key','status_id'),SORT_REGULAR,request('desc') === 'true' ? true : false) as $commessa)
                             <x-order-card :commessa="$commessa"></x-order-card>
                         @endforeach
                     </div>

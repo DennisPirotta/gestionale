@@ -74,10 +74,12 @@
                                     @endforeach
                                     <a tabindex="0" class="bi bi-info-circle text-primary" data-bs-trigger="focus" data-bs-toggle="popover" data-bs-title="Dettagli" data-bs-content="{{ $sw }}"></a>
                                     @if($order->hourSW > 0)
-                                        @if((($order->getHours(JobType::SVILUPPO_SOFTWARE)['count'] ?? 0) * 100) / $order->hourSW > 75)
-                                            <a tabindex="0" class="bi bi-exclamation-triangle text-danger" data-bs-trigger="hover" data-bs-toggle="popover" data-bs-title="Avviso" data-bs-content="Sono state utilizzate più del 75% delle ore previste, [ {{ round((($order->getHours(JobType::SVILUPPO_SOFTWARE)['count'] ?? 0) * 100) / $order->hourSW,1) }}% ]"></a>
+                                        @if((($order->getHours(JobType::SVILUPPO_SOFTWARE)['count'] ?? 0) * 100) / $order->hourSW > 100)
+                                            <a tabindex="0" class="bi bi-exclamation-triangle" style="color: #dc3545" data-bs-trigger="hover" data-bs-toggle="popover" data-bs-title="Avviso" data-bs-content="Sono state utilizzate più del 100% delle ore previste, [ {{ round((($order->getHours(JobType::SVILUPPO_SOFTWARE)['count'] ?? 0) * 100) / $order->hourSW,1) }}% ]"></a>
+                                        @elseif((($order->getHours(JobType::SVILUPPO_SOFTWARE)['count'] ?? 0) * 100) / $order->hourSW > 75)
+                                            <a tabindex="0" class="bi bi-exclamation-triangle" style="color: #fd7e14" data-bs-trigger="hover" data-bs-toggle="popover" data-bs-title="Avviso" data-bs-content="Sono state utilizzate più del 75% delle ore previste, [ {{ round((($order->getHours(JobType::SVILUPPO_SOFTWARE)['count'] ?? 0) * 100) / $order->hourSW,1) }}% ]"></a>
                                         @elseif((($order->getHours(JobType::SVILUPPO_SOFTWARE)['count'] ?? 0) * 100) / $order->hourSW > 50)
-                                            <a tabindex="0" class="bi bi-exclamation-triangle text-warning" data-bs-trigger="hover" data-bs-toggle="popover" data-bs-title="Avviso" data-bs-content="Sono state utilizzate più del 50% delle ore previste, [ {{ round((($order->getHours(JobType::SVILUPPO_SOFTWARE)['count'] ?? 0) * 100) / $order->hourSW,1) }}% ]"></a>
+                                            <a tabindex="0" class="bi bi-exclamation-triangle" style="color: #ffc107" data-bs-trigger="hover" data-bs-toggle="popover" data-bs-title="Avviso" data-bs-content="Sono state utilizzate più del 50% delle ore previste, [ {{ round((($order->getHours(JobType::SVILUPPO_SOFTWARE)['count'] ?? 0) * 100) / $order->hourSW,1) }}% ]"></a>
                                         @endif
                                     @endif
                                 @endif
@@ -106,10 +108,12 @@
                                     @endforeach
                                     <a tabindex="0" class="bi bi-info-circle text-primary" data-bs-trigger="focus" data-bs-toggle="popover" data-bs-title="Dettagli" data-bs-content="{{ $ms }}"></a>
                                     @if($order->hourMS > 0)
-                                        @if((($order->getHours(JobType::MESSA_IN_SERVIZIO)['count'] ?? 0) * 100) / $order->hourMS > 75)
-                                            <a tabindex="0" class="bi bi-exclamation-triangle text-danger" data-bs-trigger="hover" data-bs-toggle="popover" data-bs-title="Avviso" data-bs-content="Sono state utilizzate più del 75% delle ore previste, [ {{ round((($order->getHours(JobType::MESSA_IN_SERVIZIO)['count'] ?? 0) * 100) / $order->hourMS,1) }}% ]"></a>
+                                        @if((($order->getHours(JobType::MESSA_IN_SERVIZIO)['count'] ?? 0) * 100) / $order->hourMS > 100)
+                                            <a tabindex="0" class="bi bi-exclamation-triangle" style="color: #dc3545" data-bs-trigger="hover" data-bs-toggle="popover" data-bs-title="Avviso" data-bs-content="Sono state utilizzate più del 100% delle ore previste, [ {{ round((($order->getHours(JobType::MESSA_IN_SERVIZIO)['count'] ?? 0) * 100) / $order->hourMS,1) }}% ]"></a>
+                                        @elseif((($order->getHours(JobType::MESSA_IN_SERVIZIO)['count'] ?? 0) * 100) / $order->hourMS > 75)
+                                            <a tabindex="0" class="bi bi-exclamation-triangle" style="color: #fd7e14" data-bs-trigger="hover" data-bs-toggle="popover" data-bs-title="Avviso" data-bs-content="Sono state utilizzate più del 75% delle ore previste, [ {{ round((($order->getHours(JobType::MESSA_IN_SERVIZIO)['count'] ?? 0) * 100) / $order->hourMS,1) }}% ]"></a>
                                         @elseif((($order->getHours(JobType::MESSA_IN_SERVIZIO)['count'] ?? 0) * 100) / $order->hourMS > 50)
-                                            <a tabindex="0" class="bi bi-exclamation-triangle text-warning" data-bs-trigger="hover" data-bs-toggle="popover" data-bs-title="Avviso" data-bs-content="Sono state utilizzate più del 50% delle ore previste, [ {{ round((($order->getHours(JobType::MESSA_IN_SERVIZIO)['count'] ?? 0) * 100) / $order->hourMS,1) }}% ]"></a>
+                                            <a tabindex="0" class="bi bi-exclamation-triangle" style="color: #ffc107" data-bs-trigger="hover" data-bs-toggle="popover" data-bs-title="Avviso" data-bs-content="Sono state utilizzate più del 50% delle ore previste, [ {{ round((($order->getHours(JobType::MESSA_IN_SERVIZIO)['count'] ?? 0) * 100) / $order->hourMS,1) }}% ]"></a>
                                         @endif
                                     @endif
                                 @endif
@@ -127,11 +131,12 @@
                                     @endforeach
                                     <a tabindex="0" class="bi bi-info-circle text-primary" data-bs-trigger="focus" data-bs-toggle="popover" data-bs-title="Dettagli" data-bs-content="{{ $fat }}"></a>
                                     @if($order->hourFAT > 0)
-                                        @if((($order->getHours(JobType::COLLAUDO)['count'] ?? 0) * 100) / $order->hourFAT > 75)
-                                            <a tabindex="0" class="bi bi-exclamation-triangle text-danger" data-bs-trigger="hover" data-bs-toggle="popover" data-bs-title="Avviso" data-bs-content="Sono state utilizzate più del 75% delle ore previste, [ {{ round((($order->getHours(JobType::COLLAUDO)['count'] ?? 0) * 100) / $order->hourFAT,1) }}% ]"></a>
+                                        @if((($order->getHours(JobType::COLLAUDO)['count'] ?? 0) * 100) / $order->hourFAT > 100)
+                                            <a tabindex="0" class="bi bi-exclamation-triangle" style="color: #dc3545" data-bs-trigger="hover" data-bs-toggle="popover" data-bs-title="Avviso" data-bs-content="Sono state utilizzate più del 100% delle ore previste, [ {{ round((($order->getHours(JobType::COLLAUDO)['count'] ?? 0) * 100) / $order->hourFAT,1) }}% ]"></a>
+                                        @elseif((($order->getHours(JobType::COLLAUDO)['count'] ?? 0) * 100) / $order->hourFAT > 75)
+                                            <a tabindex="0" class="bi bi-exclamation-triangle" style="color: #fd7e14" data-bs-trigger="hover" data-bs-toggle="popover" data-bs-title="Avviso" data-bs-content="Sono state utilizzate più del 75% delle ore previste, [ {{ round((($order->getHours(JobType::COLLAUDO)['count'] ?? 0) * 100) / $order->hourFAT,1) }}% ]"></a>
                                         @elseif((($order->getHours(JobType::COLLAUDO)['count'] ?? 0) * 100) / $order->hourFAT > 50)
-                                            <a tabindex="0" class="bi bi-exclamation-triangle text-warning" data-bs-trigger="hover" data-bs-toggle="popover" data-bs-title="Avviso" data-bs-content="Sono state utilizzate più del 50% delle ore previste, [ {{ round((($order->getHours(JobType::COLLAUDO)['count'] ?? 0) * 100) / $order->hourFAT,1) }}% ]"></a>
-                                        @endif
+                                            <a tabindex="0" class="bi bi-exclamation-triangle" style="color: #ffc107" data-bs-trigger="hover" data-bs-toggle="popover" data-bs-title="Avviso" data-bs-content="Sono state utilizzate più del 50% delle ore previste, [ {{ round((($order->getHours(JobType::COLLAUDO)['count'] ?? 0) * 100) / $order->hourFAT,1) }}% ]"></a>                                        @endif
                                     @endif
                                 @endif
                             </td>
@@ -148,10 +153,12 @@
                                     @endforeach
                                     <a tabindex="0" class="bi bi-info-circle text-primary" data-bs-trigger="focus" data-bs-toggle="popover" data-bs-title="Dettagli" data-bs-content="{{ $saf }}"></a>
                                     @if($order->hourSAF > 0)
-                                        @if((($order->getHours(JobType::SAFETY)['count'] ?? 0) * 100) / $order->hourSAF > 75)
-                                            <a tabindex="0" class="bi bi-exclamation-triangle text-danger" data-bs-trigger="hover" data-bs-toggle="popover" data-bs-title="Avviso" data-bs-content="Sono state utilizzate più del 75% delle ore previste, [ {{ round((($order->getHours(JobType::SAFETY)['count'] ?? 0) * 100) / $order->hourSAF,1) }}% ]"></a>
+                                        @if((($order->getHours(JobType::SAFETY)['count'] ?? 0) * 100) / $order->hourSAF > 100)
+                                            <a tabindex="0" class="bi bi-exclamation-triangle" style="color: #dc3545" data-bs-trigger="hover" data-bs-toggle="popover" data-bs-title="Avviso" data-bs-content="Sono state utilizzate più del 100% delle ore previste, [ {{ round((($order->getHours(JobType::SAFETY)['count'] ?? 0) * 100) / $order->hourSAF,1) }}% ]"></a>
+                                        @elseif((($order->getHours(JobType::SAFETY)['count'] ?? 0) * 100) / $order->hourSAF > 75)
+                                            <a tabindex="0" class="bi bi-exclamation-triangle" style="color: #fd7e14" data-bs-trigger="hover" data-bs-toggle="popover" data-bs-title="Avviso" data-bs-content="Sono state utilizzate più del 75% delle ore previste, [ {{ round((($order->getHours(JobType::SAFETY)['count'] ?? 0) * 100) / $order->hourSAF,1) }}% ]"></a>
                                         @elseif((($order->getHours(JobType::SAFETY)['count'] ?? 0) * 100) / $order->hourSAF > 50)
-                                            <a tabindex="0" class="bi bi-exclamation-triangle text-warning" data-bs-trigger="hover" data-bs-toggle="popover" data-bs-title="Avviso" data-bs-content="Sono state utilizzate più del 50% delle ore previste, [ {{ round((($order->getHours(JobType::SAFETY)['count'] ?? 0) * 100) / $order->hourSAF,1) }}% ]"></a>
+                                            <a tabindex="0" class="bi bi-exclamation-triangle" style="color: #ffc107" data-bs-trigger="hover" data-bs-toggle="popover" data-bs-title="Avviso" data-bs-content="Sono state utilizzate più del 50% delle ore previste, [ {{ round((($order->getHours(JobType::SAFETY)['count'] ?? 0) * 100) / $order->hourSAF,1) }}% ]"></a>
                                         @endif
                                     @endif
                                 @endif

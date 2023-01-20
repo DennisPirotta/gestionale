@@ -8,7 +8,8 @@
             <th scope="row" class="border-r p-1.5">
                 <b>{{ $order_hour->first()->order->innerCode }}</b>
                 <p class="mb-0">{{ $order_hour->first()->order->customer->name }}</p>
-                <small>{{ $order_hour->first()->order->description }}</small>
+                <small>{{ $order_hour->first()->order->description }}</small> <br>
+                <small>{{ $order_hour->first()->order->outerCode }}</small>
             </th>
             @php($count = 0)
             @foreach($period as $day)

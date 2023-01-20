@@ -29,6 +29,7 @@
                         <th scope="col" rowspan="2">Commessa Esterna</th>
                         <th scope="col" rowspan="2">Descrizione</th>
                         <th scope="col" colspan="3">Ore SW</th>
+                        <th scope="col" rowspan="2">Ore Modifiche</th>
                         <th scope="col" colspan="3">Ore MS</th>
                         <th scope="col" colspan="3">Ore FAT</th>
                         <th scope="col" colspan="3">Ore SAF</th>
@@ -82,6 +83,17 @@
                                 @endif
                             </td>
                             <td>{{ $order->hourSW - $order->getHours(JobType::SVILUPPO_SOFTWARE)['count'] ?? 0 }}</td>
+
+                            <td>
+                                {{$order->getHours(JobType::MODIFICHE)['count'] ?? 0}}
+                                @if(count($order->getHours(JobType::MODIFICHE)) > 1)
+                                    @php($mod = '')
+                                    @foreach($order->getHours(JobType::MODIFICHE)->forget('count') as $user=>$hour)
+                                        @php($mod .= '<b>'.$user.'</b> : '.$hour.'<br>')
+                                    @endforeach
+                                    <a tabindex="0" class="bi bi-info-circle text-primary" data-bs-trigger="focus" data-bs-toggle="popover" data-bs-title="Dettagli" data-bs-content="{{ $mod }}"></a>
+                                @endif
+                            </td>
 
                             <td>{{ $order->hourMS }}</td>
                             <td>

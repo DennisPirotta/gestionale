@@ -17,10 +17,17 @@
                             data-order-id="{{ $order_hour->first()->order->id }}"
                             data-date="{{ $day->format('Y-m-d') }}"
                             data-hour-type="1"
-                    >
+                            class="@if($order_hour->contains(function($value,$key) use ($day){ return $value->hour->date == $day->format('Y-m-d'); })) hidden @endif"
+                    ></div>
                     @foreach($order_hour as $record)
                         @if($record->hour->date == $day->format('Y-m-d'))
                             @php($count+=$record->hour->count)
+                            <div    contenteditable="true"
+                                    data-order-id="{{ $record->order->id }}"
+                                    data-date="{{ $day->format('Y-m-d') }}"
+                                    data-hour-type="1"
+                                    data-hour-id="{{ $record->hour->id }}"
+                            >
                                 {{ $record->hour->count }}
                                 <data class="hidden">{{ $record->hour->id }}</data>
                             </div>

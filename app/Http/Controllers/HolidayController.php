@@ -48,6 +48,7 @@ class HolidayController extends Controller
                 'textColor' => $text,
                 'borderColor' => $border,
                 'allDay' => true,
+                'permission' => $holiday->permission
             ];
         }
 
@@ -71,8 +72,15 @@ class HolidayController extends Controller
             return redirect('/ferie')->with('error', 'Disponibilità di ferie insufficente');
         }
 
-        $start = Carbon::parse($request->start);
-        $end = Carbon::parse($request->end);
+        if ($request->permission ?? false == 'true'){
+            $start = Carbon::parse($request->start . ' ' . $request->permission_start);
+            $end = Carbon::parse($request->end . ' ' . $request->permission_end);
+        }else{
+            $start = Carbon::parse($request->start);
+            $end = Carbon::parse($request->end);
+        }
+
+
         $approved = false;
 
         if ($end->isPast()) {
@@ -84,8 +92,9 @@ class HolidayController extends Controller
             'end' => $end,
             'user_id' => auth()->id(),
             'approved' => $approved,
+            'permission' => (int) $request->permission ?? false == 'true'
         ]);
-        $holiday->sendMail();
+        //$holiday->sendMail();
 
         $period = CarbonPeriod::create($start, $end->modify('-1 day'));
 
@@ -106,7 +115,7 @@ class HolidayController extends Controller
             ]);
         }
 
-        return redirect('/ferie')->with('message', 'Ferie richieste con successo, usate <b>'.abs(Carbon::parse($request->start)->diffInBusinessHours($request->end)).'</b> ore');
+        return redirect('/ferie')->with('message', 'Ferie richieste con successo, usate <b>'.abs(Carbon::parse($start)->diffInBusinessHours($end)).'</b> ore');
     }
 
     public function create()

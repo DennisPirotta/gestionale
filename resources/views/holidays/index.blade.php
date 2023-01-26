@@ -50,19 +50,19 @@
                                                     </th>
                                                     @if($event['allDay'])
                                                         <td id="start_{{ $event['id'] }}">
-                                                            <p>{{ $start->translatedFormat('D d F Y') }}</p>
+                                                            <p>{{ $start->translatedFormat($event['permission'] ?? false == '0' ? 'D d M Y' : 'D d M Y H:i') }}</p>
                                                         </td>
                                                         <td id="end_{{ $event['id'] }}">
-                                                            <p>{{ $end->translatedFormat('D d F Y') }}</p>
+                                                            <p>{{ $end->translatedFormat($event['permission'] ?? false == '0' ? 'D d M Y' : 'D d M Y H:i') }}</p>
                                                         </td>
                                                     @else
                                                         <td id="start_{{ $event['id'] }}">
-                                                            <p>{{ $start->translatedFormat('D d F Y') }}</p>
-                                                            <p>{{ $start->translatedFormat('H:i') }}</p>
+                                                            <p>{{ $start->translatedFormat($event['permission'] ?? false == '0' ? 'D d M Y' : 'D d M Y H:i') }}</p>
+                                                            <p>{{ $start->translatedFormat($event['permission'] ?? false == '0' ? 'D d M Y' : 'D d M Y H:i') }}</p>
                                                         </td>
                                                         <td id="end_{{ $event['id'] }}">
-                                                            <p>{{ $end->translatedFormat('D d F Y') }}</p>
-                                                            <p>{{ $end->translatedFormat('H:i') }}</p>
+                                                            <p>{{ $end->translatedFormat($event['permission'] ?? false == '0' ? 'D d M Y' : 'D d M Y H:i') }}</p>
+                                                            <p>{{ $end->translatedFormat($event['permission'] ?? false == '0' ? 'D d M Y' : 'D d M Y H:i') }}</p>
                                                         </td>
                                                     @endif
 
@@ -106,9 +106,9 @@
                     @foreach( $users as $user )
                         @foreach($user->holidayList->where('approved',false) as $holiday)
                             <tr>
-                                <th scope="row">{{ $user->name }}</th>
-                                <td>{{ Carbon::parse($holiday->start)->translatedFormat('D d M Y') }}</td>
-                                <td>{{ Carbon::parse($holiday->end)->translatedFormat('D d M Y') }}</td>
+                                <th scope="row">{{ $user->surname }} {{ $user->name }}</th>
+                                <td>{{ Carbon::parse($holiday->start)->translatedFormat($holiday->permission ?? false == '0' ? 'D d M Y' : 'D d M Y H:i') }}</td>
+                                <td>{{ Carbon::parse($holiday->end)->translatedFormat($holiday->permission ?? false == '0' ? 'D d M Y' : 'D d M Y H:i') }}</td>
                                 <td>
                                     <form method="POST" action="{{ route('holidays.approve',$holiday->id) }}">
                                         @csrf
@@ -163,6 +163,32 @@
                                 <p class="text-danger fs-6">{{$message}}</p>
                                 @enderror
                             </div>
+                            <div class="form-check col-12 d-flex justify-content-center">
+                                <input class="form-check-input" type="checkbox" name="permission" value=true id="permission">
+                                <label class="form-check-label ms-1" for="permission">
+                                    Inserisci permesso
+                                </label>
+                            </div>
+                            <div class="d-none col-md-6 col-sm-12 mt-2" id="permission_start_box">
+                                <div class="input-group mb-3 col-md-4 col-sm-6">
+                                    <span class="input-group-text"><i class="bi bi-clock me-2"></i>Inizio</span>
+                                    <input type="time" class="form-control" aria-label="Inizio" name="permission_start" id="permission_start"
+                                           value="{{ old('permission_start') }}" disabled required>
+                                </div>
+                                @error('permission_start')
+                                <p class="text-danger fs-6">{{$message}}</p>
+                                @enderror
+                            </div>
+                            <div class="d-none col-md-6 col-sm-12 mt-2" id="permission_end_box">
+                                <div class="input-group mb-3 col-md-4 col-sm-6">
+                                    <span class="input-group-text"><i class="bi bi-clock me-2"></i>Fine</span>
+                                    <input type="time" class="form-control" aria-label="Fine" name="permission_end" id="permission_end"
+                                           value="{{ old('permission_end') }}" disabled required>
+                                </div>
+                                @error('permission_end')
+                                <p class="text-danger fs-6">{{$message}}</p>
+                                @enderror
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -176,6 +202,20 @@
     <script>
 
         $(document).ready(async function () {
+
+            $('#permission').change( e => {
+                if($(e.target).is(':checked')){
+                    $("#permission_end_box").removeClass('d-none')
+                    $("#permission_end").prop('disabled',false)
+                    $("#permission_start_box").removeClass('d-none')
+                    $("#permission_start").prop('disabled',false)
+                }else{
+                    $("#permission_end_box").addClass('d-none')
+                    $("#permission_end").prop('disabled',true)
+                    $("#permission_start_box").addClass('d-none')
+                    $("#permission_start").prop('disable',true)
+                }
+            } );
 
             let progressBar = new ProgressBar.Circle('#progress', {
                 color: '#000000',
@@ -224,8 +264,8 @@
                 },
                 headerToolbar: {
                     left: 'prev next today',
-                    center: 'title',
-                    right: 'listWeek timeGridDay dayGridMonth'
+                    center: '',
+                    right: 'title'
                 },
                 events: events,
                 eventDidMount: function (info) {

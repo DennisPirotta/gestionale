@@ -104,7 +104,7 @@ class HolidayController extends Controller
             $count = $day_start->diffInBusinessHours($day_end);
 
             if ($request->permission ?? false == 'true'){
-                $count = Carbon::parse($request->permission_start)->diffInHours(Carbon::parse($request->permission_end));
+                $count = Carbon::parse($request->permission_start)->floatDiffInHours(Carbon::parse($request->permission_end));
             }
 
             Hour::create([

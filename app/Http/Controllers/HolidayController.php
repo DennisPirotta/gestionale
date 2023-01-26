@@ -94,16 +94,21 @@ class HolidayController extends Controller
             'approved' => $approved,
             'permission' => (int) $request->permission ?? false == 'true'
         ]);
-        //$holiday->sendMail();
+        $holiday->sendMail();
 
         $period = CarbonPeriod::create($start, $end->modify('-1 day'));
 
         foreach ($period as $date) {
             $day_start = clone $date->setTime(0, 1);
             $day_end = $date->setTime(23, 59);
+            $count = $day_start->diffInBusinessHours($day_end);
+
+            if ($request->permission ?? false == 'true'){
+                $count = Carbon::parse($request->permission_start)->diffInHours(Carbon::parse($request->permission_end));
+            }
 
             Hour::create([
-                'count' => $day_start->diffInBusinessHours($day_end),
+                'count' => $count,
                 'user_id' => auth()->id(),
                 'hour_type_id' => 6,
                 'date' => $date,

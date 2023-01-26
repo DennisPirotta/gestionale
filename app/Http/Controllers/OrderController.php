@@ -76,14 +76,14 @@ class OrderController extends Controller
     public function create(): Factory|View|Application
     {
         return view('orders.create', [
-            'customers' => Customer::all(),
+            'customers' => Customer::all()->sortBy('name'),
             'countries' => Country::all(),
             'companies' => Company::all(),
             'statuses' => Status::all(),
             'hour_types' => HourType::all(),
             'job_types' => JobType::all(),
             'orders' => Order::all(),
-            'users' => User::all(),
+            'users' => User::all()->sortBy('surname'),
         ]);
     }
 
@@ -96,8 +96,8 @@ class OrderController extends Controller
             'companies' => Company::all(),
             'statuses' => Status::all(),
             'countries' => Country::all(),
-            'customers' => Customer::all(),
-            'users' => User::all(),
+            'customers' => Customer::all()->sortBy('name'),
+            'users' => User::all()->sortBy('surname'),
             'job_types' => JobType::all(),
         ]);
     }
@@ -140,7 +140,7 @@ class OrderController extends Controller
     public function report(): Factory|View|Application
     {
         return view('orders.report', [
-            'orders' => Order::with(['job_type', 'status', 'country', 'company', 'user', 'customer', 'order_details'])->orderBy('status_id')->orderBy('innerCode')->get(),
+            'orders' => Order::with(['job_type', 'status', 'country', 'company', 'user', 'customer', 'order_details'])->orderByDesc('innerCode')->get(),
             'order_details' => OrderDetails::with(['hour', 'order'])->get(),
         ]);
     }

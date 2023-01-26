@@ -193,7 +193,7 @@
                     <select class="form-select" id="inputGroupSelect01" name="user_id">
                         @unless(count($users) === 0)
                             @foreach($users as $user)
-                                <option value="{{$user->id}}" @if($user->id === auth()->id()) selected @endif >{{$user->name}} {{$user->surname}}</option>
+                                <option value="{{$user->id}}" @if($user->id === auth()->id()) selected @endif >{{$user->surname}} {{$user->name}}</option>
                             @endforeach
                         @endunless
                     </select>

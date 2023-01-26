@@ -197,9 +197,9 @@
                     <select class="form-select" id="inputGroupSelect01" name="user_id">
                         @foreach($users as $user)
                             @if($user->id === $commessa->user->id)
-                                <option value="{{$user->id}}" selected>{{$user->name}}</option>
+                                <option value="{{$user->id}}" selected>{{$user->surname}} {{$user->name}}</option>
                             @else
-                                <option value="{{$user->id}}">{{$user->name}}</option>
+                                <option value="{{$user->id}}">{{$user->surname}} {{$user->name}}</option>
                             @endif
                         @endforeach
                     </select>

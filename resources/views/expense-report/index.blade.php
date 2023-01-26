@@ -48,8 +48,15 @@
             </tr>
             </thead>
             <tbody>
+            @php($tot = [ 'km' => 0, 'food' => 0, 'various' => 0, 'transport' => 0 ])
             @foreach($reports as $report)
                 <tr>
+                    <?php
+                        $tot['km'] += $report->km ?? 0;
+                        $tot['food'] += $report->food ?? 0;
+                        $tot['various'] += $report->various ?? 0;
+                        $tot['transport'] += $report->transport ?? 0;
+                    ?>
                     <td>{{ Carbon::parse($report->date)->translatedFormat('D j M Y') }}</td>
                     @if($report->customer !== null)
                         <td>{{ $report->customer->name }}</td>
@@ -75,6 +82,16 @@
                     </td>
                 </tr>
             @endforeach
+                <tr>
+                    <th scope="row" colspan="3">Totale</th>
+                    <td>{{ $tot['km'] }}Km - {{ $tot['km']*0.4 }} <i class="bi bi-currency-euro"></i></td>
+                    <td>{{ $tot['food'] }} <i class="bi bi-currency-euro"></i></td>
+                    <td>{{ $tot['various'] }} <i class="bi bi-currency-euro"></i></td>
+                    <td>{{ $tot['transport'] }} <i class="bi bi-currency-euro"></i></td>
+                    <td>{{ $tot['km'] + $tot['food'] + $tot['various'] + $tot['transport'] }} <i class="bi bi-currency-euro"></i></td>
+                    <td></td>
+                    <td></td>
+                </tr>
             </tbody>
         </table>
     </div>

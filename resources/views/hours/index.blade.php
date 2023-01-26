@@ -171,11 +171,11 @@
         let target
 
         $('div[contenteditable="true"]').focus((e)=>{
-            target = $(e.target).clone().children().remove().end().text().trim()
+            target = $(e.target).clone().children().remove().end().text().trim().replace(',','.')
         })
 
         $('td').focusout((e)=>{
-            let count = $(e.target).clone().children().remove().end().text().trim()
+            let count = $(e.target).clone().children().remove().end().text().trim().replace(',','.')
             let child = $(e.target).children()
             let token = $('meta[name="csrf-token"]').attr('content')
             let headers = {
@@ -216,7 +216,7 @@
                         headers: headers,
                         credentials: "same-origin",
                         body: JSON.stringify({
-                            'count': $(e.target).text().trim(),
+                            'count': $(e.target).text().trim().replace(',','.'),
                             'date': $(e.target).attr('data-date'),
                             'hour_type_id': $(e.target).attr('data-hour-type'),
                             '_token': token,

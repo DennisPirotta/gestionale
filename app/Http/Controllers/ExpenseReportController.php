@@ -34,7 +34,7 @@ class ExpenseReportController extends Controller
             'user' => $user,
             'month' => $month,
             'period' => $period,
-            'reports' => $reports,
+            'reports' => $reports->sortBy('date'),
         ]);
     }
 

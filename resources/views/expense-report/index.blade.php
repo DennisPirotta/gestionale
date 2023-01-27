@@ -88,7 +88,7 @@
                     <td>{{ $tot['food'] }} <i class="bi bi-currency-euro"></i></td>
                     <td>{{ $tot['various'] }} <i class="bi bi-currency-euro"></i></td>
                     <td>{{ $tot['transport'] }} <i class="bi bi-currency-euro"></i></td>
-                    <td>{{ $tot['km'] + $tot['food'] + $tot['various'] + $tot['transport'] }} <i class="bi bi-currency-euro"></i></td>
+                    <td>{{ $tot['km']*0.4 + $tot['food'] + $tot['various'] + ($tot['transport']) }} <i class="bi bi-currency-euro"></i></td>
                     <td></td>
                     <td></td>
                 </tr>

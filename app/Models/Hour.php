@@ -15,7 +15,7 @@ class Hour extends Model
     use HasFactory;
 
     protected $fillable = [
-        'hour_type_id', 'user_id', 'count', 'date',
+        'hour_type_id', 'user_id', 'count', 'date','description'
     ];
 
     public function scopeFilter($query, array $filters): void

@@ -11,15 +11,23 @@
                 <div    contenteditable="true"
                         data-date="{{ $day->format('Y-m-d') }}"
                         data-hour-type="{{ $type }}"
-                >
+                        class="@if($other_hour->contains(function($value,$key) use ($day){ return $value->date == $day->format('Y-m-d'); })) hidden @endif"
+                ></div>
                 @foreach($other_hour as $record)
                     @if($record->date == $day->format('Y-m-d'))
                         @php($count+=$record->count)
-                        {{ $record->count }}
+                        <div    contenteditable="true"
+                                data-date="{{ $day->format('Y-m-d') }}"
+                                data-hour-type="{{ $type }}"
+                        >
+                            {{ $record->count }}
                             <data class="hidden">{{ $record->id }}</data>
+                        </div>
+                        @if($record->description)
+                            <i class="bi bi-info-circle text-blue-500" data-bs-toggle="popover" data-bs-title="Info" data-bs-content="{{ $record->description }}"></i>
+                        @endif
                     @endif
                 @endforeach
-                </div>
             </td>
         @endforeach
         <td>{{ $count }}</td>

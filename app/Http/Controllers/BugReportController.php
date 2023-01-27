@@ -45,6 +45,7 @@ class BugReportController extends Controller
         $bugReport->update([
             'fixed' => true,
         ]);
+        return back()->with('message', 'Report aggiornato con successo');
     }
 
     public function delete()

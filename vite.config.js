@@ -1,7 +1,9 @@
 import {defineConfig} from 'vite';
-import laravel from 'laravel-vite-plugin';
+import laravel, {refreshPaths} from 'laravel-vite-plugin';
 import path from "path";
-import mkcert from 'vite-plugin-mkcert'
+import fs from 'fs';
+
+const host = 'gestionale.dev'
 
 export default defineConfig({
     resolve: {
@@ -11,19 +13,23 @@ export default defineConfig({
         }
     },
     server: {
-        https: false, // mettere a true in produzione
-        hmr: {
-            host: 'localhost',
-        },
+        host,
+        hmr: { host },
+        https: {
+            key: fs.readFileSync('C:\\laragon\\etc\\ssl\\laragon.key'),
+            cert: fs.readFileSync('C:\\laragon\\etc\\ssl\\laragon.crt')
+        }
     },
     plugins: [
-        mkcert(),
         laravel({
             input: [
                 'resources/js/app.js',
                 'resources/css/tailwind.css'
             ],
-            refresh: true,
+            refresh: [
+                ...refreshPaths,
+                'app/Http/Livewire/**',
+            ],
         }),
     ],
 });

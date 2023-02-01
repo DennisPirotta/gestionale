@@ -86,6 +86,9 @@
                                 <a class="dropdown-item" href="{{ url('/maileclipse') }}" >
                                     <i class="bi bi-envelope-check me-2"></i>Gestione mail
                                 </a>
+                                <a class="dropdown-item" href="{{ url('/log-viewer') }}" >
+                                    <i class="bi bi-cpu me-2"></i>Gestione log
+                                </a>
                             @endrole
 
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">

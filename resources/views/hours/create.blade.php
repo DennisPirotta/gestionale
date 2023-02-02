@@ -1,8 +1,6 @@
 @extends('layouts.app')
 @section('content')
     <link rel="stylesheet" href="https://unpkg.com/flowbite@1.5.4/dist/flowbite.min.css" />
-    <script src="https://unpkg.com/flowbite@1.5.4/dist/flowbite.js"></script>
-    <script src="https://unpkg.com/flowbite@1.5.4/dist/datepicker.js"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <div style="padding-top:70px;">
         <form action="{{ route('hours.store') }}" method="post" enctype="multipart/form-data">

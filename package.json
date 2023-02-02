@@ -23,6 +23,7 @@
     "dependencies": {
         "bootstrap": "^5.2.0",
         "flowbite": "^1.6.0",
+        "flowbite-datepicker": "^1.2.2",
         "fullcalendar": "^6.0.0",
         "isomorphic-dompurify": "^0.24.0",
         "jquery-circle-progress": "^1.2.2",

@@ -2,9 +2,13 @@ import './bootstrap'
 import '../sass/app.scss'
 import '../css/app.css'
 import "flowbite"
+import {Datepicker,DateRangePicker} from "flowbite-datepicker"
+import it from "flowbite-datepicker/locales/it";
 import DOMPurify from "isomorphic-dompurify";
 const token = document.querySelector('meta[name="csrf-token"]').content;
-
+Datepicker.locales.it = it.it
+window.Datepicker = Datepicker
+window.DateRangePicker = DateRangePicker
 window.updateEvent = async function (eventInfo) {
     let res = await fetch(`/ferie/${eventInfo.event.id}`, {
         method: 'POST',

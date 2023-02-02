@@ -54,7 +54,7 @@
                               clip-rule="evenodd"></path>
                     </svg>
                 </div>
-                <input datepicker datepicker-autohide datepicker-buttons datepicker-format="yyyy-mm-dd" x-bind:disabled="multiple" id="date" name="date" datepicker
+                <input x-bind:disabled="multiple" id="date" name="date"
                        type="text"
                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                        placeholder="{{__('Select date')}}" autocomplete="off">
@@ -64,7 +64,7 @@
 
         <div class="-mt-1" x-show="multiple">
             <x-input-label for="date-multiple" :value="__('Date')"/>
-            <div date-rangepicker datepicker-autohide datepicker-buttons datepicker-format="yyyy-mm-dd"
+            <div
                  class="flex items-center mt-1" id="date-multiple">
                 <span class="mx-4 text-gray-500">{{__('From')}}</span>
                 <div class="relative">
@@ -112,4 +112,27 @@
             <x-input-error class="mt-2" :messages="$errors->get('hour_type_id')"/>
         </div>
     </div>
+
+    <script>
+        $(()=>{
+            const dateEl = document.getElementById('date');
+            new Datepicker(dateEl, {
+                autohide: true,
+                clearBtn: true,
+                format: 'yyyy-mm-dd',
+                todayBtn: true,
+                todayBtnMode: 1,
+                language: 'it'
+            });
+            const dateRangeStartEl = document.getElementById('date-multiple');
+            new DateRangePicker(dateRangeStartEl, {
+                autohide: true,
+                clearBtn: true,
+                format: 'yyyy-mm-dd',
+                todayBtn: true,
+                todayBtnMode: 1,
+                language: 'it'
+            });
+        })
+    </script>
 </section>

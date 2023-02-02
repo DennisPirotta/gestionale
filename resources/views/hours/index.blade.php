@@ -4,11 +4,6 @@
     th, td{
         max-width: 15px !important;
     }
-    @media only screen and (max-width: 600px) {
-        th, td{
-            max-width: none !important;
-        }
-    }
     @media print {
         @page {
             size: landscape;
@@ -26,132 +21,132 @@
     }
 </style>
 @section('content')
-        @php($user = App\Models\User::find(request('user')) ?? auth()->user())
-        <div class="overflow-scroll max-w-10xl mx-auto sm:px-6 lg:px-8">
-            <div class="md:flex mt-2 mb-1">
-                <div class="text-4xl p-3 md:p-0">
-                    Ore
-                    {{ request('user') !== null ? App\Models\User::find(request('user'))->name . ' ' . App\Models\User::find(request('user'))->surname : auth()->user()->name . ' ' . auth()->user()->surname }}
-                    -
-                    {{ request('month') !== null ? Carbon\Carbon::parse(request('month'))->translatedFormat('F Y') : __('Select a month') }}
-                </div>
-                <div class="no-print md:flex md:items-center ml-auto p-3 md:p-0">
-                    <button class="btn btn-primary md:mr-2 ml-auto"
-                            onclick="window.location.href = '{{ route('expense_report.index') }}?month={{ request('month',\Carbon\Carbon::now()->format('Y-m')) }}&user={{ request('user',auth()->id()) }}'"><i
-                            class="bi bi-hourglass-split me-2"></i>Nota spese
-                    </button>
-                    <button class="btn btn-primary md:mr-2" data-bs-target="#myModal"
-                            onclick="sessionStorage.setItem('user',{{ request('user',auth()->id()) }}); window.location.href = '{{  route('hours.create') }}'" data-bs-toggle="modal"><i
-                            class="bi bi-plus-circle me-2"></i>Aggiungi ore
-                    </button>
-                    <button class="btn btn-primary md:mr-2" onclick="window.print()"><i
+    <div id="main" class="container-fluid px-5 mt-5">
+        <div class="d-flex align-items-center">
+            <div class="h1 m-0">
+                Ore
+                {{ request('user') !== null ? App\Models\User::find(request('user'))->name . ' ' . App\Models\User::find(request('user'))->surname : auth()->user()->name . ' ' . auth()->user()->surname }}
+                -
+                {{ request('month') !== null ? Carbon\Carbon::parse(request('month'))->translatedFormat('F Y') : __('Select a month') }}
+            </div>
+            <div class="no-print flex ml-auto">
+                <button class="btn btn-primary me-2 ms-auto"
+                        onclick="window.location.href = '{{ route('expense_report.index') }}?month={{ request('month',\Carbon\Carbon::now()->format('Y-m')) }}&user={{ request('user',auth()->id()) }}'"><i
+                        class="bi bi-hourglass-split me-2"></i>Nota spese
+                </button>
+                <button class="btn btn-primary me-2" data-bs-target="#myModal"
+                        onclick="sessionStorage.setItem('user',{{ request('user',auth()->id()) }}); window.location.href = '{{  route('hours.create') }}'" data-bs-toggle="modal"><i
+                        class="bi bi-plus-circle me-2"></i>Aggiungi ore
+                </button>
+                <form class="m-0 d-flex" id="queryData">
+                    <div class="pe-0">
+                        <label for="date" class="d-none"></label><input type="month" class="form-control" name="month"
+                                                                        id="date"
+                                                                        value="{{ request('month') !== null ? Carbon\Carbon::parse(request('month'))->format('Y-m') : ''}}">
+                    </div>
+
+                    @role('admin|boss')
+                    <div class="ps-2 me-2">
+                        <label for="user" class="d-none"></label><select name="user" class="form-select" id="user">
+                            <option disabled selected>Utente</option>
+                            @foreach(App\Models\User::orderBy('surname')->get() as $user)
+                                <option value="{{ $user->id }}" @if(request('user') === (string)$user->id) selected @endif>
+                                    {{ $user->surname }} {{ $user->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <button class="btn btn-primary me-2 ms-auto" onclick="window.print()"><i
                             class="bi bi-printer me-2"></i>Stampa
                     </button>
-                    <form class="md:flex mb-0" id="queryData">
-                        <div class="pr-0 md:mt-auto sm:mt-2">
-                            <label for="date" class="d-none"></label><input type="month" class="form-control" name="month"
-                                                                            id="date"
-                                                                            value="{{ request('month') !== null ? Carbon\Carbon::parse(request('month'))->format('Y-m') : ''}}">
-                        </div>
-
-                        @role('admin|boss')
-                        <div class="md:ml-2 md:mt-auto sm:mt-2">
-                            <label for="user" class="d-none"></label><select name="user" class="form-select" id="user">
-                                <option disabled selected>Utente</option>
-                                @foreach(App\Models\User::orderBy('surname')->get() as $user)
-                                    <option value="{{ $user->id }}" @if(request('user') === (string)$user->id) selected @endif>
-                                        {{ $user->surname }} {{ $user->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        @else
-                            <input type="hidden" name="user" value="{{ auth()->id() }}">
+                    @else
+                        <input type="hidden" name="user" value="{{ auth()->id() }}">
                         @endrole
-                    </form>
-                </div>
-            </div>
-            <hr class="mb-3 mt-0">
-            <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                @if($order_hours->count() === 0 && $technical_report_hours->count() === 0 && $other_hours->count() === 0)
-                    <h1 class="p-6 text-gray-900">Nessuna ora disponibile</h1>
-                @else
-                    <table class="w-full text-sm text-center text-gray-500">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-200">
-                        <tr>
-                            <th scope="col" class="py-2 px-4">
-                                #
-                            </th>
-                            @foreach($period as $day)
-                                <th scope="col" class="border-l border-gray-300 @if($day->isToday()) bg-gray-400 @endif ">{{ $day->translatedFormat('D') }}<br>{{ $day->translatedFormat('j') }}</th>
-                            @endforeach
-                            <th scope="col">Tot</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @include('hours.partial.order-table-section')
-                        @include('hours.partial.technical-report-table-section')
-                        @include('hours.partial.other-hours-table-section')
-                        </tbody>
-                        <tfoot>
-                        <tr class="bg-gray-50">
-                            <td class="py-2 px-4 border-l">Parziale</td>
-                            <td colspan="{{$period->count()}}" class="py-2 px-4 "></td>
-                        </tr>
-                        <tr class="bg-gray-100 border-b">
-                            <th scope="row">
-                                Totale
-                            </th>
-                            @foreach($period as $day)
-                                <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif ">
-                                    {{ $user->hoursInDay($day)['total'] }}
-                                </td>
-                            @endforeach
-                            <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif ">{{ $user->hourDetails($period)['total'] }}</td>
-                        </tr>
-                        <tr class="bg-gray-100 border-b">
-                            <th scope="row">
-                                Straordinari 25%
-                            </th>
-                            @foreach($period as $day)
-                                <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif @if($user->hoursInDay($day)['str25'] < 0) bg-red-200 text-red-900 @endif">
-                                    {{ $user->hoursInDay($day)['str25'] }}
-                                </td>
-                            @endforeach
-                            <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif @if($user->hourDetails($period)['str25'] < 0) bg-red-200 text-red-900 @endif">{{ $user->hourDetails($period)['str25'] }}</td>
-                        </tr>
-                        <tr class="bg-gray-100 border-b">
-                            <th scope="row">
-                                Straordinari 50%
-                            </th>
-                            @foreach($period as $day)
-                                <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif ">{{ $user->hoursInDay($day)['str50'] }}</td>
-                            @endforeach
-                            <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif ">{{ $user->hourDetails($period)['str50'] }}</td>
-                        </tr>
-                        </tfoot>
-                    </table>
-
-                @endif
-            </div>
-            <div class="container-fluid p-5">
-                <div class="row row-cols-3 g-3 justify-content-center">
-                    <x-report-card :title="'Totale ore'" :icon="'bi-bar-chart-fill'"
-                                   :value="$user->hourDetails($period)['total']"></x-report-card>
-                    <x-report-card :title="'Ferie'" :icon="'bi-cup-hot'"
-                                   :value="$user->hourDetails($period)['holidays']"></x-report-card>
-                    <x-report-card :title="'Notte UE'" :icon="'bi-currency-euro'"
-                                   :value="$user->hourDetails($period)['eu']"></x-report-card>
-                    <x-report-card :title="'Notte Extra UE'" :icon="'bi-globe2'"
-                                   :value="$user->hourDetails($period)['xeu']"></x-report-card>
-                    <x-report-card :title="'Straordinari 25%'" :icon="'bi-plug'"
-                                   :value="$user->hourDetails($period)['str25']"></x-report-card>
-                    <x-report-card :title="'Straordinari 50%'" :icon="'bi-plug'"
-                                   :value="$user->hourDetails($period)['str50']"></x-report-card>
-                </div>
+                </form>
             </div>
         </div>
+        <hr class="hr my-3">
+    </div>
+    @php($user = App\Models\User::find(request('user')) ?? auth()->user())
+    <div class="max-w-10xl mx-auto sm:px-6 lg:px-8">
+        <div class="overflow-x-auto relative shadow-md sm:rounded-lg">
+            @if($order_hours->count() === 0 && $technical_report_hours->count() === 0 && $other_hours->count() === 0)
+                <h1 class="p-6 text-gray-900">Nessuna ora disponibile</h1>
+            @else
+                <table class="w-full text-sm text-center text-gray-500">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-200">
+                    <tr>
+                        <th scope="col" class="py-2 px-4">
+                            #
+                        </th>
+                        @foreach($period as $day)
+                            <th scope="col" class="border-l border-gray-300 @if($day->isToday()) bg-gray-400 @endif ">{{ $day->translatedFormat('D') }}<br>{{ $day->translatedFormat('j') }}</th>
+                        @endforeach
+                        <th scope="col">Tot</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @include('hours.partial.order-table-section')
+                    @include('hours.partial.technical-report-table-section')
+                    @include('hours.partial.other-hours-table-section')
+                    </tbody>
+                    <tfoot>
+                    <tr class="bg-gray-50">
+                        <td class="py-2 px-4 border-l">Parziale</td>
+                        <td colspan="{{$period->count()}}" class="py-2 px-4 "></td>
+                    </tr>
+                    <tr class="bg-gray-100 border-b">
+                        <th scope="row">
+                            Totale
+                        </th>
+                        @foreach($period as $day)
+                            <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif ">
+                                {{ $user->hoursInDay($day)['total'] }}
+                            </td>
+                        @endforeach
+                        <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif ">{{ $user->hourDetails($period)['total'] }}</td>
+                    </tr>
+                    <tr class="bg-gray-100 border-b">
+                        <th scope="row">
+                            Straordinari 25%
+                        </th>
+                        @foreach($period as $day)
+                            <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif @if($user->hoursInDay($day)['str25'] < 0) bg-red-200 text-red-900 @endif">
+                                {{ $user->hoursInDay($day)['str25'] }}
+                            </td>
+                        @endforeach
+                        <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif @if($user->hourDetails($period)['str25'] < 0) bg-red-200 text-red-900 @endif">{{ $user->hourDetails($period)['str25'] }}</td>
+                    </tr>
+                    <tr class="bg-gray-100 border-b">
+                        <th scope="row">
+                            Straordinari 50%
+                        </th>
+                        @foreach($period as $day)
+                            <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif ">{{ $user->hoursInDay($day)['str50'] }}</td>
+                        @endforeach
+                        <td class="border-r @if($day->isWeekend() || $day->isHoliday()) bg-opacity-25 bg-primary @endif ">{{ $user->hourDetails($period)['str50'] }}</td>
+                    </tr>
+                    </tfoot>
+                </table>
+                <div class="container-fluid p-5">
+                    <div class="row row-cols-3 g-3 justify-content-center">
+                        <x-report-card :title="'Totale ore'" :icon="'bi-bar-chart-fill'"
+                                       :value="$user->hourDetails($period)['total']"></x-report-card>
+                        <x-report-card :title="'Ferie'" :icon="'bi-cup-hot'"
+                                       :value="$user->hourDetails($period)['holidays']"></x-report-card>
+                        <x-report-card :title="'Notte UE'" :icon="'bi-currency-euro'"
+                                       :value="$user->hourDetails($period)['eu']"></x-report-card>
+                        <x-report-card :title="'Notte Extra UE'" :icon="'bi-globe2'"
+                                       :value="$user->hourDetails($period)['xeu']"></x-report-card>
+                        <x-report-card :title="'Straordinari 25%'" :icon="'bi-plug'"
+                                       :value="$user->hourDetails($period)['str25']"></x-report-card>
+                        <x-report-card :title="'Straordinari 50%'" :icon="'bi-plug'"
+                                       :value="$user->hourDetails($period)['str50']"></x-report-card>
+                    </div>
+                </div>
+            @endif
+        </div>
+    </div>
     <script>
         $(()=>{
             window.onbeforeunload = () => localStorage.setItem('scroll', window.scrollY)

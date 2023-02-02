@@ -54,7 +54,7 @@
                                                                             value="{{ request('month') !== null ? Carbon\Carbon::parse(request('month'))->format('Y-m') : ''}}">
                         </div>
 
-                        {{--@role('admin|boss')--}}
+                        @role('admin|boss')
                         <div class="md:ml-2 md:mt-auto sm:mt-2">
                             <label for="user" class="d-none"></label><select name="user" class="form-select" id="user">
                                 <option disabled selected>Utente</option>
@@ -66,9 +66,9 @@
                             </select>
                         </div>
 
-                        {{--@else--}}
+                        @else
                             <input type="hidden" name="user" value="{{ auth()->id() }}">
-                            {{--@endrole--}}
+                        @endrole
                     </form>
                 </div>
             </div>

@@ -4,6 +4,11 @@
     th, td{
         max-width: 15px !important;
     }
+    @media only screen and (max-width: 600px) {
+        th, td{
+            max-width: none !important;
+        }
+    }
     @media print {
         @page {
             size: landscape;
@@ -21,55 +26,54 @@
     }
 </style>
 @section('content')
-    <div id="main" class="container-fluid px-5 mt-5">
-        <div class="d-flex align-items-center">
-            <div class="h1 m-0">
-                Ore
-                {{ request('user') !== null ? App\Models\User::find(request('user'))->name . ' ' . App\Models\User::find(request('user'))->surname : auth()->user()->name . ' ' . auth()->user()->surname }}
-                -
-                {{ request('month') !== null ? Carbon\Carbon::parse(request('month'))->translatedFormat('F Y') : __('Select a month') }}
-            </div>
-            <div class="no-print flex ml-auto">
-                <button class="btn btn-primary me-2 ms-auto"
-                        onclick="window.location.href = '{{ route('expense_report.index') }}?month={{ request('month',\Carbon\Carbon::now()->format('Y-m')) }}&user={{ request('user',auth()->id()) }}'"><i
-                            class="bi bi-hourglass-split me-2"></i>Nota spese
-                </button>
-                <button class="btn btn-primary me-2" data-bs-target="#myModal"
-                        onclick="sessionStorage.setItem('user',{{ request('user',auth()->id()) }}); window.location.href = '{{  route('hours.create') }}'" data-bs-toggle="modal"><i
-                            class="bi bi-plus-circle me-2"></i>Aggiungi ore
-                </button>
-                <form class="m-0 d-flex" id="queryData">
-                    <div class="pe-0">
-                        <label for="date" class="d-none"></label><input type="month" class="form-control" name="month"
-                                                                        id="date"
-                                                                        value="{{ request('month') !== null ? Carbon\Carbon::parse(request('month'))->format('Y-m') : ''}}">
-                    </div>
-
-                    @role('admin|boss')
-                    <div class="ps-2 me-2">
-                        <label for="user" class="d-none"></label><select name="user" class="form-select" id="user">
-                            <option disabled selected>Utente</option>
-                            @foreach(App\Models\User::orderBy('surname')->get() as $user)
-                                <option value="{{ $user->id }}" @if(request('user') === (string)$user->id) selected @endif>
-                                    {{ $user->surname }} {{ $user->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <button class="btn btn-primary me-2 ms-auto" onclick="window.print()"><i
-                                class="bi bi-printer me-2"></i>Stampa
-                    </button>
-                    @else
-                        <input type="hidden" name="user" value="{{ auth()->id() }}">
-                    @endrole
-                </form>
-            </div>
-        </div>
-        <hr class="hr my-3">
-    </div>
         @php($user = App\Models\User::find(request('user')) ?? auth()->user())
-        <div class="max-w-10xl mx-auto sm:px-6 lg:px-8">
-            <div class="overflow-x-auto relative shadow-md sm:rounded-lg">
+        <div class="overflow-scroll max-w-10xl mx-auto sm:px-6 lg:px-8">
+            <div class="md:flex mt-2 mb-1">
+                <div class="text-4xl p-3 md:p-0">
+                    Ore
+                    {{ request('user') !== null ? App\Models\User::find(request('user'))->name . ' ' . App\Models\User::find(request('user'))->surname : auth()->user()->name . ' ' . auth()->user()->surname }}
+                    -
+                    {{ request('month') !== null ? Carbon\Carbon::parse(request('month'))->translatedFormat('F Y') : __('Select a month') }}
+                </div>
+                <div class="no-print md:flex md:items-center ml-auto p-3 md:p-0">
+                    <button class="btn btn-primary md:mr-2 ml-auto"
+                            onclick="window.location.href = '{{ route('expense_report.index') }}?month={{ request('month',\Carbon\Carbon::now()->format('Y-m')) }}&user={{ request('user',auth()->id()) }}'"><i
+                            class="bi bi-hourglass-split me-2"></i>Nota spese
+                    </button>
+                    <button class="btn btn-primary md:mr-2" data-bs-target="#myModal"
+                            onclick="sessionStorage.setItem('user',{{ request('user',auth()->id()) }}); window.location.href = '{{  route('hours.create') }}'" data-bs-toggle="modal"><i
+                            class="bi bi-plus-circle me-2"></i>Aggiungi ore
+                    </button>
+                    <button class="btn btn-primary md:mr-2" onclick="window.print()"><i
+                            class="bi bi-printer me-2"></i>Stampa
+                    </button>
+                    <form class="md:flex mb-0" id="queryData">
+                        <div class="pr-0 md:mt-auto sm:mt-2">
+                            <label for="date" class="d-none"></label><input type="month" class="form-control" name="month"
+                                                                            id="date"
+                                                                            value="{{ request('month') !== null ? Carbon\Carbon::parse(request('month'))->format('Y-m') : ''}}">
+                        </div>
+
+                        {{--@role('admin|boss')--}}
+                        <div class="md:ml-2 md:mt-auto sm:mt-2">
+                            <label for="user" class="d-none"></label><select name="user" class="form-select" id="user">
+                                <option disabled selected>Utente</option>
+                                @foreach(App\Models\User::orderBy('surname')->get() as $user)
+                                    <option value="{{ $user->id }}" @if(request('user') === (string)$user->id) selected @endif>
+                                        {{ $user->surname }} {{ $user->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        {{--@else--}}
+                            <input type="hidden" name="user" value="{{ auth()->id() }}">
+                            {{--@endrole--}}
+                    </form>
+                </div>
+            </div>
+            <hr class="mb-3 mt-0">
+            <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                 @if($order_hours->count() === 0 && $technical_report_hours->count() === 0 && $other_hours->count() === 0)
                     <h1 class="p-6 text-gray-900">Nessuna ora disponibile</h1>
                 @else
@@ -128,23 +132,24 @@
                         </tr>
                         </tfoot>
                     </table>
-                    <div class="container-fluid p-5">
-                        <div class="row row-cols-3 g-3 justify-content-center">
-                            <x-report-card :title="'Totale ore'" :icon="'bi-bar-chart-fill'"
-                                           :value="$user->hourDetails($period)['total']"></x-report-card>
-                            <x-report-card :title="'Ferie'" :icon="'bi-cup-hot'"
-                                           :value="$user->hourDetails($period)['holidays']"></x-report-card>
-                            <x-report-card :title="'Notte UE'" :icon="'bi-currency-euro'"
-                                           :value="$user->hourDetails($period)['eu']"></x-report-card>
-                            <x-report-card :title="'Notte Extra UE'" :icon="'bi-globe2'"
-                                           :value="$user->hourDetails($period)['xeu']"></x-report-card>
-                            <x-report-card :title="'Straordinari 25%'" :icon="'bi-plug'"
-                                           :value="$user->hourDetails($period)['str25']"></x-report-card>
-                            <x-report-card :title="'Straordinari 50%'" :icon="'bi-plug'"
-                                           :value="$user->hourDetails($period)['str50']"></x-report-card>
-                        </div>
-                    </div>
+
                 @endif
+            </div>
+            <div class="container-fluid p-5">
+                <div class="row row-cols-3 g-3 justify-content-center">
+                    <x-report-card :title="'Totale ore'" :icon="'bi-bar-chart-fill'"
+                                   :value="$user->hourDetails($period)['total']"></x-report-card>
+                    <x-report-card :title="'Ferie'" :icon="'bi-cup-hot'"
+                                   :value="$user->hourDetails($period)['holidays']"></x-report-card>
+                    <x-report-card :title="'Notte UE'" :icon="'bi-currency-euro'"
+                                   :value="$user->hourDetails($period)['eu']"></x-report-card>
+                    <x-report-card :title="'Notte Extra UE'" :icon="'bi-globe2'"
+                                   :value="$user->hourDetails($period)['xeu']"></x-report-card>
+                    <x-report-card :title="'Straordinari 25%'" :icon="'bi-plug'"
+                                   :value="$user->hourDetails($period)['str25']"></x-report-card>
+                    <x-report-card :title="'Straordinari 50%'" :icon="'bi-plug'"
+                                   :value="$user->hourDetails($period)['str50']"></x-report-card>
+                </div>
             </div>
         </div>
     <script>

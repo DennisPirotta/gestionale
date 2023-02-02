@@ -57,7 +57,7 @@
                 <input datepicker datepicker-autohide datepicker-buttons datepicker-format="yyyy-mm-dd" x-bind:disabled="multiple" id="date" name="date" datepicker
                        type="text"
                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                       placeholder="{{__('Select date')}}">
+                       placeholder="{{__('Select date')}}" autocomplete="off">
             </div>
             <x-input-error class="mt-2" :messages="$errors->get('date')"/>
         </div>
@@ -78,7 +78,7 @@
                     </div>
                     <input x-bind:disabled="!multiple" name="start" type="text"
                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                           placeholder="{{__('Select date start')}}">
+                           placeholder="{{__('Select date start')}}" autocomplete="off">
                     <x-input-error class="mt-2" :messages="$errors->get('start')"/>
                 </div>
                 <span class="mx-4 text-gray-500">{{__('To')}}</span>
@@ -93,7 +93,7 @@
                     </div>
                     <input x-bind:disabled="!multiple" name="end" type="text"
                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                           placeholder="{{__('Select date end')}}">
+                           placeholder="{{__('Select date end')}}" autocomplete="off">
                     <x-input-error class="mt-2" :messages="$errors->get('end')"/>
                 </div>
             </div>

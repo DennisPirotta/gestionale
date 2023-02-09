@@ -11,8 +11,19 @@ class Location extends Model
     use HasFactory;
 
     protected $fillable = [
-        'date', 'description', 'user_id',
+        'date', 'description', 'user_id','sph_office'
     ];
+
+    public static function getSphOfficeData(): array
+    {
+        $exceptions = [];
+        foreach (Location::all() as $location){
+            if ($location->sph_office){
+                $exceptions[] = $location->date;
+            }
+        }
+        return $exceptions;
+    }
 
     public function user(): BelongsTo
     {

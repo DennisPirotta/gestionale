@@ -57,14 +57,14 @@
     <link rel="stylesheet" as="font" href="https://fonts.googleapis.com/css?family=Nunito">
     <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css"></noscript>
-    <link rel="preload" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.min.css"></noscript>
+{{--    <link rel="preload" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">--}}
+{{--    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.min.css"></noscript>--}}
     <link rel="icon" sizes="96x96" href="{{asset('images/favicon.png')}}">
     @vite(['resources/js/app.js'])
 </head>
 <body>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.min.js"></script>
+{{--<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.min.js"></script>--}}
 <div id="app">
     @include('components.navbar')
     <main class="py-4">

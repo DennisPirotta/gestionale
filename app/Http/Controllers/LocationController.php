@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Location;
+use App\Models\LocationToggle;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
@@ -19,6 +21,7 @@ class LocationController extends Controller
         $events = [];
         foreach (Location::with('user')->get() as $location) {
             $events[] = [
+                'id' => $location->id,
                 'start' => Carbon::parse($location->date),
                 'end' => Carbon::parse($location->date),
                 'title' => substr($location->user->name, 0, 1).'. '.substr($location->user->surname, 0, 1).'. - '.$location->description,
@@ -31,8 +34,11 @@ class LocationController extends Controller
             ];
         }
 
+
+
         return view('locations.index', [
             'locations' => $events,
+            'toggles' => Location::getSphOfficeData()
         ]);
     }
 
@@ -48,6 +54,7 @@ class LocationController extends Controller
                 'date' => $request->date,
                 'description' => $request->whereami,
                 'user_id' => auth()->id(),
+                'sph_office' => $request->has('sph')
             ]);
             auth()->user()->update([
                 'position' => true,

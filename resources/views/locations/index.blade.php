@@ -1,25 +1,33 @@
 @extends('layouts.app')
 @section('content')
+    <script src='https://cdn.jsdelivr.net/npm/rrule@2.6.4/dist/es5/rrule.min.js'></script>
     <div class="modal fade" id="whereami" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Dove sei Oggi? <small class="ms-3">{{ \Carbon\Carbon::today()->translatedFormat('D d M Y') }}</small></h5>
+                    <h5 class="modal-title">Dove sei Oggi? <small class="ms-3" id="modal-date">{{ \Carbon\Carbon::today()->translatedFormat('D d M Y') }}</small></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form action="{{ route('locations.store') }}" method="post" id="actionForm">
                     @csrf
-                    <label>
-                        <input type="date" class="d-none" name="date" id="date">
-                    </label>
-                    <label>
-                        <input type="text" class="d-none" name="_method" id="_method">
-                    </label>
                     <div class="modal-body">
-                        <div class="input-group mb-3">
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="sph-office" name="sph">
+                            <label class="form-check-label" for="sph-office">
+                                Presenza in ufficio a Chiasso
+                            </label>
+                        </div>
+
+                        <div class="input-group">
                             <span class="input-group-text" id="basic-addon1"><i class="bi bi-geo-alt"></i></span>
                             <input type="text" class="form-control" name="whereami" id="position" placeholder="Dove sei?" aria-label="Dove sono" aria-describedby="basic-addon1" required>
                         </div>
+                        <label>
+                            <input type="date" class="d-none" name="date" id="date">
+                        </label>
+                        <label>
+                            <input type="text" class="d-none" name="_method" id="_method">
+                        </label>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
@@ -48,10 +56,13 @@
 
             let calendarEl = document.getElementById('calendar')
             let events = @json($locations, JSON_THROW_ON_ERROR);
-            let calendar = new FullCalendar.Calendar(calendarEl, {
+            let toggles = @json($toggles, JSON_THROW_ON_ERROR);
+
+            let calendar = new Calendar(calendarEl, {
+                plugins: [ dayGridPlugin,listPlugin,bootstrap5Plugin,rrulePlugin,interactionPlugin ],
                 initialView: 'dayGridMonth',
                 themeSystem: 'bootstrap5',
-                selectable: true,
+                selectable: false,
                 contentHeight: 700,
                 locale: 'it',
                 longPressDelay: 500,
@@ -63,15 +74,21 @@
                 headerToolbar: {
                     left: 'prev next today',
                     center: 'title',
-                    right: 'listWeek timeGridWeek dayGridMonth'
+                    right: 'listWeek dayGridMonth'
                 },
                 events: events,
                 viewDidMount: (info) => {
                     let events = calendar.getEvents()
                     if (info.view.type == 'listWeek')
-                        events.forEach(event => event.setProp('title',`${event.extendedProps.name} ${event.extendedProps.surname} - ${event.extendedProps.description}`))
+                        events.forEach(event => {
+                            if (event.title == '') return
+                            event.setProp('title', `${event.extendedProps.name} ${event.extendedProps.surname} - ${event.extendedProps.description}`)
+                        })
                     if (info.view.type == 'dayGridMonth')
-                        events.forEach(event => event.setProp('title',`${event.extendedProps.name.charAt(0)}.${event.extendedProps.surname.charAt(0)}. - ${event.extendedProps.description}`))
+                        events.forEach(event => {
+                            if (event.title == '') return
+                            event.setProp('title', `${event.extendedProps.name.charAt(0)}.${event.extendedProps.surname.charAt(0)}. - ${event.extendedProps.description}`)
+                        })
                 },
                 eventClick: (info) => {
                     $('#whereami').modal('toggle')
@@ -79,18 +96,31 @@
                     $('#actionForm').attr('action','{{ url('/dove-siamo') }}/'+info.event.extendedProps.locationId)
                     $('#_method').val('PUT')
                     $('#delete').removeClass('d-none')
+                    $('#sph-office').parent().hide()
                 },
-                select: (info) => {
+                dateClick: (info) => {
+                    $('#position').val('')
                     $('#actionForm').attr('action','{{ route('locations.store') }}')
                     $('#whereami').modal('toggle')
-                    $('#date').val(info.startStr)
+                    $('#date').val(info.dateStr)
+                    $('#modal-date').text(moment(info.dateStr).locale('it').format('ddd D MMM YYYY'))
                     $('#_method').val('')
+                    $('#sph-office').parent().show()
+                    $('#sph-office').attr('checked',toggles.find(t => {return t === moment(info.date).format('YYYY-MM-DD')}) ? true : false)
+                },
+                dayCellDidMount : (info) => {
+                    $(info.el).find('.fc-daygrid-day-number').prepend(`<span style="z-index:100;width: 10px;height: 10px;padding: 6px;background-color: ${ toggles.find(t => {return t === moment(info.date).format('YYYY-MM-DD')}) ? 'red' : '#10cc10' }" class="trigger me-2 d-inline-flex border border-light rounded-circle"><span class="visually-hidden">New alerts</span></span>`)
                 }
             })
             calendar.render()
         })
 
         $('#whereami').on('hide.bs.modal',()=>{ $('#delete').addClass('d-none') })
+
+        $('.toggle').click(()=>{
+            console.log('click')
+            $('#empty-office').modal('toggle')
+        })
 
         $('#delete').click(()=>{
             $('#_method').val('DELETE')

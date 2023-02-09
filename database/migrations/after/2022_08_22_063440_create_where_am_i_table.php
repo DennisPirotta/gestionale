@@ -23,6 +23,8 @@ return new class extends Migration
                     ->cascadeOnDelete()
                     ->cascadeOnUpdate();
 
+            $table->boolean('sph_office')->default(false);
+
             $table->timestamps();
         });
     }

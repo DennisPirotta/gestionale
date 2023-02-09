@@ -2,12 +2,24 @@ import './bootstrap'
 import '../sass/app.scss'
 import '../css/app.css'
 import "flowbite"
+import { Calendar } from '@fullcalendar/core';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import listPlugin from '@fullcalendar/list';
+import bootstrap5Plugin from '@fullcalendar/bootstrap5';
+import rrulePlugin from '@fullcalendar/rrule'
 import {Datepicker,DateRangePicker} from "flowbite-datepicker"
+import interactionPlugin from '@fullcalendar/interaction'; // for selectable
 import it from "flowbite-datepicker/locales/it";
 import DOMPurify from "isomorphic-dompurify";
 const token = document.querySelector('meta[name="csrf-token"]').content;
 Datepicker.locales.it = it.it
 window.Datepicker = Datepicker
+window.Calendar = Calendar
+window.dayGridPlugin = dayGridPlugin
+window.listPlugin = listPlugin
+window.bootstrap5Plugin = bootstrap5Plugin
+window.interactionPlugin = interactionPlugin
+window.rrulePlugin = rrulePlugin
 window.DateRangePicker = DateRangePicker
 window.updateEvent = async function (eventInfo) {
     let res = await fetch(`/ferie/${eventInfo.event.id}`, {

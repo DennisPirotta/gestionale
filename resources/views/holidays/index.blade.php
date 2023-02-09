@@ -247,7 +247,8 @@
             progressBar.animate({{auth()->user()->getLeftHolidays() / auth()->user()->holidays}})
             let events = @json($holidays, JSON_THROW_ON_ERROR);
             let calendarEl = document.getElementById('calendar')
-            let calendar = new FullCalendar.Calendar(calendarEl, {
+            let calendar = new Calendar(calendarEl, {
+                plugins: [ dayGridPlugin,listPlugin,bootstrap5Plugin,rrulePlugin,interactionPlugin ],
                 initialView: 'dayGridMonth',
                 themeSystem: 'bootstrap5',
                 selectable: true,

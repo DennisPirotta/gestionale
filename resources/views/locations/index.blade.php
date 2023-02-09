@@ -1,6 +1,5 @@
 @extends('layouts.app')
 @section('content')
-    <script src='https://cdn.jsdelivr.net/npm/rrule@2.6.4/dist/es5/rrule.min.js'></script>
     <div class="modal fade" id="whereami" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -48,8 +47,8 @@
             })
         </script>
     @endif
-    <div class="container mt-3 mb-1 shadow-sm p-5">
-        <div id='calendar'></div>
+    <div class="p-5 position-absolute" style="height: 90vh !important;width: 100vw">
+        <div id='calendar' class="px-5 h-100 w-100"></div>
     </div>
     <script>
         $(document).ready(async function () {
@@ -63,7 +62,6 @@
                 initialView: 'dayGridMonth',
                 themeSystem: 'bootstrap5',
                 selectable: false,
-                contentHeight: 700,
                 locale: 'it',
                 longPressDelay: 500,
                 businessHours: {

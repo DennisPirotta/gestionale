@@ -14,6 +14,13 @@ class Location extends Model
         'date', 'description', 'user_id','sph_office'
     ];
 
+    public function scopeFilter($query, array $filters): void
+    {
+        if ($filters['user'] ?? false) {
+            $query->where('user_id', request('user'));
+        }
+    }
+
     public static function getSphOfficeData(): array
     {
         $exceptions = [];

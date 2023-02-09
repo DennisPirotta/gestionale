@@ -71,10 +71,24 @@
                     startTime: '8:00',
                     endTime: '17:00',
                 },
+                customButtons: {
+                    showAllLocations: {
+                        icon: 'eye',
+                        click: function() {
+                            location.replace('{{ route('locations.index',['user' => auth()->id() ]) }}')
+                        }
+                    },
+                    hideAllLocations: {
+                        icon: 'eye-slash',
+                        click: function() {
+                            location.replace('{{ route('locations.index') }}')
+                        }
+                    }
+                },
                 headerToolbar: {
                     left: 'prev next today',
                     center: 'title',
-                    right: 'listWeek dayGridMonth'
+                    right: 'listWeek dayGridMonth {{ request()->has('user') ? 'hideAllLocations' : 'showAllLocations' }}'
                 },
                 events: events,
                 viewDidMount: (info) => {

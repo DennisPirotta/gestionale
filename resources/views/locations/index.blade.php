@@ -73,20 +73,33 @@
                     showAllLocations: {
                         icon: 'eye',
                         click: function() {
-                            location.replace('{{ route('locations.index',['user' => auth()->id() ]) }}')
+                            let url = '{{ route('locations.index',['user' => auth()->id(), 'sph' => request('sph') ]) }}'
+                            location.replace(url.replace('&amp;','&'))
                         }
                     },
                     hideAllLocations: {
                         icon: 'eye-slash',
                         click: function() {
-                            location.replace('{{ route('locations.index') }}')
+                            location.replace('{{ route('locations.index',['sph' => request('sph')]) }}')
+                        }
+                    },
+                    toggleSPHLocations: {
+                        icon: 'arrow-repeat',
+                        click: function() {
+                            let url
+                            if ({{ request('sph') ?? 0 }}){
+                                url = '{{ route('locations.index',[ 'user' => request('user') ]) }}'
+                            }else{
+                                url = '{{ route('locations.index',[ 'sph' => true, 'user' => request('user') ]) }}'
+                            }
+                            location.replace(url.replace('&amp;','&'))
                         }
                     }
                 },
                 headerToolbar: {
                     left: 'prev next today',
                     center: 'title',
-                    right: 'listWeek dayGridMonth {{ request()->has('user') ? 'hideAllLocations' : 'showAllLocations' }}'
+                    right: 'listWeek dayGridMonth {{ request()->has('user') ? 'hideAllLocations' : 'showAllLocations' }} toggleSPHLocations'
                 },
                 events: events,
                 viewDidMount: (info) => {
@@ -108,7 +121,9 @@
                     $('#actionForm').attr('action','{{ url('/dove-siamo') }}/'+info.event.extendedProps.locationId)
                     $('#_method').val('PUT')
                     $('#delete').removeClass('d-none')
-                    $('#sph-office').parent().hide()
+                    $('#sph-office').attr('checked',info.event.extendedProps.sph === 1)
+                    console.log(info.event.extendedProps.sph)
+                    //$('#sph-office').parent().hide()
                 },
                 dateClick: (info) => {
                     $('#position').val('')
@@ -117,8 +132,9 @@
                     $('#date').val(info.dateStr)
                     $('#modal-date').text(moment(info.dateStr).locale('it').format('ddd D MMM YYYY'))
                     $('#_method').val('')
-                    $('#sph-office').parent().show()
-                    $('#sph-office').attr('checked',toggles.find(t => {return t === moment(info.date).format('YYYY-MM-DD')}) ? true : false)
+                    $('#sph-office').attr('checked',false)
+                    //$('#sph-office').parent().show()
+                    //$('#sph-office').attr('checked',toggles.find(t => {return t === moment(info.date).format('YYYY-MM-DD')}) ? true : false)
                 },
                 dayCellDidMount : (info) => {
                     $(info.el).find('.fc-daygrid-day-number').prepend(`<span style="z-index:100;width: 10px;height: 10px;padding: 6px;background-color: ${ toggles.find(t => {return t === moment(info.date).format('YYYY-MM-DD')}) ? 'red' : '#10cc10' }" class="trigger me-2 d-inline-flex border border-light rounded-circle"><span class="visually-hidden">New alerts</span></span>`)

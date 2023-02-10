@@ -19,7 +19,7 @@ class LocationController extends Controller
     public function index(): Factory|View|Application
     {
         $events = [];
-        foreach (Location::with('user')->filter(request(['user']))->get() as $location) {
+        foreach (Location::with('user')->filter(request(['user','sph']))->get() as $location) {
             $events[] = [
                 'id' => $location->id,
                 'start' => Carbon::parse($location->date),
@@ -31,6 +31,7 @@ class LocationController extends Controller
                 'surname' => $location->user->surname,
                 'locationId' => $location->id,
                 'backgroundColor' => $location->user->id === auth()->id() ? '#0D6EFDFF' : '#6C757DFF',
+                'extendedProps' => [ 'sph' => $location->sph_office ]
             ];
         }
 

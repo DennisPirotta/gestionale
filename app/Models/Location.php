@@ -19,6 +19,9 @@ class Location extends Model
         if ($filters['user'] ?? false) {
             $query->where('user_id', request('user'));
         }
+        if($filters['sph'] ?? false) {
+            $query->where('sph_office',true);
+        }
     }
 
     public static function getSphOfficeData(): array

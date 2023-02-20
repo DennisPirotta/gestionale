@@ -16,6 +16,8 @@ class Order extends Model
         'user_id', 'customer_id', 'innerCode', 'outerCode', 'hourSW', 'hourMS', 'hourFAT', 'hourSAF', 'country_id', 'job_type_id', 'status_id', 'description', 'opening', 'closing', 'company_id', 'created_by',
     ];
 
+    protected $with = ['user'];
+
     public function scopeFilter($query, array $filters): void
     {
         if ($filters['customer'] ?? false) {

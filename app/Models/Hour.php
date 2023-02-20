@@ -18,6 +18,8 @@ class Hour extends Model
         'hour_type_id', 'user_id', 'count', 'date','description'
     ];
 
+    protected $with = ['user'];
+
     public function scopeFilter($query, array $filters): void
     {
         if ($filters['month'] ?? false) {

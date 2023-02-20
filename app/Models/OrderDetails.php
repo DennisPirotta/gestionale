@@ -14,6 +14,8 @@ class OrderDetails extends Model
         'hour_id', 'job_type_id', 'order_id', 'description', 'signed',
     ];
 
+    protected $with = ['hour'];
+
     public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class, 'order_id');

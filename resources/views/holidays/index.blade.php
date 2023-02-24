@@ -1,150 +1,170 @@
-@php use App\Models\Holiday;use Carbon\Carbon; @endphp
+@php use App\Models\Holiday;use Carbon\Carbon; use Carbon\CarbonPeriod@endphp
 @extends('layouts.app')
 @section('content')
+
     <style>
-        p {
-            margin-bottom: 0;
+        .fc-list-event-dot{
+            margin-top: 5px;
         }
     </style>
-    <div class="container mt-3 mb-1 shadow-sm p-5">
-        <div class="row text-center">
-            <div class="col-sm-12 col-lg-5 mb-3">
-                <div class="card"> <!--  bg-black bg-opacity-25 -->
-                    <div class="card-body">
-                        <i class="bi bi-person fs-3"></i>
-                        <span class="card-title fs-3">{{auth()->user()->name}}</span>
-                        <hr class="w-50 mx-auto mt-0">
 
-                        <div class="card-text">
-                            <p>Ore di ferie rimaste:
-                                <b id="hourLeft">{{$left_hours}}</b>
-                                ( <b id="daysLeft">{{$left_hours/8}}</b> Giorni )
-                            <div id="progress" class="my-3 w-25 mx-auto"></div>
-                            <form method="POST" action="{{ route('holidays.destroyMore') }}">
+    <div class="shadow-sm mx-5 mt-3 p-3 max-h-[85vh] relative">
+        <div id="calendar2"></div>
+    </div>
+    @role('admin|boss')
+    @if(($count = $holidays->where('approved',false)->count()) > 0)
+        <div class="container mt-5 mb-3 shadow-sm p-5 table-responsive" id="approvare">
+            <h2 class="text-center">{{ $count }} Ferie / {{ $count > 1 ? 'Permessi' : 'Permesso' }} da approvare</h2>
+            <hr>
+            <table class="table align-middle mt-3">
+                <thead>
+                <tr>
+                    <th scope="col">Utente</th>
+                    <th scope="col">Inizio</th>
+                    <th scope="col">Fine</th>
+                    <th scope="col">Azioni</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach( $users as $user )
+                    @foreach($user->holidayList->where('approved',false) as $holiday)
+                        <tr>
+                            <th scope="row">{{ $user->surname }} {{ $user->name }}</th>
+                            <td>{{ Carbon::parse($holiday->start)->translatedFormat($holiday->permission ? 'D d M Y H:i' : 'D d M Y') }}</td>
+                            <td>{{ Carbon::parse($holiday->end)->translatedFormat($holiday->permission ? 'D d M Y H:i' : 'D d M Y') }}</td>
+                            <td>
+                                <form method="POST" action="{{ route('holidays.approve',$holiday->id) }}">
+                                    @csrf
+                                    @method('PUT')
+                                    <button type="submit" class="btn btn-success"
+                                            onclick="return confirm('Approvate le ferie?')"><i
+                                            class="bi bi-check fs-4"></i></button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                @endforeach
+                </tbody>
+            </table>
+        </div>
+    @endif
+    @endrole
+    <script>
+        $(()=>{
+            let events = @json($events, JSON_THROW_ON_ERROR);
+            let calendarEl = document.getElementById('calendar2')
+            let calendar = new Calendar(calendarEl, {
+                plugins: [ dayGridPlugin,listPlugin,bootstrap5Plugin,rrulePlugin,interactionPlugin ],
+                initialView: 'dayGridMonth',
+                themeSystem: 'bootstrap5',
+                slotDuration: '1:00',
+                selectable: true,
+                slotMinTime: '8:00',
+                slotMaxTime: '18:00',
+                locale: 'it',
+                height: '80vh',
+                longPressDelay: 1000,
+                businessHours: {
+                    daysOfWeek: [1, 2, 3, 4, 5], // Lunedì - Venerdì
+                    startTime: '8:00',
+                    endTime: '17:00',
+                },
+                headerToolbar: {
+                    left: 'title',
+                    center: '',
+                    right: 'dayGridMonth listMonth today prev next'
+                },
+                events: events,
+                eventDidMount: function (info) {
+                    let content = `
+                        <div>
+                            <p>Richiesta di <b>${ info.event.allDay ? 'ferie' : 'permesso' }</b></p>
+                            <p>Da <b>${ moment(info.event.start).locale('it').format('dddd D MMMM YYYY') } ${info.event.allDay ?'': moment(info.event.start).locale('it').format('H:mm')}</b></p>
+                            <p>A <b>${ moment(info.event.end).locale('it').format('dddd D MMMM YYYY') } ${info.event.allDay ?'': moment(info.event.end).locale('it').format('H:mm')}</b></p>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <form method="POST" action="/ferie/${info.event.id}" class="mb-0">
                                 @csrf
-                                <div class="h-100 overflow-auto mb-3 fancy-scrollbar" style="max-height: 15vw">
-
-                                    <table class="table text-center ">
-                                        <thead>
-                                        <tr>
-                                            <th scope="col" id="header" style="cursor:pointer;">#</th>
-                                            <th scope="col">Inizio</th>
-                                            <th scope="col">Fine</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        @php($count = 1)
-                                        @foreach($holidays as $event)
-                                            @if($event['user'] === auth()->id())
-                                                @php($start = Carbon::parse($event['start']))
-                                                @php($end = Carbon::parse($event['end']))
-                                                <tr>
-                                                    <th scope="row">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                   value="{{$event['id']}}" id="{{$event['id']}}"
-                                                                   name="ferie[]">
-                                                            <label class="form-check-label"
-                                                                   for="{{$event['id']}}"></label>
-                                                        </div>
-                                                    </th>
-                                                    @if($event['allDay'])
-                                                        <td id="start_{{ $event['id'] }}">
-                                                            <p>{{ $start->translatedFormat($event['permission'] ?? false == '0' ? 'D d M Y' : 'D d M Y H:i') }}</p>
-                                                        </td>
-                                                        <td id="end_{{ $event['id'] }}">
-                                                            <p>{{ $end->translatedFormat($event['permission'] ?? false == '0' ? 'D d M Y' : 'D d M Y H:i') }}</p>
-                                                        </td>
-                                                    @else
-                                                        <td id="start_{{ $event['id'] }}">
-                                                            <p>{{ $start->translatedFormat($event['permission'] ?? false == '0' ? 'D d M Y' : 'D d M Y H:i') }}</p>
-                                                            <p>{{ $start->translatedFormat($event['permission'] ?? false == '0' ? 'D d M Y' : 'D d M Y H:i') }}</p>
-                                                        </td>
-                                                        <td id="end_{{ $event['id'] }}">
-                                                            <p>{{ $end->translatedFormat($event['permission'] ?? false == '0' ? 'D d M Y' : 'D d M Y H:i') }}</p>
-                                                            <p>{{ $end->translatedFormat($event['permission'] ?? false == '0' ? 'D d M Y' : 'D d M Y H:i') }}</p>
-                                                        </td>
-                                                    @endif
-
-                                                </tr>
-                                            @endif
-                                        @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <button class="btn btn-outline-danger"
-                                        onclick="return confirm('Sicuro di voler Eliminare?')">
-                                    <i class="bi bi-trash me-1"></i>
-                                    Elimina
+                                @method('DELETE')
+                                <button class="btn btn-outline-danger" onclick="return confirm('Sicuro di voler Eliminare?')">
+                                    <i class="bi bi-trash me-1 fs-4"></i>
                                 </button>
                             </form>
+                            <button class="ms-2 btn btn-outline-primary">
+                                    <i class="bi bi-pencil me-1 fs-4"></i>
+                            </button>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-12 col-lg-7">
-                <div id='calendar'></div>
-            </div>
-        </div>
-    </div>
-    @php($count = Holiday::where('approved',false)->get()->count())
-    @hasanyrole('admin|boss')
-        @if($count > 0)
-            <div class="container mt-5 mb-3 shadow-sm p-5 table-responsive" id="approvare">
-                <h2 class="text-center">{{ $count }} Ferie da approvare</h2>
-                <hr>
-                <table class="table align-middle mt-3">
-                    <thead>
-                    <tr>
-                        <th scope="col">Utente</th>
-                        <th scope="col">Inizio</th>
-                        <th scope="col">Fine</th>
-                        <th scope="col">Azioni</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach( $users as $user )
-                        @foreach($user->holidayList->where('approved',false) as $holiday)
-                            <tr>
-                                <th scope="row">{{ $user->surname }} {{ $user->name }}</th>
-                                <td>{{ Carbon::parse($holiday->start)->translatedFormat($holiday->permission ?? false == '0' ? 'D d M Y' : 'D d M Y H:i') }}</td>
-                                <td>{{ Carbon::parse($holiday->end)->translatedFormat($holiday->permission ?? false == '0' ? 'D d M Y' : 'D d M Y H:i') }}</td>
-                                <td>
-                                    <form method="POST" action="{{ route('holidays.approve',$holiday->id) }}">
-                                        @csrf
-                                        @method('PUT')
-                                        <button type="submit" class="btn btn-success"
-                                                onclick="return confirm('Approvate le ferie?')"><i
-                                                    class="bi bi-check fs-4"></i></button>
-                                    </form>
-                                </td>
-                            </tr>
-                        @endforeach
-                    @endforeach
-                    </tbody>
-                </table>
-            </div>
-        @endif
-    @endhasanyrole
-    <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="label" aria-hidden="true">
+                        `
+                    if (info.event.extendedProps.user === {{ auth()->id() }} || {{ auth()->user()->hasRole('admin|boss') }} )
+                        $(info.el).popover(
+                            {
+                                title: 'Dettagli',
+                                placement: 'top',
+                                content: content,
+                                html: true,
+                                sanitize: false,
+                                role: 'button',
+                            }
+                        ).popover().show()
+                },
+                select: function (info) {
+                    $('#myModal').modal('toggle')
+                    let inputStart = $('input[name="start"]')
+                    let inputEnd = $('input[name="end"]')
+                    inputStart.val(info.startStr)
+                    if (info.end - info.start !== 86400000){
+                        inputEnd.parent().show()
+                        inputEnd.attr('disabled',false)
+                        inputEnd.val(info.endStr)
+                        $('input[name="request_type"]').val('holidays')
+                        $("#permission_end_box").addClass('d-none')
+                        $("#permission_end").prop('disabled',true)
+                        $("#permission_start_box").addClass('d-none')
+                        $("#permission_start").prop('disable',true)
+                        $("#title").text('Inserimento Ferie')
+                        $("#alert").show()
+                    }else{
+                        inputEnd.parent().hide()
+                        inputEnd.attr('disabled',true)
+                        $('input[name="request_type"]').val('permission')
+                        $("#permission_end_box").removeClass('d-none')
+                        $("#permission_end").prop('disabled',false)
+                        $("#permission_start_box").removeClass('d-none')
+                        $("#permission_start").prop('disabled',false)
+                        $("#title").text('Inserimento Permesso')
+                        $("#alert").hide()
+                    }
+
+                }
+            })
+            calendar.render()
+            let headers = $('.fc-header-toolbar').children()
+            $(headers[1]).html('<h3 class="mb-0"><b>{{ round($left_hours,1) }}</b> Ore di ferie rimanenti</h3>')
+            $("#header").click(function () {
+                $('input:checkbox').prop('checked', true);
+            });
+
+        })
+    </script>
+    <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="title" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="label">Inserimento Ferie</h5>
+                    <h5 class="modal-title" id="title">Inserimento Ferie</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="post" action="/ferie">
-                    <label for="allDay"></label><input name="allDay" id="allDay" class="d-none">
+                <form method="POST" action="/ferie">
                     @csrf
+                    <input type="hidden" name="request_type">
                     <div class="modal-body">
                         <div class="row">
-                            <div class="col-12">
+                            <div class="col-12" id="alert">
                                 <div class="alert alert-primary" role="alert">
                                     <i class="bi bi-info-circle me-2"></i>Le date indicate fanno riferimento al giorno d'inizio <b>( compreso )</b> delle ferie e il giorno di fine <b>(escluso)</b>
                                 </div>
                             </div>
-                            <div class="col-md-6 col-sm-12">
-                                <div class="input-group mb-3 col-md-4 col-sm-6">
+                            <div class="col-12 d-flex">
+                                <div class="input-group mb-3">
                                     <span class="input-group-text"><i class="bi bi-calendar me-2"></i>Inizio</span>
                                     <input type="date" class="form-control" aria-label="Inizio" name="start" id="start"
                                            value="{{ old('start') }}" required>
@@ -152,9 +172,7 @@
                                 @error('start')
                                 <p class="text-danger fs-6">{{$message}}</p>
                                 @enderror
-                            </div>
-                            <div class="col-md-6 col-sm-12">
-                                <div class="input-group mb-3 col-md-4 col-sm-6">
+                                <div class="input-group mb-3 ms-2">
                                     <span class="input-group-text"><i class="bi bi-calendar me-2"></i>Fine</span>
                                     <input type="date" class="form-control" aria-label="Fine" name="end" id="end"
                                            value="{{ old('end') }}" required>
@@ -162,12 +180,6 @@
                                 @error('end')
                                 <p class="text-danger fs-6">{{$message}}</p>
                                 @enderror
-                            </div>
-                            <div class="form-check col-12 d-flex justify-content-center">
-                                <input class="form-check-input" type="checkbox" name="permission" value=true id="permission">
-                                <label class="form-check-label ms-1" for="permission">
-                                    Inserisci permesso
-                                </label>
                             </div>
                             <div class="d-none col-md-6 col-sm-12 mt-2" id="permission_start_box">
                                 <div class="input-group mb-3 col-md-4 col-sm-6">
@@ -179,7 +191,7 @@
                                 <p class="text-danger fs-6">{{$message}}</p>
                                 @enderror
                             </div>
-                            <div class="d-none col-md-6 col-sm-12 mt-2" id="permission_end_box">
+                            <div class="col-md-6 col-sm-12 mt-2" id="permission_end_box">
                                 <div class="input-group mb-3 col-md-4 col-sm-6">
                                     <span class="input-group-text"><i class="bi bi-clock me-2"></i>Fine</span>
                                     <input type="time" class="form-control" aria-label="Fine" name="permission_end" id="permission_end"
@@ -199,126 +211,4 @@
             </div>
         </div>
     </div>
-    <script>
-
-        $(document).ready(async function () {
-
-            $('#permission').change( e => {
-                if($(e.target).is(':checked')){
-                    $("#permission_end_box").removeClass('d-none')
-                    $("#permission_end").prop('disabled',false)
-                    $("#permission_start_box").removeClass('d-none')
-                    $("#permission_start").prop('disabled',false)
-                }else{
-                    $("#permission_end_box").addClass('d-none')
-                    $("#permission_end").prop('disabled',true)
-                    $("#permission_start_box").addClass('d-none')
-                    $("#permission_start").prop('disable',true)
-                }
-            } );
-
-            let progressBar = new ProgressBar.Circle('#progress', {
-                color: '#000000',
-                // This has to be the same size as the maximum width to
-                // prevent clipping
-                strokeWidth: 4,
-                trailWidth: 1,
-                easing: 'easeInOut',
-                height: 'auto',
-                duration: 1400,
-                from: {color: '#FF0000', width: 1},
-                to: {color: '#00FF00', width: 4},
-                // Set default step function for all animate calls
-                step: function (state, circle) {
-                    circle.path.setAttribute('stroke', state.color);
-                    circle.path.setAttribute('stroke-width', state.width);
-
-                    let value = Math.round(circle.value() * 100);
-                    if (value === 0) {
-                        circle.setText('');
-                    } else {
-                        circle.setText(value + "%");
-                    }
-
-                }
-            })
-            progressBar.text.style.fontFamily = '"Raleway", Helvetica, sans-serif';
-            progressBar.text.style.fontSize = '1.5rem';
-            progressBar.animate({{auth()->user()->getLeftHolidays() / auth()->user()->holidays}})
-            let events = @json($holidays, JSON_THROW_ON_ERROR);
-            let calendarEl = document.getElementById('calendar')
-            let calendar = new Calendar(calendarEl, {
-                plugins: [ dayGridPlugin,listPlugin,bootstrap5Plugin,rrulePlugin,interactionPlugin ],
-                initialView: 'dayGridMonth',
-                themeSystem: 'bootstrap5',
-                selectable: true,
-                editable: true,
-                slotDuration: '1:00',
-                slotMinTime: '8:00',
-                slotMaxTime: '18:00',
-                locale: 'it',
-                longPressDelay: 1000,
-                businessHours: {
-                    daysOfWeek: [1, 2, 3, 4, 5], // Lunedì - Venerdì
-                    startTime: '8:00',
-                    endTime: '17:00',
-                },
-                headerToolbar: {
-                    left: 'prev next today',
-                    center: '',
-                    right: 'title'
-                },
-                events: events,
-                eventDidMount: function (info) {
-                    let content = `<form method="POST" action="/ferie/${info.event.id}">@csrf @method('DELETE')<button class="btn btn-outline-danger" onclick="return confirm('Sicuro di voler Eliminare?')"><i class="bi bi-trash me-1 fs-4"></i></button></form>`
-                    $(info.el).popover(
-                        {
-                            title: 'Dettagli',
-                            placement: 'top',
-                            trigger: 'click',
-                            content: content,
-                            container: 'body',
-                            html: true,
-                            sanitize: false,
-                            role: 'button'
-                        }
-                    ).popover().show()
-                },
-                eventDrop: updateEvent,
-                select: function (info) {
-                    $('#myModal').modal('toggle')
-                    $('input[name="allDay"]').val(info.allDay)
-                    let inputStart = $('input[name="start"]')
-                    let inputEnd = $('input[name="end"]')
-                    if (info.allDay) {
-                        inputStart.attr('type', 'date')
-                        inputEnd.attr('type', 'date')
-                        inputStart.val(info.startStr)
-                        inputEnd.val(info.endStr)
-                    } else {
-                        inputStart.attr('type', 'time')
-                        inputEnd.attr('type', 'time')
-                        inputStart.val(moment(info.start).format('HH:mm'))
-                        inputEnd.val(moment(info.end).format('HH:mm'))
-                    }
-                },
-                eventResize: async (info) => {
-                    let progress = updateEvent(info)
-                    let start = new moment(info.event.start)
-                    let end = new moment(info.event.end)
-                    progressBar.animate(await progress)
-                    $(`#start_${info.event.id}`).text(start.format('ddd DD MMMM YYYY'))
-                    $(`#end_${info.event.id}`).text(end.format('ddd DD MMMM YYYY'))
-                }
-            })
-            calendar.render()
-            $("#header").click(function () {
-                $('input:checkbox').prop('checked', true);
-            });
-        })
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/progressbar.js/1.1.0/progressbar.min.js"
-            integrity="sha512-EZhmSl/hiKyEHklogkakFnSYa5mWsLmTC4ZfvVzhqYNLPbXKAXsjUYRf2O9OlzQN33H0xBVfGSEIUeqt9astHQ=="
-            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <link href="https://fonts.googleapis.com/css?family=Raleway:400,300,600,800,900" rel="stylesheet" type="text/css">
 @endsection

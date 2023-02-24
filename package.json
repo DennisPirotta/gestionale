@@ -28,6 +28,7 @@
         "@fullcalendar/list": "^6.1.4",
         "@fullcalendar/rrule": "^6.1.4",
         "bootstrap": "^5.2.0",
+        "chokidar": "^3.5.3",
         "flowbite": "^1.6.0",
         "flowbite-datepicker": "^1.2.2",
         "fullcalendar": "^6.0.0",

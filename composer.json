@@ -14,13 +14,15 @@
         "guzzlehttp/guzzle": "^7.2",
         "ladumor/laravel-pwa": "^0.0.3",
         "laravel/framework": "^9.19",
+        "laravel/octane": "^1.4",
         "laravel/sanctum": "^2.14.1",
         "laravel/tinker": "^2.7",
         "laravel/ui": "^4.0",
         "nesbot/carbon": "^2.61",
         "opcodesio/log-viewer": "^1.9",
         "qoraiche/laravel-mail-editor": "^4.0",
-        "spatie/laravel-permission": "^5.5"
+        "spatie/laravel-permission": "^5.5",
+        "spiral/roadrunner": "^2.8.2"
     },
     "require-dev": {
         "arcanedev/laravel-lang": "^10.0",

@@ -11,13 +11,14 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('holidays', function (Blueprint $table) {
             $table->id();
             $table->boolean('approved')->default(false);
             $table->date('start');
             $table->date('end');
+            $table->boolean('permission')->default(false);
             $table->timestamps();
 
             $table->foreignId('user_id')
@@ -32,7 +33,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('holidays');
     }

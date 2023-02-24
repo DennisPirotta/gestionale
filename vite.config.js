@@ -3,16 +3,16 @@ import laravel, {refreshPaths} from 'laravel-vite-plugin';
 import path from "path";
 import fs from 'fs';
 
-const host = 'gestionale.dev'
-const env = loadEnv('production',process.cwd(),'')
-const serverConfig = env.APP_ENV === 'production' ? {} : {
-    host,
-    hmr: { host },
-    https: {
-        key: fs.readFileSync('C:\\laragon\\etc\\ssl\\laragon.key'),
-        cert: fs.readFileSync('C:\\laragon\\etc\\ssl\\laragon.crt')
-    }
-}
+// const host = 'gestionale.dev'
+// const env = loadEnv('production',process.cwd(),'')
+// const serverConfig = env.APP_ENV === 'production' ? {} : {
+//     host,
+//     hmr: { host },
+//     https: {
+//         key: fs.readFileSync('C:\\laragon\\etc\\ssl\\laragon.key'),
+//         cert: fs.readFileSync('C:\\laragon\\etc\\ssl\\laragon.crt')
+//     }
+// }
 export default defineConfig({
     resolve: {
         alias: {
@@ -20,7 +20,7 @@ export default defineConfig({
             '@': '/resources/js',
         }
     },
-    server: serverConfig,
+    // server: serverConfig,
     plugins: [
         laravel({
             input: [

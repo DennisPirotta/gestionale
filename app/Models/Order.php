@@ -100,9 +100,7 @@ class Order extends Model
         $data = [
             'count' => 0
         ];
-        foreach ($temp->groupBy(function ($item) {
-        return $item->user->name.' '.$item->user->surname;
-        }) as $user => $item) {
+        foreach ($temp->groupBy(function ($item) { return $item->user->name.' '.$item->user->surname; }) as $user => $item) {
             $data[$user] = 0;
             foreach ($item as $dato) {
                 $data[$user] += $dato->count;

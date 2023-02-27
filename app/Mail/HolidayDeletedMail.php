@@ -12,11 +12,7 @@ class HolidayDeletedMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    private string $start;
-
-    private string $end;
-
-    private string $user;
+    private Holiday $holiday;
 
     /**
      * Create a new message instance.
@@ -25,9 +21,7 @@ class HolidayDeletedMail extends Mailable
      */
     public function __construct(Holiday $holiday)
     {
-        $this->start = Carbon::parse($holiday->start)->translatedFormat('l j F Y');
-        $this->end = Carbon::parse($holiday->end)->translatedFormat('l j F Y');
-        $this->user = $holiday->user->name.' '.$holiday->user->surname;
+        $this->holiday = $holiday;
     }
 
     /**
@@ -39,9 +33,7 @@ class HolidayDeletedMail extends Mailable
     {
         return $this->subject('Ferie Eliminate')
             ->markdown('mails.holidays.deleted', [
-                'start' => $this->start,
-                'end' => $this->end,
-                'user' => $this->user,
+                'holiday' => $this->holiday
             ]);
     }
 }

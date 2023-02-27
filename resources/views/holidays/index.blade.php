@@ -63,7 +63,6 @@
                 slotMaxTime: '18:00',
                 locale: 'it',
                 height: '80vh',
-                longPressDelay: 1000,
                 businessHours: {
                     daysOfWeek: [1, 2, 3, 4, 5], // Lunedì - Venerdì
                     startTime: '8:00',
@@ -82,20 +81,22 @@
                             <p>Da <b>${ moment(info.event.start).locale('it').format('dddd D MMMM YYYY') } ${info.event.allDay ?'': moment(info.event.start).locale('it').format('H:mm')}</b></p>
                             <p>A <b>${ moment(info.event.end).locale('it').format('dddd D MMMM YYYY') } ${info.event.allDay ?'': moment(info.event.end).locale('it').format('H:mm')}</b></p>
                         </div>
+                        `
+                    if (info.event.extendedProps.user === {{ auth()->id() }} || {{ auth()->user()->hasRole('admin|boss') ? 1 : 0 }} )
+                        content += `
                         <div class="d-flex justify-content-center">
                             <form method="POST" action="/ferie/${info.event.id}" class="mb-0">
                                 @csrf
                                 @method('DELETE')
                                 <button class="btn btn-outline-danger" onclick="return confirm('Sicuro di voler Eliminare?')">
-                                    <i class="bi bi-trash me-1 fs-4"></i>
+                                    <i class="bi bi-trash fs-4"></i>
                                 </button>
                             </form>
                             <button class="ms-2 btn btn-outline-primary">
-                                    <i class="bi bi-pencil me-1 fs-4"></i>
+                                    <i class="bi bi-pencil fs-4"></i>
                             </button>
                         </div>
                         `
-                    if (info.event.extendedProps.user === {{ auth()->id() }} || {{ auth()->user()->hasRole('admin|boss') }} )
                         $(info.el).popover(
                             {
                                 title: 'Dettagli',
@@ -116,6 +117,7 @@
                         inputEnd.parent().show()
                         inputEnd.attr('disabled',false)
                         inputEnd.val(info.endStr)
+                        $('#permission_alert').hide()
                         $('input[name="request_type"]').val('holidays')
                         $("#permission_end_box").addClass('d-none')
                         $("#permission_end").prop('disabled',true)
@@ -126,6 +128,7 @@
                     }else{
                         inputEnd.parent().hide()
                         inputEnd.attr('disabled',true)
+                        $('#permission_alert').show()
                         $('input[name="request_type"]').val('permission')
                         $("#permission_end_box").removeClass('d-none')
                         $("#permission_end").prop('disabled',false)
@@ -134,8 +137,7 @@
                         $("#title").text('Inserimento Permesso')
                         $("#alert").hide()
                     }
-
-                }
+                },
             })
             calendar.render()
             let headers = $('.fc-header-toolbar').children()
@@ -181,11 +183,16 @@
                                 <p class="text-danger fs-6">{{$message}}</p>
                                 @enderror
                             </div>
+                            <div class="col-12" id="permission_alert">
+                                <div class="alert alert-primary" role="alert">
+                                    <i class="bi bi-info-circle me-2"></i>Per inserire un permesso di un giorno lasciare i campi sottostanti vuoti</b>
+                                </div>
+                            </div>
                             <div class="d-none col-md-6 col-sm-12 mt-2" id="permission_start_box">
                                 <div class="input-group mb-3 col-md-4 col-sm-6">
                                     <span class="input-group-text"><i class="bi bi-clock me-2"></i>Inizio</span>
                                     <input type="time" class="form-control" aria-label="Inizio" name="permission_start" id="permission_start"
-                                           value="{{ old('permission_start') }}" disabled required>
+                                           value="{{ old('permission_start') }}" disabled>
                                 </div>
                                 @error('permission_start')
                                 <p class="text-danger fs-6">{{$message}}</p>
@@ -195,12 +202,13 @@
                                 <div class="input-group mb-3 col-md-4 col-sm-6">
                                     <span class="input-group-text"><i class="bi bi-clock me-2"></i>Fine</span>
                                     <input type="time" class="form-control" aria-label="Fine" name="permission_end" id="permission_end"
-                                           value="{{ old('permission_end') }}" disabled required>
+                                           value="{{ old('permission_end') }}" disabled>
                                 </div>
                                 @error('permission_end')
                                 <p class="text-danger fs-6">{{$message}}</p>
                                 @enderror
                             </div>
+
                         </div>
                     </div>
                     <div class="modal-footer">

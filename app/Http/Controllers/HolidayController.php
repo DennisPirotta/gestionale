@@ -16,39 +16,43 @@ class HolidayController extends Controller
 {
     public function index()
     {
-//        $events = new Collection();
-//
-//        foreach (Holiday::with(['user'])->get() as $holiday) {
-//            $events->push([
-//                'title' => $holiday->user->name.' '.$holiday->user->surname,
-//                'start' => $holiday->start,
-//                'end' => $holiday->end,
-//                'id' => $holiday->id,
-//                'editable' => $holiday->user->id === auth()->id(),
-//                'color' => $holiday->approved ? 'rgba(73, 126, 41, 1)' : 'rgba(215,239,79,0.84)',
-//                'textColor' => $holiday->approved ? 'white' : 'black',
-//                'borderColor' => $holiday->approved ? 'rgb(32,70,15)' : 'rgb(250,192,0)',
-//                'allDay' => !($holiday->permission && Carbon::parse($holiday->start)->isSameDay($holiday->end)),
-//                'extendedProps' => [ 'user' => $holiday->user->id ]
-//            ]);
-//        }
-//
-//        return view('holidays.index', [
-//            'events' => $events,
-//            'holidays' => Holiday::all(),
-//            'left_hours' => auth()->user()->getLeftHolidays(),
-//            'users' => User::with('holidayList')->get(),
-//        ]);
-        return view('errors.maintenance');
+        $events = new Collection();
+
+        foreach (Holiday::with(['user'])->get() as $holiday) {
+            $events->push([
+                'title' => $holiday->user->name.' '.$holiday->user->surname,
+                'start' => $holiday->start,
+                'end' => $holiday->end,
+                'id' => $holiday->id,
+                'color' => $holiday->approved ? 'rgba(73, 126, 41, 1)' : 'rgba(215,239,79,0.84)',
+                'textColor' => $holiday->approved ? 'white' : 'black',
+                'borderColor' => $holiday->approved ? 'rgb(32,70,15)' : 'rgb(250,192,0)',
+                'allDay' => !($holiday->permission && Carbon::parse($holiday->start)->isSameDay($holiday->end)),
+                'extendedProps' => [ 'user' => $holiday->user->id ]
+            ]);
+        }
+
+        return view('holidays.index', [
+            'events' => $events,
+            'holidays' => Holiday::all(),
+            'left_hours' => auth()->user()->getLeftHolidays(),
+            'users' => User::with('holidayList')->get(),
+        ]);
     }
 
     public function store(Request $request)
     {
         $isPermission = $request->get('request_type') === 'permission';
+        if ($request->get('permission_start') === null || $request->get('permission_end') === null) {
+            $isPermission = false;
+        }
 
         if ($isPermission) {
             $start = Carbon::parse($request->get('start') . ' ' . $request->get('permission_start'));
             $end = Carbon::parse($request->get('start') . ' ' . $request->get('permission_end'));
+        } elseif (!$request->has('end') && ($request->get('permission_start') === null || $request->get('permission_end') === null)) {
+            $start = Carbon::parse($request->get('start'));
+            $end = $start->clone()->addDay();
         } else {
             $start = Carbon::parse($request->get('start'));
             $end = Carbon::parse($request->get('end'));
@@ -60,7 +64,7 @@ class HolidayController extends Controller
             'user_id' => auth()->id(),
             'approved' => $end->isPast(),
             'permission' => $isPermission
-        ]);
+        ])->sendMail();
 
         if ($isPermission) {
             $count = Carbon::parse($start)->diffInBusinessHours($end);

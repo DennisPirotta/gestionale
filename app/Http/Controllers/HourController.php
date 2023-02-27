@@ -57,11 +57,16 @@ class HourController extends Controller
      */
     public function create(): Response
     {
+        if (auth()->user()->hasRole('admin|boss')){
+            $technical_reports = TechnicalReport::with('customer', 'secondary_customer')->get();
+        }else{
+            $technical_reports = auth()->user()->technical_reports;
+        }
         return response()->view('hours.create', [
             'hour_types' => HourType::all(),
             'orders' => Order::with('customer', 'status')->orderByDesc('innerCode')->get(),
             'job_types' => JobType::all(),
-            'technical_reports' => TechnicalReport::with('customer', 'secondary_customer')->get(),
+            'technical_reports' => $technical_reports,
             'customers' => Customer::all(),
         ]);
     }

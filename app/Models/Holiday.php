@@ -35,14 +35,14 @@ class Holiday extends Model
         $cc[] = 'angelo.dariol@sphtechnology.ch';
         $cc[] = 'andrea.dariol@sphtechnology.ch';
         if ($deleted) {
-//            Mail::to($to)->cc($cc)->send(new HolidayDeletedMail($this));
-            Mail::to('dennispirotta@gmail.com')->send(new HolidayDeletedMail($this));
+            Mail::to($to)->cc($cc)->send(new HolidayDeletedMail($this));
+//            Mail::to('dennispirotta@gmail.com')->send(new HolidayDeletedMail($this));
         } elseif ($approved) {
-//            Mail::to($this->user->email)->send(new HolidayApprovedMail($this));
-            Mail::to('dennispirotta@gmail.com')->send(new HolidayApprovedMail($this));
+            Mail::to($this->user->email)->send(new HolidayApprovedMail($this));
+//            Mail::to('dennispirotta@gmail.com')->send(new HolidayApprovedMail($this));
         } else {
-//            Mail::to($to)->cc($cc)->send(new HolidayRequestMail($this, $old));
-            Mail::to('dennispirotta@gmail.com')->send(new HolidayRequestMail($this, $old));
+            Mail::to($to)->cc($cc)->send(new HolidayRequestMail($this, $old));
+//            Mail::to('dennispirotta@gmail.com')->send(new HolidayRequestMail($this, $old));
         }
     }
 

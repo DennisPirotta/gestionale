@@ -47,12 +47,15 @@ class HolidayController extends Controller
             $isPermission = false;
         }
 
+        $continue = true; // fix bug giorno singolo !
+
         if ($isPermission) {
             $start = Carbon::parse($request->get('start') . ' ' . $request->get('permission_start'));
             $end = Carbon::parse($request->get('start') . ' ' . $request->get('permission_end'));
         } elseif (!$request->has('end') && ($request->get('permission_start') === null || $request->get('permission_end') === null)) {
             $start = Carbon::parse($request->get('start'));
             $end = $start->clone()->addDay();
+            $continue = false;
         } else {
             $start = Carbon::parse($request->get('start'));
             $end = Carbon::parse($request->get('end'));
@@ -80,6 +83,7 @@ class HolidayController extends Controller
                 'user_id' => auth()->id(),
             ]);
         } else {
+            $continue ?: $end->subDay();
             foreach (CarbonPeriod::create($start, $end) as $day) {
                 Hour::create([
                     'count' => 8,

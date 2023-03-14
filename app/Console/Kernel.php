@@ -20,6 +20,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->command('whereami:clear')->daily();
+        $schedule->command('notify:holidays')->dailyAt('8:00');
     }
 
     /**

@@ -34,7 +34,7 @@ class NotifyHolidays extends Command
     public function handle(): int
     {
         $holidays = Holiday::with('user')->get()->filter(function ($holiday) {
-            $period = CarbonPeriod::create($holiday->start,$holiday->end);
+            $period = CarbonPeriod::create(Carbon::parse($holiday->start)->setTime(0,0),Carbon::parse($holiday->end)->setTime(0,0));
             $next_week = CarbonPeriod::create(Carbon::now()->next('monday'),Carbon::now()->next('monday')->next('friday'));
             return count(array_intersect($period->toArray(),$next_week->toArray())) > 0;
         });
@@ -47,6 +47,7 @@ class NotifyHolidays extends Command
                         'angelo.dariol@sphtechnology.ch',
                         'andrea.dariol@sphtechnology.ch'
                     ])
+//                Mail::to('dennispirotta@gmail.com')
                     ->send(new HolidayNotifyMail($grouped->get(1)));
             }
             if ($grouped->get(2,collect([]))->count() > 0) {
@@ -56,6 +57,7 @@ class NotifyHolidays extends Command
                         'angelo.dariol@sphtechnology.ch',
                         'andrea.dariol@sphtechnology.ch'
                     ])
+//                    Mail::to('dennispirotta@gmail.com')
                     ->send(new HolidayNotifyMail($grouped->get(2)));
             }
         }

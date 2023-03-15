@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Mail\HolidayNotifyMail;
 use App\Models\Holiday;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use Symfony\Component\Console\Command\Command as CommandAlias;
@@ -23,7 +24,7 @@ class NotifyHolidays extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Send email for holidays reminder';
 
     /**
      * Execute the console command.
@@ -32,7 +33,11 @@ class NotifyHolidays extends Command
      */
     public function handle(): int
     {
-        $holidays = Holiday::with('user')->where('start', Carbon::tomorrow())->get();
+        $holidays = Holiday::with('user')->get()->filter(function ($holiday) {
+            $period = CarbonPeriod::create($holiday->start,$holiday->end);
+            $next_week = CarbonPeriod::create(Carbon::now()->next('monday'),Carbon::now()->next('monday')->next('friday'));
+            return count(array_intersect($period->toArray(),$next_week->toArray())) > 0;
+        });
         if ($holidays->count() > 0) {
             $grouped = $holidays->groupBy('user.company_id');
             if ($grouped->get(1,collect([]))->count() > 0) {
@@ -50,7 +55,8 @@ class NotifyHolidays extends Command
                         'amministrazione@3dautomation.it',
                         'angelo.dariol@sphtechnology.ch',
                         'andrea.dariol@sphtechnology.ch'
-                    ])->send(new HolidayNotifyMail($grouped->get(2)));
+                    ])
+                    ->send(new HolidayNotifyMail($grouped->get(2)));
             }
         }
         return CommandAlias::SUCCESS;

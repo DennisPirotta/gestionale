@@ -9,6 +9,7 @@ class Kernel extends ConsoleKernel
 {
     protected $commands = [
         Commands\DailyWhereAmI::class,
+        Commands\NotifyHolidays::class
     ];
 
     /**
@@ -20,7 +21,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->command('whereami:clear')->daily();
-        $schedule->command('notify:holidays')->dailyAt('8:00');
+        $schedule->command('notify:holidays')->weeklyOn(4,'8:00');
     }
 
     /**

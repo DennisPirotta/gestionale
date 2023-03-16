@@ -4,6 +4,9 @@
     th, td{
         max-width: 15px !important;
     }
+    th[scope=row]{
+        overflow-wrap: break-word;
+    }
     @media print {
         @page {
             size: landscape;
@@ -16,9 +19,6 @@
 
         .no-print {
             display: none !important;
-        }
-        th[scope=row]{
-            overflow-wrap: break-word;
         }
     }
 </style>

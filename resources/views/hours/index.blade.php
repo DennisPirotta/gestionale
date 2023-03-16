@@ -17,7 +17,9 @@
         .no-print {
             display: none !important;
         }
-
+        th[scope=row]{
+            overflow-wrap: break-word;
+        }
     }
 </style>
 @section('content')

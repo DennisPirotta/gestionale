@@ -145,7 +145,7 @@
                         <div class="input-group mb-3">
                             <span class="input-group-text"><i class="bi bi-house fs-5"></i></span>
                             <div class="form-floating">
-                                <input type="number" step="0.05" name="food" class="form-control" id="food"
+                                <input type="number" step="0.01" name="food" class="form-control" id="food"
                                        placeholder="Vitto e alloggio" >
                                 <label for="food">Vitto e alloggio</label>
                             </div>
@@ -154,7 +154,7 @@
                         <div class="input-group mb-3">
                             <span class="input-group-text"><i class="bi bi-credit-card-2-front fs-5"></i></span>
                             <div class="form-floating">
-                                <input type="number" step="0.05" name="various" class="form-control" id="various"
+                                <input type="number" step="0.01" name="various" class="form-control" id="various"
                                        placeholder="Spese varie" >
                                 <label for="various">Spese varie</label>
                             </div>
@@ -163,7 +163,7 @@
                         <div class="input-group mb-3">
                             <span class="input-group-text"><i class="bi bi-bicycle fs-5"></i></span>
                             <div class="form-floating">
-                                <input type="number" step="0.05" name="transport" class="form-control" id="transport"
+                                <input type="number" step="0.01" name="transport" class="form-control" id="transport"
                                        placeholder="Trasporti" >
                                 <label for="transport">Trasporti</label>
                             </div>

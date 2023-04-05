@@ -243,6 +243,14 @@
                                     })
                                 }).then(()=>location.reload())
                             }else if (hour.hour_type_id === '1'){
+                                console.log(hour.id)
+                                console.log(JSON.stringify({
+                                    'signed': true,
+                                    'order_id': $(e.target).attr('data-order-id'),
+                                    'hour_id': hour.id,
+                                    'job_type_id': 1,
+                                    '_token': token
+                                }))
                                 fetch('{{ route('order-hours.store') }}',{
                                     method: 'POST',
                                     headers: headers,

@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
@@ -155,6 +156,7 @@ class HourController extends Controller
             $hour->delete();
         }
         $info = $details->validated();
+        Log::info($info);
         $order = Order::find($info['extra']) ?? Order::where('innerCode', $info['extra'])->first();
         OrderDetails::create([
             'hour_id' => $hour->id,

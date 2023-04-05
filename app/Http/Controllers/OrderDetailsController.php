@@ -12,7 +12,7 @@ class OrderDetailsController extends Controller
         $validated = $request->validate([
             'signed' => ['required','boolean'],
             'order_id' => ['required','numeric'],
-            'hour_id' => ['required','numeric'],
+            'hour_id' => ['required'],
             'job_type_id' => ['required','numeric'],
         ]);
         OrderDetails::create($validated);

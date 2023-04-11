@@ -2,10 +2,29 @@
 @section('content')
     <div class="container shadow-sm my-3 text-center justify-content-center p-3">
         @unless(count($users) === 0)
-            <div class="row">
-                @foreach($users as $user)
-                    <x-user-card :user="$user"></x-user-card>
-                @endforeach
+            <nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    <button class="nav-link active" id="nav-hired-tab" data-bs-toggle="tab" data-bs-target="#nav-hired" type="button" role="tab" aria-controls="nav-hired" aria-selected="true">Assunti</button>
+                    <button class="nav-link" id="nav-resigned-tab" data-bs-toggle="tab" data-bs-target="#nav-resigned" type="button" role="tab" aria-controls="nav-resigned" aria-selected="false">Dimessi</button>
+                </div>
+            </nav>
+            <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="nav-hired" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
+                    <div class="row pt-3 ">
+                        @foreach($users->where('hired',true) as $user)
+                            <x-user-card :user="$user"></x-user-card>
+                        @endforeach
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="nav-resigned" role="tabpanel" aria-labelledby="nav-resigned-tab" tabindex="0">
+                    <div class="row pt-3">
+                        @forelse($users->where('hired',false) as $user)
+                            <x-user-card :user="$user"></x-user-card>
+                        @empty
+                            <h1>Nessun Dipendente Dimesso</h1>
+                        @endforelse
+                    </div>
+                </div>
             </div>
         @else
             <div class="col">

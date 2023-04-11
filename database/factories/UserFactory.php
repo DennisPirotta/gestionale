@@ -28,7 +28,7 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'holidays' => 160.00,
-            'level' => random_int(0, 2),
+            'hired' => true,
             'company_id' => Company::all()->random(),
             'remember_token' => Str::random(10),
 

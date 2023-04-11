@@ -31,7 +31,6 @@ class DatabaseSeeder extends Seeder
         $this->call(StaticSeeder::class);
 
         $me = User::factory()->create([
-            'level' => 2,
             'name' => 'Dennis',
             'surname' => 'Pirotta',
             'email' => 'dennispirotta@gmail.com',

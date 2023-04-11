@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('surname');
             $table->string('email')->unique();
             $table->integer('holidays')->default(160);
-            $table->integer('level')->default(0);
+            $table->boolean('hired')->default(true);
             $table->string('password');
             $table->boolean('position')->default(false);
 

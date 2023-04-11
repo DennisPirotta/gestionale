@@ -100,4 +100,10 @@ class UserController extends Controller
 
         return back()->with('message', 'Permessi cambiati con successo');
     }
+
+    public function resigned(User $user)
+    {
+        $user->update([ 'hired' => false ]);
+        return back()->with('message', 'Utente contrassegnato come dimesso con successo');
+    }
 }

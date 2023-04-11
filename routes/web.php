@@ -207,6 +207,8 @@ Route::middleware(['auth'])->group(function () {
 
         Route::delete('/dipendenti/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 
+        Route::put('/dipendenti/{user}', [UserController::class, 'resigned'])->name('users.resigned');
+
         /*
          * GESTIONE ROUTE CHIAVI DI ACCESSO
          */

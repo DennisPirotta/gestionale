@@ -12,14 +12,14 @@
                 <div class="tab-pane fade show active" id="nav-hired" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
                     <div class="row pt-3 ">
                         @foreach($users->where('hired',true) as $user)
-                            <x-user-card :user="$user"></x-user-card>
+                            <x-user-card :user="$user" :hired="true"></x-user-card>
                         @endforeach
                     </div>
                 </div>
                 <div class="tab-pane fade" id="nav-resigned" role="tabpanel" aria-labelledby="nav-resigned-tab" tabindex="0">
                     <div class="row pt-3">
                         @forelse($users->where('hired',false) as $user)
-                            <x-user-card :user="$user"></x-user-card>
+                            <x-user-card :user="$user" :hired="false"></x-user-card>
                         @empty
                             <h1>Nessun Dipendente Dimesso</h1>
                         @endforelse

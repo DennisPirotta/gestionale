@@ -16,14 +16,26 @@
                         Dettagli
                     </button>
                 </a>
-                <form method="POST" action="{{ route('users.destroy',$user->id) }}">
-                    @csrf
-                    @method('DELETE')
-                    <button class="btn btn-outline-danger" onclick="return confirm('Sicuro di voler Eliminare?')">
-                        <i class="bi bi-trash me-1"></i>
-                        Elimina
-                    </button>
-                </form>
+                @if($hired)
+                    <form method="POST" action="{{ route('users.resigned',$user->id) }}">
+                        @csrf
+                        @method('PUT')
+                        <button class="btn btn-outline-danger" onclick="return confirm('Contrassegnare il dipendente come dimesso?')">
+                            <i class="bi bi-box-arrow-right me-1"></i>
+                            Dimesso
+                        </button>
+                    </form>
+                @else
+                    <form method="POST" action="{{ route('users.destroy',$user->id) }}">
+                        @csrf
+                        @method('DELETE')
+                        <button class="btn btn-outline-danger" onclick="return confirm('Sicuro di voler Eliminare?')">
+                            <i class="bi bi-trash me-1"></i>
+                            Elimina
+                        </button>
+                    </form>
+                @endif
+
             </div>
         </div>
     </div>

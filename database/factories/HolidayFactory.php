@@ -23,7 +23,7 @@ class HolidayFactory extends Factory
             'start' => $start,
             'end' => fake()->dateTimeInInterval($start, '+10 days')->setTime(0, 0, 0),
             'approved' => fake()->boolean,
-            'user_id' => User::all()->random()->id,
+            'user_id' => User::all()->where('hired', true)->random()->id,
         ];
     }
 }

@@ -24,7 +24,7 @@ class DailyWhereAmI extends Command
 
     public function handle(): int
     {
-        foreach (User::all() as $user) {
+        foreach (User::all()->where('hired', true) as $user) {
             $user->update([
                 'position' => false,
             ]);

@@ -24,7 +24,7 @@ class HourFactory extends Factory
         return [
             'count' => fake()->numberBetween('0', '10'),
             'hour_type_id' => HourType::all()->random()->id,
-            'user_id' => User::all()->random()->id,
+            'user_id' => User::all()->where('hired', true)->random()->id,
             'date' => fake()->dateTimeThisYear->format('Y-m-d'),
         ];
     }

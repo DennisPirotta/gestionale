@@ -24,7 +24,7 @@ class TechnicalReportFactory extends Factory
             'secondary_customer_id' => Customer::all()->random()->id,
             'order_id' => Order::all()->random()->id,
             'number' => fake()->unique()->randomNumber(5),
-            'user_id' => User::all()->random()->id,
+            'user_id' => User::all()->where('hired', true)->random()->id,
         ];
     }
 }

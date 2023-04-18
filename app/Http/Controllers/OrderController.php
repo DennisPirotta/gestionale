@@ -83,7 +83,7 @@ class OrderController extends Controller
             'hour_types' => HourType::all(),
             'job_types' => JobType::all(),
             'orders' => Order::all(),
-            'users' => User::all()->sortBy('surname'),
+            'users' => User::all()->where('hired', true)->sortBy('surname'),
         ]);
     }
 
@@ -97,7 +97,7 @@ class OrderController extends Controller
             'statuses' => Status::all(),
             'countries' => Country::all(),
             'customers' => Customer::all()->sortBy('name'),
-            'users' => User::all()->sortBy('surname'),
+            'users' => User::all()->where('hired', true)->sortBy('surname'),
             'job_types' => JobType::all(),
         ]);
     }

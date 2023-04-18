@@ -46,8 +46,8 @@ class OrderFactory extends Factory
             'opening' => fake()->dateTime,
             'closing' => $closing,
             'customer_id' => Customer::all()->random()->id,
-            'user_id' => User::all()->random()->id,
-            'created_by' => User::all()->random()->id,
+            'user_id' => User::all()->where('hired', true)->random()->id,
+            'created_by' => User::all()->where('hired', true)->random()->id,
         ];
     }
 }

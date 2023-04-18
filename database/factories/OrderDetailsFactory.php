@@ -24,7 +24,7 @@ class OrderDetailsFactory extends Factory
             'count' => 8,
             'date' => fake()->dateTimeThisYear,
             'hour_type_id' => 1,
-            'user_id' => User::all()->random()->id,
+            'user_id' => User::all()->where('hired', true)->random()->id,
         ]);
 
         return [

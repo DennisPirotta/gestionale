@@ -51,7 +51,7 @@
                     <div class="ps-2 me-2">
                         <label for="user" class="d-none"></label><select name="user" class="form-select" id="user">
                             <option disabled selected>Utente</option>
-                            @foreach(App\Models\User::orderBy('surname')->get() as $user)
+                            @foreach(App\Models\User::where('hired',true)->orderBy('surname')->get() as $user)
                                 <option value="{{ $user->id }}" @if(request('user') === (string)$user->id) selected @endif>
                                     {{ $user->surname }} {{ $user->name }}
                                 </option>

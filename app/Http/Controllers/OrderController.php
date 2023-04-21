@@ -144,4 +144,13 @@ class OrderController extends Controller
             'order_details' => OrderDetails::with(['hour', 'order'])->get(),
         ]);
     }
+
+    public function updateInvoice(Request $request)
+    {
+        $request->validate(['order_id' => 'required']);
+        $order = Order::find($request->input('order_id'));
+        $status = $request->has('status');
+        $order->update(['invoiced' => $status]);
+        return back()->with('message','Fatturazione della commessa aggiornata con successo');
+    }
 }

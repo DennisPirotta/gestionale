@@ -22,6 +22,7 @@ return new class extends Migration
             $table->integer('hourMS')->default(0);
             $table->integer('hourFAT')->default(0);
             $table->integer('hourSAF')->default(0);
+            $table->boolean('invoiced')->default(false);
             $table->dateTime('opening');
             $table->dateTime('closing')->nullable();
             $table->timestamps();

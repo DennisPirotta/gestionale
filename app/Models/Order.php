@@ -13,7 +13,7 @@ class Order extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'customer_id', 'innerCode', 'outerCode', 'hourSW', 'hourMS', 'hourFAT', 'hourSAF', 'country_id', 'job_type_id', 'status_id', 'description', 'opening', 'closing', 'company_id', 'created_by',
+        'invoiced','user_id', 'customer_id', 'innerCode', 'outerCode', 'hourSW', 'hourMS', 'hourFAT', 'hourSAF', 'country_id', 'job_type_id', 'status_id', 'description', 'opening', 'closing', 'company_id', 'created_by',
     ];
 
     protected $with = ['user'];

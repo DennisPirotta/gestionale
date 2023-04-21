@@ -29,6 +29,7 @@
                         <th scope="col" rowspan="2">Commessa Esterna</th>
                         <th scope="col" rowspan="2">Descrizione</th>
                         <th scope="col" colspan="3">Ore SW</th>
+                        <th scope="col" rowspan="2">Fatturata</th>
                         <th scope="col" rowspan="2">Ore Modifiche</th>
                         <th scope="col" colspan="3">Ore MS</th>
                         <th scope="col" colspan="3">Ore FAT</th>
@@ -85,7 +86,13 @@
                                 @endif
                             </td>
                             <td>{{ $order->hourSW - $order->getHours(JobType::SVILUPPO_SOFTWARE)['count'] ?? 0 }}</td>
-
+                            <td>
+                                @if($order->invoiced)
+                                    <i class="bi bi-check-circle text-success fs-5" data-bs-toggle="modal" data-bs-target="#invoiceModal" onclick="selectOrder({{$order->id}},{{ $order->invoiced }})"></i>
+                                @else
+                                    <i class="bi bi-x-circle text-danger fs-5" data-bs-toggle="modal" data-bs-target="#invoiceModal" onclick="selectOrder({{$order->id}},{{ $order->invoiced }})"></i>
+                                @endif
+                            </td>
                             <td>
                                 {{$order->getHours(JobType::MODIFICHE)['count'] ?? 0}}
                                 @if(count($order->getHours(JobType::MODIFICHE)) > 1)
@@ -194,6 +201,11 @@
 
     </div>
     <script>
+        function selectOrder(order_id,current_status)
+        {
+            $('#id_order_invoice').val(order_id)
+            $('#status_checkbox').prop('checked',current_status)
+        }
         $(function () {
             const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
             const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl,{ html:true }))
@@ -221,29 +233,37 @@
 
             }
 
-        });
 
-        // $('th').click(function(){
-        //     if($(this).hasClass('head')) return
-        //     let table = $(this).parents('table').eq(0)
-        //     let rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()));
-        //     //console.log(rows)
-        //     rows = rows.filter( e => {
-        //         return !$(e).hasClass('head')
-        //     } )
-        //     this.asc = !this.asc
-        //     if (!this.asc){rows = rows.reverse()}
-        //     for (let i = 0; i < rows.length; i++){
-        //         table.append(rows[i])
-        //     }
-        // })
-        // function comparer(index) {
-        //     return function(a, b) {
-        //         let valA = getCellValue(a, index), valB = getCellValue(b, index);
-        //         return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB)
-        //     }
-        // }
-        // function getCellValue(row, index){ return $(row).children('td').eq(index).text() }
+
+        });
     </script>
+
+    <!-- Modal -->
+    <div class="modal fade" id="invoiceModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Commessa Fatturata?</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{route('orders.updateInvoice')}}" method="post">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="status_checkbox" name="status">
+                            <input type="hidden" id="id_order_invoice" name="order_id">
+                            <label class="form-check-label" for="status_checkbox">
+                                Spunta questa casella se la commessa è stata fatturata
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+                        <button type="submit" class="btn btn-primary">Salva</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
 @endsection

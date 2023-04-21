@@ -60,6 +60,9 @@ Route::middleware(['auth'])->group(function () {
     // Salva modifiche commessa
     Route::put('/commesse/{order}', [OrderController::class, 'update'])->name('orders.update');
 
+    // Modifica stato commessa (fatturata / non fatturata)
+    Route::post('/commesse/invoiced', [OrderController::class, 'updateInvoice'])->name('orders.updateInvoice');
+
     /*
     *  GESTIONE ROUTES HOME
     */

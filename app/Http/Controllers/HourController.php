@@ -79,6 +79,9 @@ class HourController extends Controller
      */
     public function store(StoreHourRequest $request)
     {
+        if ($request->get('count') >= 24){
+            return back()->with('message', 'Inserisci un conteggio ore valido');
+        }
         if ($request->has('date')) {
             $validated = $request->validated();
             if (!array_key_exists('user_id', $validated)) {

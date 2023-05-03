@@ -190,76 +190,81 @@
                 "X-CSRF-TOKEN": token,
             }
             if(target !== count){
-                if (child.length > 0){
-                    let id = child.text()
-                    if(count === '0' || count === ''){
-                        fetch(`ore/${id}`,{
-                            method: 'POST',
-                            headers: headers,
-                            credentials: "same-origin",
-                            body: JSON.stringify({
-                                '_method': 'DELETE',
-                                '_token': token
-                            })
-                        }).then(()=>location.reload())
-                    }else{
-                        fetch(`ore/${id}`,{
-                            method: 'POST',
-                            headers: headers,
-                            credentials: "same-origin",
-                            body: JSON.stringify({
-                                'count': count,
-                                '_method': 'PUT',
-                                '_token': token
-                            })
-                        }).then(()=>location.reload())
-                    }
+                if(count < 24){
+                    if (child.length > 0){
+                        let id = child.text()
+                        if(count === '0' || count === ''){
+                            fetch(`ore/${id}`,{
+                                method: 'POST',
+                                headers: headers,
+                                credentials: "same-origin",
+                                body: JSON.stringify({
+                                    '_method': 'DELETE',
+                                    '_token': token
+                                })
+                            }).then(()=>location.reload())
+                        }else{
+                            fetch(`ore/${id}`,{
+                                method: 'POST',
+                                headers: headers,
+                                credentials: "same-origin",
+                                body: JSON.stringify({
+                                    'count': count,
+                                    '_method': 'PUT',
+                                    '_token': token
+                                })
+                            }).then(()=>location.reload())
+                        }
 
+                    }else{
+                        fetch('{{ route('hours.store') }}',{
+                            method: 'POST',
+                            headers: headers,
+                            credentials: "same-origin",
+                            body: JSON.stringify({
+                                'count': $(e.target).text().trim().replace(',','.'),
+                                'date': $(e.target).attr('data-date'),
+                                'hour_type_id': $(e.target).attr('data-hour-type'),
+                                '_token': token,
+                                'user_id': {{ request('user') }}
+                            })
+                        }).then((response) => response.json())
+                            .then((hour) => {
+                                if (hour.hour_type_id === '2'){
+                                    fetch('{{ route('technical-report-hours.store') }}',{
+                                        method: 'POST',
+                                        headers: headers,
+                                        credentials: "same-origin",
+                                        body: JSON.stringify({
+                                            'hour_id': hour.id,
+                                            'nightEU': false,
+                                            'nightExtraEU': false,
+                                            'technical_report_id': $(e.target).attr('data-technical-report-id'),
+                                            '_token': token
+                                        })
+                                    }).then(()=>location.reload())
+                                }else if (hour.hour_type_id === '1'){
+                                    fetch('{{ route('order-hours.store') }}',{
+                                        method: 'POST',
+                                        headers: headers,
+                                        credentials: "same-origin",
+                                        body: JSON.stringify({
+                                            'signed': true,
+                                            'order_id': $(e.target).attr('data-order-id'),
+                                            'hour_id': hour.id,
+                                            'job_type_id': 1,
+                                            '_token': token
+                                        })
+                                    }).then(()=>location.reload())
+                                }else{
+                                    location.reload()
+                                }
+                            });
+                    }
                 }else{
-                    fetch('{{ route('hours.store') }}',{
-                        method: 'POST',
-                        headers: headers,
-                        credentials: "same-origin",
-                        body: JSON.stringify({
-                            'count': $(e.target).text().trim().replace(',','.'),
-                            'date': $(e.target).attr('data-date'),
-                            'hour_type_id': $(e.target).attr('data-hour-type'),
-                            '_token': token,
-                            'user_id': {{ request('user') }}
-                        })
-                    }).then((response) => response.json())
-                        .then((hour) => {
-                            if (hour.hour_type_id === '2'){
-                                fetch('{{ route('technical-report-hours.store') }}',{
-                                    method: 'POST',
-                                    headers: headers,
-                                    credentials: "same-origin",
-                                    body: JSON.stringify({
-                                        'hour_id': hour.id,
-                                        'nightEU': false,
-                                        'nightExtraEU': false,
-                                        'technical_report_id': $(e.target).attr('data-technical-report-id'),
-                                        '_token': token
-                                    })
-                                }).then(()=>location.reload())
-                            }else if (hour.hour_type_id === '1'){
-                                fetch('{{ route('order-hours.store') }}',{
-                                    method: 'POST',
-                                    headers: headers,
-                                    credentials: "same-origin",
-                                    body: JSON.stringify({
-                                        'signed': true,
-                                        'order_id': $(e.target).attr('data-order-id'),
-                                        'hour_id': hour.id,
-                                        'job_type_id': 1,
-                                        '_token': token
-                                    })
-                                }).then(()=>location.reload())
-                            }else{
-                                location.reload()
-                            }
-                        });
+                    $(e.target).text('')
                 }
+
             }
 
         }).keypress(e => {

@@ -22,8 +22,8 @@ class LocationController extends Controller
         foreach (Location::with('user')->filter(request(['user','sph']))->get() as $location) {
             $events[] = [
                 'id' => $location->id,
-                'start' => Carbon::parse($location->date),
-                'end' => Carbon::parse($location->date),
+                'start' => Carbon::parse($location->date)->addDay(),
+                'end' => Carbon::parse($location->date)->addDay(),
                 'title' => substr($location->user->name, 0, 1).'. '.substr($location->user->surname, 0, 1).'. - '.$location->description,
                 'allDay' => true,
                 'description' => $location->description,

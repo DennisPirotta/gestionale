@@ -85,17 +85,19 @@ class HolidayController extends Controller
         } else {
             $continue ?: $end->subDay();
             foreach (CarbonPeriod::create($start, $end) as $day) {
-                Hour::create([
-                    'count' => 8,
-                    'user_id' => auth()->id(),
-                    'hour_type_id' => 6,
-                    'date' => $day,
-                ]);
-                Location::create([
-                    'date' => $day->format('Y-m-d'),
-                    'description' => 'Ferie',
-                    'user_id' => auth()->id(),
-                ]);
+                if ($day->isWeekday()){
+                    Hour::create([
+                        'count' => 8,
+                        'user_id' => auth()->id(),
+                        'hour_type_id' => 6,
+                        'date' => $day,
+                    ]);
+                    Location::create([
+                        'date' => $day->format('Y-m-d'),
+                        'description' => 'Ferie',
+                        'user_id' => auth()->id(),
+                    ]);
+                }
             }
         }
 

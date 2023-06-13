@@ -1,14 +1,18 @@
 <div class="col-sm-6 col-md-4 mb-3">
     <div class="card h-100 @if($user->id === auth()->id()) bg-secondary bg-opacity-25 @endif"> <!--  bg-primary bg-opacity-25 -->
-        <div class="card-body">
+        <div class="card-body space">
             <i class="bi bi-person"></i>
-            <span class="card-title">Dipendente {{$user->id}}</span>
+            <span class="card-title">{{$user->surname}} {{$user->name}}</span>
             @if($user->company->id === 1)
                 <span class="badge bg-primary ms-1">3D</span>
             @else
                 <span class="badge bg-success ms-1">S+H</span>
             @endif
-            <p class="card-text">{{$user->surname}} {{$user->name}}</p>
+            <div class="my-2">
+                <div><b>{{ $user->getLeftHolidays() }}</b> ore di ferie totali</div>
+                <div><b>{{ $user->holidays - $user->getLeftHolidays() }}</b> ore di ferie utilizzate</div>
+                <div><b>{{ $user->getLeftHolidays() }}</b> ore di ferie rimanenti</div>
+            </div>
             <div class="d-flex justify-content-center">
                 <a href="{{ route('users.show',$user->id) }}">
                     <button class="btn btn-outline-primary me-2">

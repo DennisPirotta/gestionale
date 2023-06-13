@@ -9,7 +9,7 @@
                 <span class="badge bg-success ms-1">S+H</span>
             @endif
             <div class="my-2">
-                <div><b>{{ $user->getLeftHolidays() }}</b> ore di ferie totali</div>
+                <div><b>{{ $user->holidays }}</b> ore di ferie totali</div>
                 <div><b>{{ $user->holidays - $user->getLeftHolidays() }}</b> ore di ferie utilizzate</div>
                 <div><b>{{ $user->getLeftHolidays() }}</b> ore di ferie rimanenti</div>
             </div>

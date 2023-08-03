@@ -2,15 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper\GraphHelper;
 use App\Models\Holiday;
 use App\Models\Hour;
-use App\Models\Location;
 use App\Models\User;
+use App\Models\Location;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
-use DateTime;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Http;
+use Microsoft\Graph\Graph;
+use Microsoft\Graph\Model\BodyType;
+use Microsoft\Graph\Model\DateTimeTimeZone;
+use Microsoft\Graph\Model\Event;
+use Microsoft\Graph\Model\ItemBody;
+use Microsoft\Graph\Model\Location as EventLocation;
 
 class HolidayController extends Controller
 {
@@ -61,13 +69,16 @@ class HolidayController extends Controller
             $end = Carbon::parse($request->get('end'));
         }
 
-        Holiday::create([
+        $holiday = Holiday::create([
             'start' => $start,
             'end' => $end,
             'user_id' => auth()->id(),
             'approved' => $end->isPast(),
             'permission' => $isPermission
-        ])->sendMail();
+        ]);
+
+        $holiday->office_id = json_encode($this->add_to_office($holiday));
+//        $holiday->sendMail();
 
         if ($isPermission) {
             $count = Carbon::parse($start)->diffInBusinessHours($end);
@@ -85,7 +96,7 @@ class HolidayController extends Controller
         } else {
             $continue ?: $end->subDay();
             foreach (CarbonPeriod::create($start, $end) as $day) {
-                if ($day->isWeekday()){
+                if ($day->isWeekday()) {
                     Hour::create([
                         'count' => 8,
                         'user_id' => auth()->id(),
@@ -116,9 +127,9 @@ class HolidayController extends Controller
                     }
                 }
             }
-            $holiday->sendMail(null, false, true);
+//            $holiday->sendMail(null, false, true);
             $holiday->delete();
-
+            $this->remove_from_office($holiday);
             return back()->with('message', 'Ferie eliminate con successo');
         }
 
@@ -144,5 +155,93 @@ class HolidayController extends Controller
         $holiday->sendMail(null, true);
 
         return back()->with('message', 'Ferie modificate con successo');
+    }
+
+    private function add_to_office(Holiday $holiday): array|null
+    {
+        $event = new Event();
+        $event->setSubject("Ferie " . $holiday->user->name . ' ' . $holiday->user->surname);
+
+        $event_body = new ItemBody();
+        $event_body->setContentType(new BodyType(BodyType::HTML));
+        $event_body->setContent("Si ricorda che oggi " . $holiday->user->name . " " . $holiday->user->surname . " è in ferie.");
+
+        $event_start = new DateTimeTimeZone();
+        $event_start->setDateTime(Carbon::parse($holiday->start)->toISOString());
+        $event_start->setTimeZone("Europe/Rome");
+
+        $event_end = new DateTimeTimeZone();
+        $event_end->setDateTime(Carbon::parse($holiday->end)->toISOString());
+        $event_end->setTimeZone("Europe/Rome");
+
+        $location = new EventLocation();
+        $location->setDisplayName('Ferie');
+
+        $event->setBody($event_body);
+        $event->setStart($event_start);
+        $event->setEnd($event_end);
+        $event->setLocation($location);
+
+        try {
+            $data = [
+                "client_id" => config('services.microsoft_graph.client_id'),
+                "client_secret" => config('services.microsoft_graph.client_secret'),
+                "grant_type" => "client_credentials",
+                "scope" => "https://graph.microsoft.com/.default"
+            ];
+            $response = Http::asForm()->post(
+                url: "https://login.microsoftonline.com/".config('services.microsoft_graph.tenant_id')."/oauth2/v2.0/token",
+                data: $data
+            );
+            $token = $response->json('access_token');
+            $graph = new Graph();
+            $graph->setAccessToken($token);
+
+            $users = [
+                'Admin SPH' => '464c0bdb-c888-4bc1-b4f4-4a7f80b31157',
+                'Admin 3D' => '6bc96584-256c-40cc-ac01-1397d92e9db3',
+            ];
+            foreach ($users as $user => $id) {
+                $res = $graph->createRequest('POST', "/users/$id/calendar/events")
+                    ->attachBody($event)
+                    ->execute();
+                $users[$user] = $res->getBody()['id'];
+            }
+            return $users;
+        } catch (\Exception|GuzzleException $e) {
+            return null;
+        }
+    }
+
+    private function remove_from_office(Holiday $holiday): void
+    {
+        try {
+            $data = [
+                "client_id" => config('services.microsoft_graph.client_id'),
+                "client_secret" => config('services.microsoft_graph.client_secret'),
+                "grant_type" => "client_credentials",
+                "scope" => "https://graph.microsoft.com/.default"
+            ];
+            $response = Http::asForm()->post(
+                url: "https://login.microsoftonline.com/".config('services.microsoft_graph.tenant_id')."/oauth2/v2.0/token",
+                data: $data
+            );
+            $token = $response->json('access_token');
+            $graph = new Graph();
+            $graph->setAccessToken($token);
+
+            $users = [
+                'Admin SPH' => '464c0bdb-c888-4bc1-b4f4-4a7f80b31157',
+                'Admin 3D' => '6bc96584-256c-40cc-ac01-1397d92e9db3',
+            ];
+
+            foreach ($users as $user => $id) {
+                $id = json_decode($holiday->office_id)[$user];
+                $graph->createRequest('DELETE', "/users/$id/calendar/events/$id")->execute();
+            }
+            return;
+        } catch (\Exception|GuzzleException $e) {
+            return;
+        }
     }
 }

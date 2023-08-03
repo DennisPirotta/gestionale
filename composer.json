@@ -18,6 +18,8 @@
         "laravel/sanctum": "^2.14.1",
         "laravel/tinker": "^2.7",
         "laravel/ui": "^4.0",
+        "league/oauth2-client": "^2.7",
+        "microsoft/microsoft-graph": "^1.103",
         "nesbot/carbon": "^2.61",
         "opcodesio/log-viewer": "^1.9",
         "qoraiche/laravel-mail-editor": "^4.0",

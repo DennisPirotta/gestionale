@@ -18,6 +18,7 @@ return new class extends Migration
             $table->boolean('approved')->default(false);
             $table->date('start');
             $table->date('end');
+            $table->string('office_id')->nullable();
             $table->boolean('permission')->default(false);
             $table->timestamps();
 

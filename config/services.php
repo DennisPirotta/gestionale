@@ -31,4 +31,13 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'microsoft_graph' => [
+        'client_id' => env('MICROSOFT_GRAPH_CLIENT_ID'),
+        'tenant_id' => env('MICROSOFT_GRAPH_TENANT_ID'),
+        'client_secret' => env('MICROSOFT_GRAPH_CLIENT_SECRET'),
+        'redirect_uri' => env('MICROSOFT_GRAPH_REDIRECT_URI'),
+        'scopes' => "Calendars.ReadWrite",
+        '3d_sph_group_id' => 'f4b7a00a-db17-47e3-8ac4-0c04ac7be851'
+    ]
+
 ];

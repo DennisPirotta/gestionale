@@ -15,7 +15,7 @@ class Holiday extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'approved', 'start', 'end','permission'
+        'user_id', 'approved', 'start', 'end','permission','office_id'
     ];
 
     public function user(): BelongsTo

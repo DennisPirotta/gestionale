@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Helper\GraphHelper;
 use App\Models\Holiday;
 use App\Models\Hour;
 use App\Models\User;
@@ -78,6 +77,9 @@ class HolidayController extends Controller
         ]);
 
         $holiday->office_id = json_encode($this->add_to_office($holiday));
+
+        $holiday->save();
+
         $holiday->sendMail();
 
         if ($isPermission) {

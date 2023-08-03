@@ -78,7 +78,7 @@ class HolidayController extends Controller
         ]);
 
         $holiday->office_id = json_encode($this->add_to_office($holiday));
-//        $holiday->sendMail();
+        $holiday->sendMail();
 
         if ($isPermission) {
             $count = Carbon::parse($start)->diffInBusinessHours($end);
@@ -127,9 +127,11 @@ class HolidayController extends Controller
                     }
                 }
             }
-//            $holiday->sendMail(null, false, true);
+            $holiday->sendMail(null, false, true);
+            if ($holiday->office_id !== null) {
+                $this->remove_from_office($holiday);
+            }
             $holiday->delete();
-            $this->remove_from_office($holiday);
             return back()->with('message', 'Ferie eliminate con successo');
         }
 

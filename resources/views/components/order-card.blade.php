@@ -3,7 +3,13 @@
         <!--  bg-black bg-opacity-25 -->
         <div class="card-body">
             <i class="bi bi-building"></i>
-            <span class="card-title">Commessa {{ $commessa->innerCode }}</span>
+            <div class="card-title">
+                Commessa Interna {{ $commessa->innerCode }}
+                @if($commessa->outerCode ?? false)
+                    <br>Commessa Esterna {{ $commessa->outerCode }}
+                @endif
+                Commessa Esterna {{ $commessa->innerCode }} <br>
+            </div>
             <a href="{{ route('orders.index',['company' => $commessa->company->name]) }}">
                 @if($commessa->company->id === 1)
                     <span class="badge text-bg-primary bg-opacity-100">3D</span>

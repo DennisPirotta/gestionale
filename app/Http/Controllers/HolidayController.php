@@ -241,7 +241,8 @@ class HolidayController extends Controller
 
             foreach ($users as $user => $id) {
                 $id = json_decode($holiday->office_id, flags: JSON_OBJECT_AS_ARRAY)[$user];
-                $graph->createRequest('DELETE', "/users/$id/calendar/events/$id")->execute();
+                $res = $graph->createRequest('DELETE', "/users/$id/calendar/events/$id")->execute();
+                \Log::info("Delete Response", $res->getBody());
             }
             return;
         } catch (\Exception|GuzzleException $e) {

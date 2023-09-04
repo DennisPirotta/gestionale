@@ -8,7 +8,6 @@
                 @if($commessa->outerCode ?? false)
                     <br>Commessa Esterna {{ $commessa->outerCode }}
                 @endif
-                Commessa Esterna {{ $commessa->innerCode }} <br>
             </div>
             <a href="{{ route('orders.index',['company' => $commessa->company->name]) }}">
                 @if($commessa->company->id === 1)

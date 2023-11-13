@@ -25,6 +25,7 @@
                     <thead headers="sticky">
                     <tr class="head">
                         <th scope="col" rowspan="2">#</th>
+                        <th scope="col" rowspan="2">Ditta</th>
                         <th scope="col" rowspan="2">Commessa Interna</th>
                         <th scope="col" rowspan="2">Commessa Esterna</th>
                         <th scope="col" rowspan="2">Descrizione</th>
@@ -60,6 +61,7 @@
                     @foreach($orders as $order)
                         <tr class="table-{{$order->status->color}}">
                             <td><b>{{$count++}}</b></td>
+                            <td>{{ $order->company->name }}</td>
                             <td>{{$order->innerCode}}</td>
                             <td>{{$order->outerCode}}</td>
                             <td>{{$order->description}}</td>

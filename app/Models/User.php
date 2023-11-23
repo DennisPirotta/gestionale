@@ -60,7 +60,12 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function orders(): HasMany
     {
-        return $this->hasMany(Order::class, ['user_id', 'created_by']);
+        return $this->hasMany(Order::class, 'created_by');
+    }
+
+    public function ordersWorked(): HasMany
+    {
+        return $this->hasMany(Order::class, 'user_id');
     }
 
     public function holidayList(): HasMany
@@ -188,5 +193,25 @@ class User extends Authenticatable implements MustVerifyEmail
             $data['str25'] = $data['total'] - 8;
         }
         return $data;
+    }
+
+    public function orders_hours()
+    {
+        $data = [];
+
+        foreach ($this->orders->groupBy('customer_id') as $customer => $orders) {
+            dd($this->orders->groupBy('customer_id'));
+            foreach ($orders as $order) {
+                foreach ($order->order_details as $order_detail) {
+                    $data[] = [
+                        "customer" => $customer,
+                        "hours" => $order_detail
+                    ];
+                }
+            }
+
+        }
+        return $data;
+
     }
 }

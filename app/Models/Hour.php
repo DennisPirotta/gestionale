@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Attribute;
 use Carbon\CarbonPeriod;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

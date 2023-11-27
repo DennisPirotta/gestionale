@@ -185,6 +185,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::group(['middleware' => ['role:admin|boss']], static function () {
 
+        Route::get('/invoices/export', [UserController::class,'exportInvoices'])->name('invoices.export');
 
         // Approva ferie
         Route::put('/ferie/approve/{holiday}', [HolidayController::class, 'approve'])->name('holidays.approve');

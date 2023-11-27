@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\InvoicesExport;
 use App\Models\BusinessHour;
 use App\Models\Customer;
 use App\Models\Hour;
@@ -19,6 +20,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class UserController extends Controller
 {
@@ -203,5 +205,10 @@ class UserController extends Controller
             ];
         }
         return $invoices;
+    }
+
+    public function exportInvoices()
+    {
+        return Excel::download(new InvoicesExport($this->getInvoices(User::with(['company','hours','orders'])->get())), 'users.xlsx');
     }
 }

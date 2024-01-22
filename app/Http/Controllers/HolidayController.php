@@ -204,6 +204,7 @@ class HolidayController extends Controller
             $users = [
                 'Admin SPH' => '464c0bdb-c888-4bc1-b4f4-4a7f80b31157',
                 'Admin 3D' => '6bc96584-256c-40cc-ac01-1397d92e9db3',
+                'Angelo Dariol' => '3a5eb90b-e23c-4d62-894c-b3e86c245ada'
             ];
             foreach ($users as $user => $id) {
                 $res = $graph->createRequest('POST', "/users/$id/calendar/events")
@@ -237,6 +238,7 @@ class HolidayController extends Controller
             $users = [
                 'Admin SPH' => '464c0bdb-c888-4bc1-b4f4-4a7f80b31157',
                 'Admin 3D' => '6bc96584-256c-40cc-ac01-1397d92e9db3',
+                'Angelo Dariol' => '3a5eb90b-e23c-4d62-894c-b3e86c245ada'
             ];
 
             foreach ($users as $user => $id) {
